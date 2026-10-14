@@ -261,189 +261,221 @@ const CustomCollegeTooltip = ({ active, payload, label }) => {
   return null;
 };
 
-// Sample analytics data
-const ANALYTICS_DATA = {
-  overview: {
-    totalEvents: 24,
-    totalParticipants: 1856,
-    avgTeamSize: 3.2,
-    successRate: 87,
-    totalColleges: 45,
-    activeStudents: 1234,
+// Sample analytics data by time range
+const ANALYTICS_DATA_BY_RANGE = {
+  week: {
+    overview: {
+      totalEvents: 2,
+      totalParticipants: 94,
+      avgTeamSize: 3.0,
+      successRate: 95,
+      totalColleges: 8,
+      activeStudents: 76,
+    },
+    areaDistribution: [
+      { area: "Computer Science", count: 32, color: "#6366f1" },
+      { area: "Electronics", count: 16, color: "#8b5cf6" },
+      { area: "Mechanical", count: 12, color: "#a855f7" },
+      { area: "Civil", count: 8, color: "#d946ef" },
+      { area: "Information Technology", count: 14, color: "#ec4899" },
+      { area: "AI & Data Science", count: 12, color: "#f43f5e" },
+    ],
+    domainParticipation: [
+      { domain: "Web Development", participants: 26, wins: 1, winRate: 3.8 },
+      { domain: "Machine Learning", participants: 24, wins: 1, winRate: 4.2 },
+      { domain: "IoT", participants: 12, wins: 1, winRate: 8.3 },
+      { domain: "Blockchain", participants: 6, wins: 0, winRate: 0.0 },
+      { domain: "Mobile Apps", participants: 14, wins: 1, winRate: 7.1 },
+      { domain: "Cybersecurity", participants: 12, wins: 0, winRate: 0.0 },
+    ],
+    trendTitle: "Daily Participation Trend (Past 7 Days)",
+    participationTrend: [
+      { period: "Mon", events: 0, participants: 8 },
+      { period: "Tue", events: 1, participants: 24 },
+      { period: "Wed", events: 0, participants: 12 },
+      { period: "Thu", events: 0, participants: 15 },
+      { period: "Fri", events: 1, participants: 22 },
+      { period: "Sat", events: 0, participants: 9 },
+      { period: "Sun", events: 0, participants: 4 },
+    ],
+    eventTypes: [
+      { type: "Hackathon", count: 1, percentage: 50, participants: 58 },
+      { type: "Workshop", count: 1, percentage: 50, participants: 36 },
+    ],
+    yearWiseParticipation: [
+      { year: "1st Year", count: 16, percentage: 17 },
+      { year: "2nd Year", count: 27, percentage: 29 },
+      { year: "3rd Year", count: 33, percentage: 35 },
+      { year: "4th Year", count: 18, percentage: 19 },
+    ],
+    quickInsights: [
+      { label: "Completion Rate", value: 92, color: "#22c55e" },
+      { label: "Team Formation", value: 88, color: "#3b82f6" },
+      { label: "Mentor Approval", value: 96, color: "#8b5cf6" },
+      { label: "External Collab", value: 60, color: "#f59e0b" },
+    ],
+    insightsList: [
+      {
+        icon: "lucide:trending-up",
+        color: "#22c55e",
+        text: "Sprint registrations spiked on Tuesday following campus kickoff",
+      },
+      {
+        icon: "lucide:zap",
+        color: "#f59e0b",
+        text: "Average team formation completed in under 36 hours this week",
+      },
+      {
+        icon: "lucide:star",
+        color: "#6366f1",
+        text: "AI/ML workshop had a 95% full-session completion rate",
+      },
+    ],
   },
-  areaDistribution: [
-    { area: "Computer Science", count: 542, color: "#6366f1" },
-    { area: "Electronics", count: 328, color: "#8b5cf6" },
-    { area: "Mechanical", count: 245, color: "#a855f7" },
-    { area: "Civil", count: 189, color: "#d946ef" },
-    { area: "Information Technology", count: 312, color: "#ec4899" },
-    { area: "AI & Data Science", count: 240, color: "#f43f5e" },
-  ],
-  domainParticipation: [
-    { domain: "Web Development", participants: 425, wins: 12, winRate: 2.8 },
-    { domain: "Machine Learning", participants: 380, wins: 15, winRate: 3.9 },
-    { domain: "IoT", participants: 290, wins: 8, winRate: 2.8 },
-    { domain: "Blockchain", participants: 185, wins: 5, winRate: 2.7 },
-    { domain: "Mobile Apps", participants: 310, wins: 10, winRate: 3.2 },
-    { domain: "Cybersecurity", participants: 266, wins: 7, winRate: 2.6 },
-  ],
-  monthlyTrend: [
-    { month: "Jan", events: 2, participants: 145 },
-    { month: "Feb", events: 3, participants: 198 },
-    { month: "Mar", events: 4, participants: 312 },
-    { month: "Apr", events: 2, participants: 156 },
-    { month: "May", events: 1, participants: 89 },
-    { month: "Jun", events: 3, participants: 245 },
-    { month: "Jul", events: 2, participants: 167 },
-    { month: "Aug", events: 2, participants: 189 },
-    { month: "Sep", events: 3, participants: 278 },
-    { month: "Oct", events: 4, participants: 356 },
-    { month: "Nov", events: 5, participants: 421 },
-    { month: "Dec", events: 3, participants: 287 },
-  ],
-  eventTypes: [
-    { type: "Hackathon", count: 8, percentage: 33, participants: 456 },
-    { type: "Workshop", count: 6, percentage: 25, participants: 324 },
-    { type: "Competition", count: 5, percentage: 21, participants: 289 },
-    { type: "Seminar", count: 3, percentage: 13, participants: 178 },
-    { type: "Bootcamp", count: 2, percentage: 8, participants: 134 },
-  ],
-  topColleges: [
-    {
-      name: "VIT Chennai",
-      participants: 245,
-      events: 12,
-      wins: 8,
-      winRate: 3.3,
-      departments: ["CSE", "ECE", "IT"],
+  month: {
+    overview: {
+      totalEvents: 4,
+      totalParticipants: 356,
+      avgTeamSize: 3.4,
+      successRate: 91,
+      totalColleges: 18,
+      activeStudents: 284,
     },
-    {
-      name: "SRM University",
-      participants: 198,
-      events: 10,
-      wins: 6,
-      winRate: 3.0,
-      departments: ["CSE", "Mech", "AI"],
+    areaDistribution: [
+      { area: "Computer Science", count: 118, color: "#6366f1" },
+      { area: "Electronics", count: 62, color: "#8b5cf6" },
+      { area: "Mechanical", count: 44, color: "#a855f7" },
+      { area: "Civil", count: 32, color: "#d946ef" },
+      { area: "Information Technology", count: 58, color: "#ec4899" },
+      { area: "AI & Data Science", count: 42, color: "#f43f5e" },
+    ],
+    domainParticipation: [
+      { domain: "Web Development", participants: 96, wins: 3, winRate: 3.1 },
+      { domain: "Machine Learning", participants: 82, wins: 4, winRate: 4.8 },
+      { domain: "IoT", participants: 48, wins: 2, winRate: 4.1 },
+      { domain: "Blockchain", participants: 24, wins: 1, winRate: 4.2 },
+      { domain: "Mobile Apps", participants: 56, wins: 2, winRate: 3.6 },
+      { domain: "Cybersecurity", participants: 50, wins: 2, winRate: 4.0 },
+    ],
+    trendTitle: "Weekly Participation Trend (This Month)",
+    participationTrend: [
+      { period: "Week 1", events: 1, participants: 74 },
+      { period: "Week 2", events: 1, participants: 92 },
+      { period: "Week 3", events: 1, participants: 118 },
+      { period: "Week 4", events: 1, participants: 72 },
+    ],
+    eventTypes: [
+      { type: "Hackathon", count: 2, percentage: 50, participants: 184 },
+      { type: "Workshop", count: 1, percentage: 25, participants: 92 },
+      { type: "Competition", count: 1, percentage: 25, participants: 80 },
+    ],
+    yearWiseParticipation: [
+      { year: "1st Year", count: 58, percentage: 16 },
+      { year: "2nd Year", count: 98, percentage: 28 },
+      { year: "3rd Year", count: 132, percentage: 37 },
+      { year: "4th Year", count: 68, percentage: 19 },
+    ],
+    quickInsights: [
+      { label: "Completion Rate", value: 84, color: "#22c55e" },
+      { label: "Team Formation", value: 74, color: "#3b82f6" },
+      { label: "Mentor Approval", value: 94, color: "#8b5cf6" },
+      { label: "External Collab", value: 52, color: "#f59e0b" },
+    ],
+    insightsList: [
+      {
+        icon: "lucide:trending-up",
+        color: "#22c55e",
+        text: "Monthly registrations surged by 18% over the previous month",
+      },
+      {
+        icon: "lucide:award",
+        color: "#f59e0b",
+        text: "Inter-college Hackathon was the largest engagement driver",
+      },
+      {
+        icon: "lucide:star",
+        color: "#6366f1",
+        text: "Computer Science & AIDS contributed 45% of registered teams",
+      },
+    ],
+  },
+  year: {
+    overview: {
+      totalEvents: 24,
+      totalParticipants: 1856,
+      avgTeamSize: 3.2,
+      successRate: 87,
+      totalColleges: 45,
+      activeStudents: 1234,
     },
-    {
-      name: "Anna University",
-      participants: 176,
-      events: 8,
-      wins: 5,
-      winRate: 2.8,
-      departments: ["CSE", "ECE"],
-    },
-    {
-      name: "SRMIST",
-      participants: 156,
-      events: 9,
-      wins: 4,
-      winRate: 2.6,
-      departments: ["IT", "CSE", "ECE"],
-    },
-    {
-      name: "Amity University",
-      participants: 134,
-      events: 7,
-      wins: 3,
-      winRate: 2.2,
-      departments: ["CSE", "AI"],
-    },
-  ],
-  collegeAnalytics: [
-    {
-      college: "VIT Chennai",
-      hackathons: 5,
-      workshops: 3,
-      competitions: 2,
-      seminars: 2,
-      totalEvents: 12,
-      totalParticipants: 245,
-      avgScore: 78,
-    },
-    {
-      college: "SRM University",
-      hackathons: 4,
-      workshops: 2,
-      competitions: 3,
-      seminars: 1,
-      totalEvents: 10,
-      totalParticipants: 198,
-      avgScore: 75,
-    },
-    {
-      college: "Anna University",
-      hackathons: 3,
-      workshops: 2,
-      competitions: 2,
-      seminars: 1,
-      totalEvents: 8,
-      totalParticipants: 176,
-      avgScore: 72,
-    },
-    {
-      college: "SRMIST",
-      hackathons: 4,
-      workshops: 3,
-      competitions: 1,
-      seminars: 1,
-      totalEvents: 9,
-      totalParticipants: 156,
-      avgScore: 70,
-    },
-    {
-      college: "Amity University",
-      hackathons: 3,
-      workshops: 2,
-      competitions: 1,
-      seminars: 1,
-      totalEvents: 7,
-      totalParticipants: 134,
-      avgScore: 68,
-    },
-  ],
-  collegePerformance: [
-    {
-      college: "VIT Chennai",
-      Jan: 45,
-      Feb: 52,
-      Mar: 38,
-      Apr: 41,
-      May: 35,
-      Jun: 34,
-    },
-    {
-      college: "SRM University",
-      Jan: 38,
-      Feb: 42,
-      Mar: 35,
-      Apr: 32,
-      May: 28,
-      Jun: 23,
-    },
-    {
-      college: "Anna University",
-      Jan: 32,
-      Feb: 35,
-      Mar: 28,
-      Apr: 30,
-      May: 25,
-      Jun: 26,
-    },
-    { college: "SRMIST", Jan: 28, Feb: 30, Mar: 25, Apr: 28, May: 22, Jun: 23 },
-  ],
-  yearWiseParticipation: [
-    { year: "1st Year", count: 312, percentage: 17 },
-    { year: "2nd Year", count: 524, percentage: 28 },
-    { year: "3rd Year", count: 645, percentage: 35 },
-    { year: "4th Year", count: 375, percentage: 20 },
-  ],
-  quickInsights: [
-    { label: "Completion Rate", value: 78, color: "#22c55e" },
-    { label: "Team Formation", value: 65, color: "#3b82f6" },
-    { label: "Mentor Approval", value: 92, color: "#8b5cf6" },
-    { label: "External Collab", value: 45, color: "#f59e0b" },
-  ],
+    areaDistribution: [
+      { area: "Computer Science", count: 542, color: "#6366f1" },
+      { area: "Electronics", count: 328, color: "#8b5cf6" },
+      { area: "Mechanical", count: 245, color: "#a855f7" },
+      { area: "Civil", count: 189, color: "#d946ef" },
+      { area: "Information Technology", count: 312, color: "#ec4899" },
+      { area: "AI & Data Science", count: 240, color: "#f43f5e" },
+    ],
+    domainParticipation: [
+      { domain: "Web Development", participants: 425, wins: 12, winRate: 2.8 },
+      { domain: "Machine Learning", participants: 380, wins: 15, winRate: 3.9 },
+      { domain: "IoT", participants: 290, wins: 8, winRate: 2.8 },
+      { domain: "Blockchain", participants: 185, wins: 5, winRate: 2.7 },
+      { domain: "Mobile Apps", participants: 310, wins: 10, winRate: 3.2 },
+      { domain: "Cybersecurity", participants: 266, wins: 7, winRate: 2.6 },
+    ],
+    trendTitle: "Monthly Participation Trend (Full Year)",
+    participationTrend: [
+      { period: "Jan", events: 2, participants: 145 },
+      { period: "Feb", events: 3, participants: 198 },
+      { period: "Mar", events: 4, participants: 312 },
+      { period: "Apr", events: 2, participants: 156 },
+      { period: "May", events: 1, participants: 89 },
+      { period: "Jun", events: 3, participants: 245 },
+      { period: "Jul", events: 2, participants: 167 },
+      { period: "Aug", events: 2, participants: 189 },
+      { period: "Sep", events: 3, participants: 278 },
+      { period: "Oct", events: 4, participants: 356 },
+      { period: "Nov", events: 5, participants: 421 },
+      { period: "Dec", events: 3, participants: 287 },
+    ],
+    eventTypes: [
+      { type: "Hackathon", count: 8, percentage: 33, participants: 456 },
+      { type: "Workshop", count: 6, percentage: 25, participants: 324 },
+      { type: "Competition", count: 5, percentage: 21, participants: 289 },
+      { type: "Seminar", count: 3, percentage: 13, participants: 178 },
+      { type: "Bootcamp", count: 2, percentage: 8, participants: 134 },
+    ],
+    yearWiseParticipation: [
+      { year: "1st Year", count: 312, percentage: 17 },
+      { year: "2nd Year", count: 524, percentage: 28 },
+      { year: "3rd Year", count: 645, percentage: 35 },
+      { year: "4th Year", count: 375, percentage: 20 },
+    ],
+    quickInsights: [
+      { label: "Completion Rate", value: 78, color: "#22c55e" },
+      { label: "Team Formation", value: 65, color: "#3b82f6" },
+      { label: "Mentor Approval", value: 92, color: "#8b5cf6" },
+      { label: "External Collab", value: 45, color: "#f59e0b" },
+    ],
+    insightsList: [
+      {
+        icon: "lucide:trending-up",
+        color: "#22c55e",
+        text: "Hackathon participation increased by 23% this academic year",
+      },
+      {
+        icon: "lucide:alert-circle",
+        color: "#f59e0b",
+        text: "Workshop attendance showed steady quarterly growth",
+      },
+      {
+        icon: "lucide:star",
+        color: "#6366f1",
+        text: "ML/AI domain shows highest engagement across all colleges",
+      },
+    ],
+  },
 };
 
 // Donut Progress Component (keeping this one for quick insights)
@@ -503,6 +535,9 @@ export default function AdminEventAnalytics() {
   const [timeRange, setTimeRange] = useState("year");
   const [selectedCollege, setSelectedCollege] = useState(null);
 
+  const currentData =
+    ANALYTICS_DATA_BY_RANGE[timeRange] || ANALYTICS_DATA_BY_RANGE.year;
+
   return (
     <div style={styles.container}>
       <div style={styles.header}>
@@ -513,7 +548,14 @@ export default function AdminEventAnalytics() {
           <div>
             <h1 style={styles.title}>Event Analytics</h1>
             <p style={styles.subtitle}>
-              Comprehensive insights on events and participation
+              Comprehensive insights on events and participation • Showing{" "}
+              <strong style={{ color: "var(--foreground)" }}>
+                {timeRange === "week"
+                  ? "Past 7 Days"
+                  : timeRange === "month"
+                    ? "Past 30 Days"
+                    : "Full Year"}
+              </strong>
             </p>
           </div>
         </div>
@@ -542,42 +584,42 @@ export default function AdminEventAnalytics() {
         {[
           {
             label: "Total Events",
-            value: ANALYTICS_DATA.overview.totalEvents,
+            value: currentData.overview.totalEvents,
             icon: "lucide:calendar",
             color: "#3b82f6",
             bg: "#eff6ff",
           },
           {
             label: "Participants",
-            value: ANALYTICS_DATA.overview.totalParticipants.toLocaleString(),
+            value: currentData.overview.totalParticipants.toLocaleString(),
             icon: "lucide:users",
             color: "#22c55e",
             bg: "#f0fdf4",
           },
           {
             label: "Avg Team Size",
-            value: ANALYTICS_DATA.overview.avgTeamSize,
+            value: currentData.overview.avgTeamSize,
             icon: "lucide:users-2",
             color: "#f59e0b",
             bg: "#fef3c7",
           },
           {
             label: "Success Rate",
-            value: `${ANALYTICS_DATA.overview.successRate}%`,
+            value: `${currentData.overview.successRate}%`,
             icon: "lucide:trophy",
             color: "#ec4899",
             bg: "#fce7f3",
           },
           {
             label: "Total Colleges",
-            value: ANALYTICS_DATA.overview.totalColleges,
+            value: currentData.overview.totalColleges,
             icon: "lucide:building-2",
             color: "#6366f1",
             bg: "#eef2ff",
           },
           {
             label: "Active Students",
-            value: ANALYTICS_DATA.overview.activeStudents.toLocaleString(),
+            value: currentData.overview.activeStudents.toLocaleString(),
             icon: "lucide:user-check",
             color: "#14b8a6",
             bg: "#f0fdfa",
@@ -614,7 +656,7 @@ export default function AdminEventAnalytics() {
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
-                    data={ANALYTICS_DATA.areaDistribution.map((item) => ({
+                    data={currentData.areaDistribution.map((item) => ({
                       ...item,
                       name: item.area,
                       value: item.count,
@@ -626,7 +668,7 @@ export default function AdminEventAnalytics() {
                     paddingAngle={3}
                     dataKey="value"
                   >
-                    {ANALYTICS_DATA.areaDistribution.map((entry, index) => (
+                    {currentData.areaDistribution.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={entry.color} />
                     ))}
                   </Pie>
@@ -635,7 +677,7 @@ export default function AdminEventAnalytics() {
               </ResponsiveContainer>
             </div>
             <div style={styles.legendList}>
-              {ANALYTICS_DATA.areaDistribution.map((item, index) => (
+              {currentData.areaDistribution.map((item, index) => (
                 <div key={index} style={styles.legendItem}>
                   <span
                     style={{
@@ -663,7 +705,7 @@ export default function AdminEventAnalytics() {
           <div style={{ height: "260px" }}>
             <ResponsiveContainer width="100%" height="100%">
               <BarChart
-                data={ANALYTICS_DATA.domainParticipation}
+                data={currentData.domainParticipation}
                 layout="vertical"
               >
                 <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
@@ -683,7 +725,7 @@ export default function AdminEventAnalytics() {
                   name="Participants"
                   radius={[0, 6, 6, 0]}
                 >
-                  {ANALYTICS_DATA.domainParticipation.map((entry, index) => (
+                  {currentData.domainParticipation.map((entry, index) => (
                     <Cell
                       key={`cell-${index}`}
                       fill={CHART_COLORS[index % CHART_COLORS.length]}
@@ -704,11 +746,11 @@ export default function AdminEventAnalytics() {
               icon="lucide:trending-up"
               style={{ marginRight: "8px", color: "#22c55e" }}
             />
-            Monthly Participation Trend
+            {currentData.trendTitle}
           </h3>
           <div style={{ height: "280px" }}>
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={ANALYTICS_DATA.monthlyTrend}>
+              <AreaChart data={currentData.participationTrend}>
                 <defs>
                   <linearGradient
                     id="colorParticipants"
@@ -727,7 +769,7 @@ export default function AdminEventAnalytics() {
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
                 <XAxis
-                  dataKey="month"
+                  dataKey="period"
                   tick={{ fontSize: 12, fill: "var(--muted-foreground)" }}
                 />
                 <YAxis
@@ -771,7 +813,7 @@ export default function AdminEventAnalytics() {
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
-                  data={ANALYTICS_DATA.eventTypes.map((item) => ({
+                  data={currentData.eventTypes.map((item) => ({
                     ...item,
                     name: item.type,
                     value: item.count,
@@ -786,7 +828,7 @@ export default function AdminEventAnalytics() {
                     `${name}: ${(percent * 100).toFixed(0)}%`
                   }
                 >
-                  {ANALYTICS_DATA.eventTypes.map((entry, index) => (
+                  {currentData.eventTypes.map((entry, index) => (
                     <Cell
                       key={`cell-${index}`}
                       fill={CHART_COLORS[index % CHART_COLORS.length]}
@@ -812,7 +854,7 @@ export default function AdminEventAnalytics() {
           </h3>
           <div style={{ height: "250px" }}>
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={ANALYTICS_DATA.yearWiseParticipation}>
+              <BarChart data={currentData.yearWiseParticipation}>
                 <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
                 <XAxis
                   dataKey="year"
@@ -823,7 +865,7 @@ export default function AdminEventAnalytics() {
                 />
                 <Tooltip content={<CustomBarTooltip />} />
                 <Bar dataKey="count" name="Students" radius={[6, 6, 0, 0]}>
-                  {ANALYTICS_DATA.yearWiseParticipation.map((entry, index) => (
+                  {currentData.yearWiseParticipation.map((entry, index) => (
                     <Cell
                       key={`cell-${index}`}
                       fill={CHART_COLORS[index % CHART_COLORS.length]}
@@ -846,7 +888,7 @@ export default function AdminEventAnalytics() {
           </h3>
           <div style={{ height: "280px" }}>
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={ANALYTICS_DATA.domainParticipation}>
+              <BarChart data={currentData.domainParticipation}>
                 <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
                 <XAxis
                   dataKey="domain"
@@ -896,7 +938,7 @@ export default function AdminEventAnalytics() {
               paddingTop: "10px",
             }}
           >
-            {ANALYTICS_DATA.domainParticipation.map((item, i) => (
+            {currentData.domainParticipation.map((item, i) => (
               <div
                 key={i}
                 style={{
@@ -927,9 +969,9 @@ export default function AdminEventAnalytics() {
                 >
                   <div
                     style={{
-                      width: `${item.winRate * 10}%`,
+                      width: `${Math.min(100, item.winRate * 10)}%`,
                       height: "100%",
-                      background: `linear-gradient(90deg, ${CHART_COLORS[i]}, ${CHART_COLORS[(i + 1) % CHART_COLORS.length]})`,
+                      background: `linear-gradient(90deg, ${CHART_COLORS[i % CHART_COLORS.length]}, ${CHART_COLORS[(i + 1) % CHART_COLORS.length]})`,
                       borderRadius: "6px",
                     }}
                   ></div>
@@ -972,7 +1014,7 @@ export default function AdminEventAnalytics() {
             Quick Insights
           </h3>
           <div style={styles.insightsGrid}>
-            {ANALYTICS_DATA.quickInsights.map((item, i) => (
+            {currentData.quickInsights.map((item, i) => (
               <DonutProgress
                 key={i}
                 percentage={item.value}
@@ -982,18 +1024,12 @@ export default function AdminEventAnalytics() {
             ))}
           </div>
           <div style={styles.insightsList}>
-            <div style={styles.insightItem}>
-              <Icon icon="lucide:trending-up" style={{ color: "#22c55e" }} />
-              <span>Hackathon participation increased by 23% this quarter</span>
-            </div>
-            <div style={styles.insightItem}>
-              <Icon icon="lucide:alert-circle" style={{ color: "#f59e0b" }} />
-              <span>Workshop attendance is below target by 15%</span>
-            </div>
-            <div style={styles.insightItem}>
-              <Icon icon="lucide:star" style={{ color: "#6366f1" }} />
-              <span>ML/AI domain shows highest engagement rate</span>
-            </div>
+            {currentData.insightsList.map((item, i) => (
+              <div key={i} style={styles.insightItem}>
+                <Icon icon={item.icon} style={{ color: item.color }} />
+                <span>{item.text}</span>
+              </div>
+            ))}
           </div>
         </div>
       </div>
