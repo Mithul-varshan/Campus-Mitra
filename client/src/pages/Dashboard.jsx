@@ -2805,7 +2805,10 @@ export default function Dashboard() {
   }, []);
 
   return (
-    <div style={{ flex: 1, overflowY: "auto", padding: "24px" }}>
+    <div
+      className="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 min-h-screen transition-colors"
+      style={{ flex: 1, overflowY: "auto", padding: "24px" }}
+    >
       {/* Page Header */}
       {/* <div
         style={{

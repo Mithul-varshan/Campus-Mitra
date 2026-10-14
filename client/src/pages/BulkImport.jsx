@@ -248,33 +248,33 @@ export default function BulkImport() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 p-6">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 p-6 text-slate-900 dark:text-slate-100 transition-colors">
       <div className="max-w-6xl mx-auto">
 
         {/* ── Success Modal ─────────────────────────────────────────── */}
         {importSuccess !== null && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
-            <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-8 flex flex-col items-center text-center">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl w-full max-w-md p-8 flex flex-col items-center text-center transition-colors">
               {/* Icon */}
-              <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center mb-4">
-                <CheckCircle2 size={36} className="text-green-600" />
+              <div className="w-16 h-16 rounded-full bg-green-100 dark:bg-green-950/70 flex items-center justify-center mb-4">
+                <CheckCircle2 size={36} className="text-green-600 dark:text-green-400" />
               </div>
 
-              <h2 className="text-2xl font-bold text-slate-900 mb-1">Import Successful!</h2>
-              <p className="text-slate-500 text-sm mb-6">
+              <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-1">Import Successful!</h2>
+              <p className="text-slate-500 dark:text-slate-400 text-sm mb-6">
                 {importSuccess.count} {importSuccess.type}{importSuccess.count !== 1 ? "s" : ""} have been added successfully.
               </p>
 
               {/* Stat pill */}
-              <div className="flex items-center gap-3 bg-slate-50 rounded-xl px-6 py-4 mb-8 w-full justify-center">
+              <div className="flex items-center gap-3 bg-slate-50 dark:bg-slate-800 rounded-xl px-6 py-4 mb-8 w-full justify-center">
                 {importSuccess.type === "student" ? (
-                  <Users size={22} className="text-blue-600" />
+                  <Users size={22} className="text-blue-600 dark:text-blue-400" />
                 ) : (
-                  <UserCheck size={22} className="text-purple-600" />
+                  <UserCheck size={22} className="text-purple-600 dark:text-purple-400" />
                 )}
                 <div>
-                  <p className="text-3xl font-extrabold text-slate-900">{importSuccess.count}</p>
-                  <p className="text-xs text-slate-500 uppercase tracking-wide">
+                  <p className="text-3xl font-extrabold text-slate-900 dark:text-white">{importSuccess.count}</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wide">
                     {importSuccess.type}{importSuccess.count !== 1 ? "s" : ""} imported
                   </p>
                 </div>
@@ -284,7 +284,7 @@ export default function BulkImport() {
               <div className="flex gap-3 w-full">
                 <button
                   onClick={() => setImportSuccess(null)}
-                  className="flex-1 px-4 py-2.5 border border-slate-300 text-slate-700 rounded-lg font-medium hover:bg-slate-50 transition-colors"
+                  className="flex-1 px-4 py-2.5 border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 rounded-lg font-medium hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
                 >
                   Stay Here
                 </button>
@@ -308,17 +308,17 @@ export default function BulkImport() {
 
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-slate-900 mb-2">
+          <h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-2">
             Bulk Data Import
           </h1>
-          <p className="text-slate-600">
+          <p className="text-slate-600 dark:text-slate-400">
             Import student, faculty, and event data in bulk using CSV or Excel
             files
           </p>
         </div>
-        <div className="bg-white rounded-lg shadow-md p-8 mb-8">
+        <div className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-lg shadow-md p-8 mb-8 transition-colors">
           {/* Tabs */}
-          <div className="flex border-b border-slate-200 mb-8">
+          <div className="flex border-b border-slate-200 dark:border-slate-800 mb-8">
             {Object.entries(tabConfig).map(([key, config]) => (
               <button
                 key={key}
@@ -328,8 +328,8 @@ export default function BulkImport() {
                 }}
                 className={`px-6 py-3 font-medium transition-colors ${
                   activeTab === key
-                    ? "border-b-2 border-blue-600 text-blue-600"
-                    : "text-slate-600 hover:text-slate-900"
+                    ? "border-b-2 border-blue-600 text-blue-600 dark:text-blue-400"
+                    : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100"
                 }`}
               >
                 {config.title}
@@ -345,20 +345,20 @@ export default function BulkImport() {
                   className={`w-10 h-10 rounded-full flex items-center justify-center font-bold transition-colors ${
                     step <= currentStep
                       ? "bg-blue-600 text-white"
-                      : "bg-slate-200 text-slate-600"
+                      : "bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400"
                   }`}
                 >
                   {step < currentStep ? <Check size={20} /> : step}
                 </div>
                 <div className="ml-3">
-                  <p className="font-medium text-slate-900">
+                  <p className="font-medium text-slate-900 dark:text-white">
                     {step === 1
                       ? "Download Template"
                       : step === 2
                         ? "Fill Data"
                         : "Upload & Review"}
                   </p>
-                  <p className="text-sm text-slate-600">
+                  <p className="text-sm text-slate-600 dark:text-slate-400">
                     {step === 1
                       ? "Get the CSV template with required fields like Name, Roll No., Email"
                       : step === 2
@@ -367,7 +367,7 @@ export default function BulkImport() {
                   </p>
                 </div>
                 {step < 3 && (
-                  <div className="flex-1 mx-4 h-1 bg-slate-200"></div>
+                  <div className="flex-1 mx-4 h-1 bg-slate-200 dark:bg-slate-800"></div>
                 )}
               </div>
             ))}
@@ -378,12 +378,12 @@ export default function BulkImport() {
             <div className="text-center">
               <button
                 onClick={handleDownloadTemplate}
-                className="inline-flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors"
+                className="inline-flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors shadow-sm"
               >
                 <Download size={20} />
                 Download Template
               </button>
-              <p className="text-slate-600 mt-4">
+              <p className="text-slate-600 dark:text-slate-400 mt-4">
                 Template: {tabConfig[activeTab].template}
               </p>
             </div>
@@ -391,7 +391,7 @@ export default function BulkImport() {
 
           {(currentStep === 1 || currentStep === 2) && (
             <div className="mt-8">
-              <div className="border-2 border-dashed border-slate-300 rounded-lg p-12 text-center bg-slate-50 hover:bg-slate-100 transition-colors">
+              <div className="border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-lg p-12 text-center bg-slate-50 dark:bg-slate-950/60 hover:bg-slate-100 dark:hover:bg-slate-800/40 transition-colors">
                 <input
                   type="file"
                   accept=".csv,.xlsx,.xls"
@@ -404,30 +404,30 @@ export default function BulkImport() {
                   htmlFor="file-input"
                   className="cursor-pointer flex flex-col items-center"
                 >
-                  <Upload size={48} className="text-slate-400 mb-4" />
-                  <p className="text-lg font-medium text-slate-900">
+                  <Upload size={48} className="text-slate-400 dark:text-slate-500 mb-4" />
+                  <p className="text-lg font-medium text-slate-900 dark:text-white">
                     Click to upload or drag and drop
                   </p>
-                  <p className="text-sm text-slate-600 mt-2">
+                  <p className="text-sm text-slate-600 dark:text-slate-400 mt-2">
                     CSV, XLS, XLSX (Max 10MB)
                   </p>
                 </label>
 
                 {uploadedFile && (
-                  <div className="mt-6 bg-white p-4 rounded border border-green-200">
+                  <div className="mt-6 bg-white dark:bg-slate-900 p-4 rounded border border-green-200 dark:border-green-800/60">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
-                        <FileText size={20} className="text-green-600" />
+                        <FileText size={20} className="text-green-600 dark:text-green-400" />
                         <div className="text-left">
-                          <p className="font-medium text-slate-900">
+                          <p className="font-medium text-slate-900 dark:text-slate-100">
                             {uploadedFile.name}
                           </p>
-                          <p className="text-sm text-slate-600">
+                          <p className="text-sm text-slate-600 dark:text-slate-400">
                             {uploadedFile.size} KB
                           </p>
                         </div>
                       </div>
-                      <Check size={20} className="text-green-600" />
+                      <Check size={20} className="text-green-600 dark:text-green-400" />
                     </div>
                   </div>
                 )}
@@ -437,13 +437,13 @@ export default function BulkImport() {
                 <div className="mt-6 flex gap-4 justify-center">
                   <button
                     onClick={() => setUploadedFile(null)}
-                    className="px-6 py-2 border border-slate-300 text-slate-900 rounded-lg font-medium hover:bg-slate-50 transition-colors"
+                    className="px-6 py-2 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-200 rounded-lg font-medium hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
                   >
                     Remove File
                   </button>
                   <button
                     onClick={handleStartImport}
-                    className="px-6 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors"
+                    className="px-6 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors shadow-sm"
                   >
                     Review & Upload
                   </button>
@@ -454,17 +454,17 @@ export default function BulkImport() {
 
           {currentStep === 3 && showReview && (
             <div>
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-6">
+              <div className="bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-900/60 rounded-lg p-6 mb-6">
                 <div className="flex gap-4">
                   <AlertCircle
                     size={24}
-                    className="text-blue-600 shrink-0 mt-1"
+                    className="text-blue-600 dark:text-blue-400 shrink-0 mt-1"
                   />
                   <div>
-                    <p className="font-medium text-blue-900">
+                    <p className="font-medium text-blue-900 dark:text-blue-200">
                       Review before importing
                     </p>
-                    <p className="text-sm text-blue-700 mt-1">
+                    <p className="text-sm text-blue-700 dark:text-blue-300 mt-1">
                       Please check the data preview below. Any errors will be
                       reported after import.
                     </p>
@@ -473,38 +473,38 @@ export default function BulkImport() {
               </div>
 
               {parseError && (
-                <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6 flex items-center gap-3">
-                  <AlertCircle size={20} className="text-red-600 shrink-0" />
-                  <p className="text-sm text-red-700">{parseError}</p>
+                <div className="bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900/60 rounded-lg p-4 mb-6 flex items-center gap-3">
+                  <AlertCircle size={20} className="text-red-600 dark:text-red-400 shrink-0" />
+                  <p className="text-sm text-red-700 dark:text-red-300">{parseError}</p>
                 </div>
               )}
 
-              <div className="bg-slate-50 rounded-lg p-6 mb-6">
-                <h3 className="font-medium text-slate-900 mb-4">
+              <div className="bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800 rounded-lg p-6 mb-6">
+                <h3 className="font-medium text-slate-900 dark:text-white mb-4">
                   Import Details
                 </h3>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <p className="text-sm text-slate-600">File Name</p>
-                    <p className="font-medium text-slate-900">
+                    <p className="text-sm text-slate-600 dark:text-slate-400">File Name</p>
+                    <p className="font-medium text-slate-900 dark:text-slate-100">
                       {uploadedFile.name}
                     </p>
                   </div>
                   <div>
-                    <p className="text-sm text-slate-600">Import Type</p>
-                    <p className="font-medium text-slate-900">
+                    <p className="text-sm text-slate-600 dark:text-slate-400">Import Type</p>
+                    <p className="font-medium text-slate-900 dark:text-slate-100">
                       {tabConfig[activeTab].title.split(" ")[1]}
                     </p>
                   </div>
                   <div>
-                    <p className="text-sm text-slate-600">File Size</p>
-                    <p className="font-medium text-slate-900">
+                    <p className="text-sm text-slate-600 dark:text-slate-400">File Size</p>
+                    <p className="font-medium text-slate-900 dark:text-slate-100">
                       {uploadedFile.size} KB
                     </p>
                   </div>
                   <div>
-                    <p className="text-sm text-slate-600">Records Detected</p>
-                    <p className="font-medium text-slate-900">
+                    <p className="text-sm text-slate-600 dark:text-slate-400">Records Detected</p>
+                    <p className="font-medium text-slate-900 dark:text-slate-100">
                       {parsedRows.length > 0 ? parsedRows.length : "—"}
                     </p>
                   </div>
@@ -514,22 +514,22 @@ export default function BulkImport() {
               {/* Data Preview Table (students + faculty) */}
               {(activeTab === "students" || activeTab === "faculty") && parsedRows.length > 0 && (
                 <div className="mb-6">
-                  <h3 className="font-medium text-slate-900 mb-3">
+                  <h3 className="font-medium text-slate-900 dark:text-white mb-3">
                     Data Preview{" "}
-                    <span className="text-slate-500 font-normal text-sm">
+                    <span className="text-slate-500 dark:text-slate-400 font-normal text-sm">
                       (showing first {Math.min(parsedRows.length, 5)} of {parsedRows.length} rows)
                     </span>
                   </h3>
-                  <div className="overflow-x-auto rounded-lg border border-slate-200">
+                  <div className="overflow-x-auto rounded-lg border border-slate-200 dark:border-slate-800">
                     <table className="w-full text-sm">
-                      <thead className="bg-slate-100">
+                      <thead className="bg-slate-100 dark:bg-slate-800">
                         <tr>
                           {Object.keys(parsedRows[0])
                             .filter((k) => k !== "_rowIndex")
                             .map((h) => (
                               <th
                                 key={h}
-                                className="text-left px-3 py-2 font-medium text-slate-700 whitespace-nowrap"
+                                className="text-left px-3 py-2 font-medium text-slate-700 dark:text-slate-300 whitespace-nowrap"
                               >
                                 {h}
                               </th>
@@ -540,16 +540,16 @@ export default function BulkImport() {
                         {parsedRows.slice(0, 5).map((row, i) => (
                           <tr
                             key={i}
-                            className="border-t border-slate-100 hover:bg-slate-50"
+                            className="border-t border-slate-100 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors"
                           >
                             {Object.entries(row)
                               .filter(([k]) => k !== "_rowIndex")
                               .map(([k, v]) => (
                                 <td
                                   key={k}
-                                  className="px-3 py-2 text-slate-700 whitespace-nowrap"
+                                  className="px-3 py-2 text-slate-700 dark:text-slate-300 whitespace-nowrap"
                                 >
-                                  {v || <span className="text-slate-400">—</span>}
+                                  {v || <span className="text-slate-400 dark:text-slate-600">—</span>}
                                 </td>
                               ))}
                           </tr>
@@ -563,7 +563,7 @@ export default function BulkImport() {
               <div className="flex gap-4 justify-center">
                 <button
                   onClick={resetImport}
-                  className="px-6 py-2 border border-slate-300 text-slate-900 rounded-lg font-medium hover:bg-slate-50 transition-colors"
+                  className="px-6 py-2 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-200 rounded-lg font-medium hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
                 >
                   Cancel
                 </button>
@@ -573,7 +573,7 @@ export default function BulkImport() {
                     (activeTab === "students" || activeTab === "faculty") &&
                     parsedRows.length === 0
                   }
-                  className="px-6 py-2 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-6 py-2 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
                 >
                   Start Import Process
                 </button>
@@ -583,10 +583,10 @@ export default function BulkImport() {
         </div>
 
         {/* Import History */}
-        <div className="bg-white rounded-lg shadow-md p-8">
+        <div className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-lg shadow-md p-8 transition-colors">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-xl font-bold text-slate-900">Import History</h2>
-            <button className="text-sm text-slate-600 hover:text-slate-900 font-medium">
+            <h2 className="text-xl font-bold text-slate-900 dark:text-white">Import History</h2>
+            <button className="text-sm text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 font-medium">
               View All Logs
             </button>
           </div>
@@ -594,23 +594,23 @@ export default function BulkImport() {
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="border-b border-slate-200">
-                  <th className="text-left py-3 px-4 font-medium text-slate-600">
+                <tr className="border-b border-slate-200 dark:border-slate-800">
+                  <th className="text-left py-3 px-4 font-medium text-slate-600 dark:text-slate-400">
                     File Name
                   </th>
-                  <th className="text-left py-3 px-4 font-medium text-slate-600">
+                  <th className="text-left py-3 px-4 font-medium text-slate-600 dark:text-slate-400">
                     Date
                   </th>
-                  <th className="text-left py-3 px-4 font-medium text-slate-600">
+                  <th className="text-left py-3 px-4 font-medium text-slate-600 dark:text-slate-400">
                     Type
                   </th>
-                  <th className="text-left py-3 px-4 font-medium text-slate-600">
+                  <th className="text-left py-3 px-4 font-medium text-slate-600 dark:text-slate-400">
                     Records
                   </th>
-                  <th className="text-left py-3 px-4 font-medium text-slate-600">
+                  <th className="text-left py-3 px-4 font-medium text-slate-600 dark:text-slate-400">
                     Status
                   </th>
-                  <th className="text-left py-3 px-4 font-medium text-slate-600">
+                  <th className="text-left py-3 px-4 font-medium text-slate-600 dark:text-slate-400">
                     Action
                   </th>
                 </tr>
@@ -619,29 +619,29 @@ export default function BulkImport() {
                 {importHistory.map((record) => (
                   <tr
                     key={record.id}
-                    className="border-b border-slate-100 hover:bg-slate-50"
+                    className="border-b border-slate-100 dark:border-slate-800/60 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors"
                   >
                     <td className="py-3 px-4">
                       <div className="flex items-center gap-2">
-                        <FileText size={16} className="text-slate-400" />
-                        <span className="text-slate-900 font-medium">
+                        <FileText size={16} className="text-slate-400 dark:text-slate-500" />
+                        <span className="text-slate-900 dark:text-slate-100 font-medium">
                           {record.fileName}
                         </span>
                       </div>
                     </td>
-                    <td className="py-3 px-4 text-slate-600">{record.date}</td>
-                    <td className="py-3 px-4 text-slate-600">{record.type}</td>
-                    <td className="py-3 px-4 text-slate-600">
+                    <td className="py-3 px-4 text-slate-600 dark:text-slate-400">{record.date}</td>
+                    <td className="py-3 px-4 text-slate-600 dark:text-slate-400">{record.type}</td>
+                    <td className="py-3 px-4 text-slate-600 dark:text-slate-400">
                       {record.records || "—"}
                     </td>
                     <td className="py-3 px-4">
                       <span
                         className={`inline-block px-3 py-1 rounded-full text-sm font-medium ${
                           record.status === "completed"
-                            ? "bg-green-100 text-green-700"
+                            ? "bg-green-100 dark:bg-green-950/70 text-green-700 dark:text-green-300 dark:border dark:border-green-800/50"
                             : record.status === "partial"
-                              ? "bg-yellow-100 text-yellow-700"
-                              : "bg-red-100 text-red-700"
+                              ? "bg-yellow-100 dark:bg-yellow-950/70 text-yellow-700 dark:text-yellow-300 dark:border dark:border-yellow-800/50"
+                              : "bg-red-100 dark:bg-red-950/70 text-red-700 dark:text-red-300 dark:border dark:border-red-800/50"
                         }`}
                       >
                         {record.status === "completed"
@@ -652,7 +652,7 @@ export default function BulkImport() {
                       </span>
                     </td>
                     <td className="py-3 px-4">
-                      <button className="text-slate-600 hover:text-slate-900">
+                      <button className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
                         ⋮
                       </button>
                     </td>

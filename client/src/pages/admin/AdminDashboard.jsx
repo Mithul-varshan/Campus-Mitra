@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useMemo } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useEvents } from "../../context/EventsContext";
 
@@ -15,14 +15,9 @@ const COLLEGE_INFO = {
 export default function AdminDashboard() {
   const navigate = useNavigate();
   const { events } = useEvents();
-  const [timeRange, setTimeRange] = useState("this_month");
 
   // Calculate dashboard metrics
   const metrics = useMemo(() => {
-    const now = new Date();
-    const thisMonth = now.getMonth();
-    const thisYear = now.getFullYear();
-
     // Filter events by time range
     const activeEvents = events.filter((e) => e.status !== "closed");
     const completedEvents = events.filter((e) => e.status === "closed");
@@ -71,7 +66,7 @@ export default function AdminDashboard() {
       recentRegistrations,
       registrationGrowth,
     };
-  }, [events, timeRange]);
+  }, [events]);
 
   // Recent events for quick view
   const recentEvents = useMemo(() => {
@@ -108,48 +103,54 @@ export default function AdminDashboard() {
       label: "Create Event",
       description: "Host a new hackathon, workshop, or seminar",
       path: "/admin/create-event",
-      color: "#1e3a8a",
-      bg: "#eff6ff",
+      colorClass: "text-blue-600 dark:text-blue-400",
+      bgClass: "bg-blue-50 dark:bg-blue-950/50",
+      borderHover: "hover:border-blue-500 dark:hover:border-blue-400",
     },
     {
       icon: "lucide:calendar-check",
       label: "My Events",
       description: "Manage your hosted events",
       path: "/admin/my-events",
-      color: "#059669",
-      bg: "#ecfdf5",
+      colorClass: "text-emerald-600 dark:text-emerald-400",
+      bgClass: "bg-emerald-50 dark:bg-emerald-950/50",
+      borderHover: "hover:border-emerald-500 dark:hover:border-emerald-400",
     },
     {
       icon: "lucide:trophy",
       label: "Declare Winners",
       description: "Announce winners for completed events",
       path: "/admin/declare-winners",
-      color: "#b45309",
-      bg: "#fef3c7",
+      colorClass: "text-amber-600 dark:text-amber-400",
+      bgClass: "bg-amber-50 dark:bg-amber-950/50",
+      borderHover: "hover:border-amber-500 dark:hover:border-amber-400",
     },
     {
       icon: "lucide:users",
       label: "Registered Teams",
       description: "View and manage team registrations",
       path: "/admin/registered-teams",
-      color: "#7c3aed",
-      bg: "#f3e8ff",
+      colorClass: "text-violet-600 dark:text-violet-400",
+      bgClass: "bg-violet-50 dark:bg-violet-950/50",
+      borderHover: "hover:border-violet-500 dark:hover:border-violet-400",
     },
     {
       icon: "lucide:bar-chart-3",
       label: "Event Analytics",
       description: "Insights and performance metrics",
       path: "/admin/event-analytics",
-      color: "#0891b2",
-      bg: "#ecfeff",
+      colorClass: "text-cyan-600 dark:text-cyan-400",
+      bgClass: "bg-cyan-50 dark:bg-cyan-950/50",
+      borderHover: "hover:border-cyan-500 dark:hover:border-cyan-400",
     },
     {
       icon: "lucide:bell",
       label: "Incoming Events",
       description: "External events from partner colleges",
       path: "/admin/incoming-events",
-      color: "#dc2626",
-      bg: "#fef2f2",
+      colorClass: "text-rose-600 dark:text-rose-400",
+      bgClass: "bg-rose-50 dark:bg-rose-950/50",
+      borderHover: "hover:border-rose-500 dark:hover:border-rose-400",
     },
   ];
 
@@ -160,16 +161,16 @@ export default function AdminDashboard() {
       label: "Total Events",
       value: metrics.totalEvents,
       subtitle: `${metrics.activeEvents} active`,
-      color: "#1e3a8a",
-      bg: "#eff6ff",
+      colorClass: "text-blue-600 dark:text-blue-400",
+      bgClass: "bg-blue-50 dark:bg-blue-950/50",
     },
     {
       icon: "lucide:users",
       label: "Participants",
       value: metrics.totalParticipants.toLocaleString(),
       subtitle: `+${metrics.recentRegistrations} this week`,
-      color: "#059669",
-      bg: "#ecfdf5",
+      colorClass: "text-emerald-600 dark:text-emerald-400",
+      bgClass: "bg-emerald-50 dark:bg-emerald-950/50",
       trend: `+${metrics.registrationGrowth}%`,
     },
     {
@@ -177,16 +178,16 @@ export default function AdminDashboard() {
       label: "Winners",
       value: metrics.totalWinners,
       subtitle: "From completed events",
-      color: "#b45309",
-      bg: "#fef3c7",
+      colorClass: "text-amber-600 dark:text-amber-400",
+      bgClass: "bg-amber-50 dark:bg-amber-950/50",
     },
     {
       icon: "lucide:indian-rupee",
       label: "Revenue Generated",
       value: `₹${metrics.totalRevenue.toLocaleString()}`,
       subtitle: "From registration fees",
-      color: "#7c3aed",
-      bg: "#f3e8ff",
+      colorClass: "text-violet-600 dark:text-violet-400",
+      bgClass: "bg-violet-50 dark:bg-violet-950/50",
     },
   ];
 
@@ -204,819 +205,369 @@ export default function AdminDashboard() {
   }, [events]);
 
   return (
-    <div
-      style={{
-        padding: "24px 32px",
-        maxWidth: "1400px",
-        margin: "0 auto",
-        fontFamily: "Inter, sans-serif",
-      }}
-    >
-      {/* Page Header */}
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "flex-start",
-          marginBottom: "28px",
-        }}
-      >
-        <div>
-          <h1
-            style={{
-              fontSize: "26px",
-              fontWeight: 700,
-              margin: "0 0 8px 0",
-              color: "#1e293b",
-            }}
-          >
-            Admin Dashboard
-          </h1>
-          <p style={{ fontSize: "14px", color: "#64748b", margin: 0 }}>
-            Welcome back! Here's an overview of {COLLEGE_INFO.name}
-          </p>
-        </div>
-        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "8px",
-              padding: "8px 14px",
-              background: "#f8fafc",
-              borderRadius: "8px",
-              border: "1px solid #e2e8f0",
-            }}
-          >
-            <iconify-icon
-              icon="lucide:building-2"
-              style={{ fontSize: "16px", color: "#64748b" }}
-            ></iconify-icon>
-            <span
-              style={{ fontSize: "13px", fontWeight: 500, color: "#1e293b" }}
-            >
-              {COLLEGE_INFO.name}
-            </span>
-            <span
-              style={{
-                fontSize: "10px",
-                fontWeight: 600,
-                background: "#dcfce7",
-                color: "#15803d",
-                padding: "2px 6px",
-                borderRadius: "4px",
-              }}
-            >
-              {COLLEGE_INFO.naacGrade}
-            </span>
-          </div>
-          <button
-            onClick={() => navigate("/admin/create-event")}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "8px",
-              padding: "10px 18px",
-              background: "#1e3a8a",
-              color: "white",
-              border: "none",
-              borderRadius: "8px",
-              fontSize: "13px",
-              fontWeight: 600,
-              cursor: "pointer",
-            }}
-          >
-            <iconify-icon
-              icon="lucide:plus"
-              style={{ fontSize: "16px" }}
-            ></iconify-icon>
-            Create Event
-          </button>
-        </div>
-      </div>
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 p-6 md:p-8 transition-colors">
+      <div className="max-w-7xl mx-auto space-y-7">
 
-      {/* Stats Cards */}
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(4, 1fr)",
-          gap: "16px",
-          marginBottom: "28px",
-        }}
-      >
-        {statsCards.map((stat, idx) => (
-          <div
-            key={idx}
-            style={{
-              background: "white",
-              borderRadius: "12px",
-              padding: "20px",
-              border: "1px solid #e2e8f0",
-              display: "flex",
-              alignItems: "flex-start",
-              gap: "14px",
-            }}
-          >
-            <div
-              style={{
-                width: "44px",
-                height: "44px",
-                borderRadius: "10px",
-                background: stat.bg,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                flexShrink: 0,
-              }}
+        {/* Page Header */}
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <div>
+            <h1 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white mb-1.5">
+              Admin Dashboard
+            </h1>
+            <p className="text-sm text-slate-500 dark:text-slate-400">
+              Welcome back! Here's an overview of {COLLEGE_INFO.name}
+            </p>
+          </div>
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 px-3 py-2 bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800 shadow-sm">
+              <iconify-icon
+                icon="lucide:building-2"
+                style={{ fontSize: "16px" }}
+                className="text-slate-500 dark:text-slate-400"
+              ></iconify-icon>
+              <span className="text-xs md:text-sm font-medium text-slate-800 dark:text-slate-200">
+                {COLLEGE_INFO.name}
+              </span>
+              <span className="text-[10px] font-bold bg-green-100 dark:bg-green-950/60 text-green-700 dark:text-green-300 px-1.5 py-0.5 rounded">
+                {COLLEGE_INFO.naacGrade}
+              </span>
+            </div>
+            <button
+              onClick={() => navigate("/admin/create-event")}
+              className="flex items-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs md:text-sm font-semibold transition-colors shadow-sm cursor-pointer"
             >
               <iconify-icon
-                icon={stat.icon}
-                style={{ fontSize: "22px", color: stat.color }}
+                icon="lucide:plus"
+                style={{ fontSize: "16px" }}
               ></iconify-icon>
-            </div>
-            <div style={{ flex: 1 }}>
-              <div
-                style={{
-                  fontSize: "12px",
-                  color: "#64748b",
-                  fontWeight: 500,
-                  marginBottom: "4px",
-                }}
-              >
-                {stat.label}
-              </div>
-              <div
-                style={{
-                  fontSize: "24px",
-                  fontWeight: 700,
-                  color: "#1e293b",
-                  marginBottom: "2px",
-                }}
-              >
-                {stat.value}
-              </div>
-              <div
-                style={{
-                  fontSize: "12px",
-                  color: "#94a3b8",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "6px",
-                }}
-              >
-                {stat.trend && (
-                  <span
-                    style={{
-                      color: "#16a34a",
-                      fontWeight: 600,
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "2px",
-                    }}
-                  >
-                    <iconify-icon
-                      icon="lucide:trending-up"
-                      style={{ fontSize: "12px" }}
-                    ></iconify-icon>
-                    {stat.trend}
-                  </span>
-                )}
-                {stat.subtitle}
-              </div>
-            </div>
+              Create Event
+            </button>
           </div>
-        ))}
-      </div>
+        </div>
 
-      {/* Quick Actions */}
-      <div style={{ marginBottom: "28px" }}>
-        <h2
-          style={{
-            fontSize: "16px",
-            fontWeight: 600,
-            color: "#1e293b",
-            margin: "0 0 16px 0",
-          }}
-        >
-          Quick Actions
-        </h2>
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(3, 1fr)",
-            gap: "14px",
-          }}
-        >
-          {quickActions.map((action, idx) => (
-            <Link
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {statsCards.map((stat, idx) => (
+            <div
               key={idx}
-              to={action.path}
-              style={{
-                textDecoration: "none",
-                background: "white",
-                borderRadius: "12px",
-                padding: "18px 20px",
-                border: "1px solid #e2e8f0",
-                display: "flex",
-                alignItems: "center",
-                gap: "14px",
-                transition: "all 0.2s",
-                cursor: "pointer",
-              }}
-              onMouseOver={(e) => {
-                e.currentTarget.style.borderColor = action.color;
-                e.currentTarget.style.boxShadow = `0 4px 12px ${action.color}15`;
-              }}
-              onMouseOut={(e) => {
-                e.currentTarget.style.borderColor = "#e2e8f0";
-                e.currentTarget.style.boxShadow = "none";
-              }}
+              className="bg-white dark:bg-slate-900 rounded-xl p-5 border border-slate-200 dark:border-slate-800 shadow-sm flex items-start gap-3.5"
             >
               <div
-                style={{
-                  width: "44px",
-                  height: "44px",
-                  borderRadius: "10px",
-                  background: action.bg,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  flexShrink: 0,
-                }}
+                className={`w-11 h-11 rounded-xl ${stat.bgClass} flex items-center justify-center shrink-0`}
               >
                 <iconify-icon
-                  icon={action.icon}
-                  style={{ fontSize: "22px", color: action.color }}
+                  icon={stat.icon}
+                  style={{ fontSize: "22px" }}
+                  className={stat.colorClass}
                 ></iconify-icon>
               </div>
-              <div>
-                <div
-                  style={{
-                    fontSize: "14px",
-                    fontWeight: 600,
-                    color: "#1e293b",
-                    marginBottom: "2px",
-                  }}
-                >
-                  {action.label}
+              <div className="flex-1 min-w-0">
+                <div className="text-xs text-slate-500 dark:text-slate-400 font-medium mb-1">
+                  {stat.label}
                 </div>
-                <div style={{ fontSize: "12px", color: "#64748b" }}>
-                  {action.description}
+                <div className="text-2xl font-bold text-slate-900 dark:text-white mb-0.5 truncate">
+                  {stat.value}
+                </div>
+                <div className="text-xs text-slate-400 dark:text-slate-500 flex items-center gap-1.5">
+                  {stat.trend && (
+                    <span className="text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-0.5">
+                      <iconify-icon
+                        icon="lucide:trending-up"
+                        style={{ fontSize: "12px" }}
+                      ></iconify-icon>
+                      {stat.trend}
+                    </span>
+                  )}
+                  <span>{stat.subtitle}</span>
                 </div>
               </div>
-            </Link>
+            </div>
           ))}
         </div>
-      </div>
 
-      {/* Main Content Grid */}
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "2fr 1fr",
-          gap: "20px",
-        }}
-      >
-        {/* Left Column */}
-        <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
-          {/* Recent Events */}
-          <div
-            style={{
-              background: "white",
-              borderRadius: "12px",
-              border: "1px solid #e2e8f0",
-              padding: "20px",
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                marginBottom: "16px",
-              }}
-            >
-              <h3
-                style={{
-                  fontSize: "15px",
-                  fontWeight: 600,
-                  color: "#1e293b",
-                  margin: 0,
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "8px",
-                }}
-              >
-                <iconify-icon
-                  icon="lucide:calendar"
-                  style={{ fontSize: "16px", color: "#1e3a8a" }}
-                ></iconify-icon>
-                Recent Events
-              </h3>
+        {/* Quick Actions */}
+        <div>
+          <h2 className="text-base font-semibold text-slate-900 dark:text-slate-100 mb-3.5">
+            Quick Actions
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5">
+            {quickActions.map((action, idx) => (
               <Link
-                to="/admin/my-events"
-                style={{
-                  fontSize: "12px",
-                  color: "#1e3a8a",
-                  textDecoration: "none",
-                  fontWeight: 500,
-                }}
+                key={idx}
+                to={action.path}
+                className={`bg-white dark:bg-slate-900 rounded-xl p-4 md:p-5 border border-slate-200 dark:border-slate-800 ${action.borderHover} flex items-center gap-3.5 transition-all shadow-sm group`}
               >
-                View All →
-              </Link>
-            </div>
-            <div
-              style={{ display: "flex", flexDirection: "column", gap: "10px" }}
-            >
-              {recentEvents.map((event) => (
                 <div
-                  key={event.id}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "14px",
-                    padding: "12px 14px",
-                    background: "#f8fafc",
-                    borderRadius: "10px",
-                    cursor: "pointer",
-                  }}
-                  onClick={() => navigate(`/admin/my-events`)}
+                  className={`w-11 h-11 rounded-xl ${action.bgClass} flex items-center justify-center shrink-0`}
                 >
-                  <img
-                    src={event.image}
-                    alt={event.title}
-                    style={{
-                      width: "48px",
-                      height: "48px",
-                      borderRadius: "8px",
-                      objectFit: "cover",
-                    }}
-                  />
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <div
-                      style={{
-                        fontSize: "13px",
-                        fontWeight: 600,
-                        color: "#1e293b",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        whiteSpace: "nowrap",
-                      }}
-                    >
-                      {event.title}
-                    </div>
-                    <div
-                      style={{
-                        fontSize: "12px",
-                        color: "#64748b",
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "8px",
-                      }}
-                    >
-                      <span>{event.eventType}</span>
-                      <span>•</span>
-                      <span>
-                        {new Date(event.startDate).toLocaleDateString("en-US", {
-                          month: "short",
-                          day: "numeric",
-                        })}
-                      </span>
-                    </div>
-                  </div>
-                  <span
-                    style={{
-                      fontSize: "11px",
-                      fontWeight: 600,
-                      padding: "4px 10px",
-                      borderRadius: "6px",
-                      background:
-                        event.status === "closed"
-                          ? "#f1f5f9"
-                          : event.status === "ongoing"
-                            ? "#dcfce7"
-                            : "#fef3c7",
-                      color:
-                        event.status === "closed"
-                          ? "#64748b"
-                          : event.status === "ongoing"
-                            ? "#15803d"
-                            : "#b45309",
-                      textTransform: "capitalize",
-                    }}
-                  >
-                    {event.status}
-                  </span>
+                  <iconify-icon
+                    icon={action.icon}
+                    style={{ fontSize: "22px" }}
+                    className={action.colorClass}
+                  ></iconify-icon>
                 </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Event Type Distribution */}
-          <div
-            style={{
-              background: "white",
-              borderRadius: "12px",
-              border: "1px solid #e2e8f0",
-              padding: "20px",
-            }}
-          >
-            <h3
-              style={{
-                fontSize: "15px",
-                fontWeight: 600,
-                color: "#1e293b",
-                margin: "0 0 16px 0",
-                display: "flex",
-                alignItems: "center",
-                gap: "8px",
-              }}
-            >
-              <iconify-icon
-                icon="lucide:pie-chart"
-                style={{ fontSize: "16px", color: "#7c3aed" }}
-              ></iconify-icon>
-              Events by Type
-            </h3>
-            <div
-              style={{ display: "flex", flexDirection: "column", gap: "10px" }}
-            >
-              {eventTypeDistribution.map((item, idx) => {
-                const percentage = Math.round(
-                  (item.count / events.length) * 100,
-                );
-                const colors = [
-                  "#1e3a8a",
-                  "#059669",
-                  "#b45309",
-                  "#7c3aed",
-                  "#0891b2",
-                ];
-                return (
-                  <div key={idx}>
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        marginBottom: "6px",
-                      }}
-                    >
-                      <span style={{ fontSize: "13px", color: "#1e293b" }}>
-                        {item.type}
-                      </span>
-                      <span style={{ fontSize: "12px", color: "#64748b" }}>
-                        {item.count} ({percentage}%)
-                      </span>
-                    </div>
-                    <div
-                      style={{
-                        height: "8px",
-                        background: "#f1f5f9",
-                        borderRadius: "4px",
-                        overflow: "hidden",
-                      }}
-                    >
-                      <div
-                        style={{
-                          height: "100%",
-                          width: `${percentage}%`,
-                          background: colors[idx % colors.length],
-                          borderRadius: "4px",
-                          transition: "width 0.3s ease",
-                        }}
-                      ></div>
-                    </div>
+                <div className="flex-1 min-w-0">
+                  <div className="text-sm font-semibold text-slate-900 dark:text-slate-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors mb-0.5">
+                    {action.label}
                   </div>
-                );
-              })}
-            </div>
+                  <div className="text-xs text-slate-500 dark:text-slate-400 truncate">
+                    {action.description}
+                  </div>
+                </div>
+              </Link>
+            ))}
           </div>
         </div>
 
-        {/* Right Column */}
-        <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
-          {/* Event Status Overview */}
-          <div
-            style={{
-              background: "white",
-              borderRadius: "12px",
-              border: "1px solid #e2e8f0",
-              padding: "20px",
-            }}
-          >
-            <h3
-              style={{
-                fontSize: "15px",
-                fontWeight: 600,
-                color: "#1e293b",
-                margin: "0 0 16px 0",
-                display: "flex",
-                alignItems: "center",
-                gap: "8px",
-              }}
-            >
-              <iconify-icon
-                icon="lucide:activity"
-                style={{ fontSize: "16px", color: "#059669" }}
-              ></iconify-icon>
-              Event Status
-            </h3>
-            <div
-              style={{ display: "flex", flexDirection: "column", gap: "10px" }}
-            >
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  padding: "12px 14px",
-                  background: "#ecfdf5",
-                  borderRadius: "8px",
-                }}
-              >
-                <div
-                  style={{ display: "flex", alignItems: "center", gap: "10px" }}
-                >
-                  <div
-                    style={{
-                      width: "10px",
-                      height: "10px",
-                      borderRadius: "50%",
-                      background: "#16a34a",
-                    }}
-                  ></div>
-                  <span style={{ fontSize: "13px", color: "#1e293b" }}>
-                    Ongoing
-                  </span>
-                </div>
-                <span
-                  style={{
-                    fontSize: "16px",
-                    fontWeight: 700,
-                    color: "#16a34a",
-                  }}
-                >
-                  {metrics.ongoingEvents}
-                </span>
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  padding: "12px 14px",
-                  background: "#fef3c7",
-                  borderRadius: "8px",
-                }}
-              >
-                <div
-                  style={{ display: "flex", alignItems: "center", gap: "10px" }}
-                >
-                  <div
-                    style={{
-                      width: "10px",
-                      height: "10px",
-                      borderRadius: "50%",
-                      background: "#f59e0b",
-                    }}
-                  ></div>
-                  <span style={{ fontSize: "13px", color: "#1e293b" }}>
-                    Upcoming
-                  </span>
-                </div>
-                <span
-                  style={{
-                    fontSize: "16px",
-                    fontWeight: 700,
-                    color: "#b45309",
-                  }}
-                >
-                  {metrics.upcomingEvents}
-                </span>
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  padding: "12px 14px",
-                  background: "#f1f5f9",
-                  borderRadius: "8px",
-                }}
-              >
-                <div
-                  style={{ display: "flex", alignItems: "center", gap: "10px" }}
-                >
-                  <div
-                    style={{
-                      width: "10px",
-                      height: "10px",
-                      borderRadius: "50%",
-                      background: "#64748b",
-                    }}
-                  ></div>
-                  <span style={{ fontSize: "13px", color: "#1e293b" }}>
-                    Completed
-                  </span>
-                </div>
-                <span
-                  style={{
-                    fontSize: "16px",
-                    fontWeight: 700,
-                    color: "#64748b",
-                  }}
-                >
-                  {metrics.completedEvents}
-                </span>
-              </div>
-            </div>
-          </div>
+        {/* Main Content Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
 
-          {/* Upcoming Deadlines */}
-          <div
-            style={{
-              background: "white",
-              borderRadius: "12px",
-              border: "1px solid #e2e8f0",
-              padding: "20px",
-            }}
-          >
-            <h3
-              style={{
-                fontSize: "15px",
-                fontWeight: 600,
-                color: "#1e293b",
-                margin: "0 0 16px 0",
-                display: "flex",
-                alignItems: "center",
-                gap: "8px",
-              }}
-            >
-              <iconify-icon
-                icon="lucide:clock"
-                style={{ fontSize: "16px", color: "#dc2626" }}
-              ></iconify-icon>
-              Upcoming Deadlines
-            </h3>
-            {upcomingDeadlines.length === 0 ? (
-              <div
-                style={{
-                  textAlign: "center",
-                  padding: "20px",
-                  color: "#94a3b8",
-                  fontSize: "13px",
-                }}
-              >
-                No upcoming deadlines
+          {/* Left Column (2 cols wide on large screens) */}
+          <div className="lg:col-span-2 space-y-5">
+
+            {/* Recent Events */}
+            <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-sm md:text-base font-semibold text-slate-900 dark:text-slate-100 flex items-center gap-2">
+                  <iconify-icon
+                    icon="lucide:calendar"
+                    style={{ fontSize: "16px" }}
+                    className="text-blue-600 dark:text-blue-400"
+                  ></iconify-icon>
+                  Recent Events
+                </h3>
+                <Link
+                  to="/admin/my-events"
+                  className="text-xs font-semibold text-blue-600 dark:text-blue-400 hover:underline"
+                >
+                  View All →
+                </Link>
               </div>
-            ) : (
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "10px",
-                }}
-              >
-                {upcomingDeadlines.map((deadline) => (
+
+              <div className="space-y-2.5">
+                {recentEvents.map((event) => (
                   <div
-                    key={deadline.id}
-                    style={{
-                      padding: "12px 14px",
-                      background: "#fafafa",
-                      borderRadius: "8px",
-                      borderLeft: `3px solid ${
-                        deadline.daysLeft <= 3 ? "#ef4444" : "#f59e0b"
-                      }`,
-                    }}
+                    key={event.id}
+                    onClick={() => navigate(`/admin/my-events`)}
+                    className="flex items-center gap-3.5 p-3 bg-slate-50 dark:bg-slate-800/40 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl cursor-pointer transition-colors"
                   >
-                    <div
-                      style={{
-                        fontSize: "13px",
-                        fontWeight: 600,
-                        color: "#1e293b",
-                        marginBottom: "4px",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        whiteSpace: "nowrap",
-                      }}
-                    >
-                      {deadline.title}
+                    <img
+                      src={event.image}
+                      alt={event.title}
+                      className="w-12 h-12 rounded-lg object-cover shrink-0"
+                    />
+                    <div className="flex-1 min-w-0">
+                      <div className="text-xs md:text-sm font-semibold text-slate-900 dark:text-slate-100 truncate">
+                        {event.title}
+                      </div>
+                      <div className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-2 mt-0.5">
+                        <span>{event.eventType}</span>
+                        <span>•</span>
+                        <span>
+                          {new Date(event.startDate).toLocaleDateString("en-US", {
+                            month: "short",
+                            day: "numeric",
+                          })}
+                        </span>
+                      </div>
                     </div>
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                      }}
+                    <span
+                      className={`text-[11px] font-semibold px-2.5 py-1 rounded-md shrink-0 capitalize ${
+                        event.status === "closed"
+                          ? "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400"
+                          : event.status === "ongoing"
+                            ? "bg-green-100 dark:bg-green-950/60 text-green-700 dark:text-green-300"
+                            : "bg-amber-100 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300"
+                      }`}
                     >
-                      <span style={{ fontSize: "11px", color: "#64748b" }}>
-                        {deadline.type}
-                      </span>
-                      <span
-                        style={{
-                          fontSize: "11px",
-                          fontWeight: 600,
-                          color: deadline.daysLeft <= 3 ? "#ef4444" : "#b45309",
-                        }}
-                      >
-                        {deadline.daysLeft === 0
-                          ? "Today"
-                          : deadline.daysLeft === 1
-                            ? "1 day left"
-                            : `${deadline.daysLeft} days left`}
-                      </span>
-                    </div>
+                      {event.status}
+                    </span>
                   </div>
                 ))}
               </div>
-            )}
+            </div>
+
+            {/* Event Type Distribution */}
+            <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
+              <h3 className="text-sm md:text-base font-semibold text-slate-900 dark:text-slate-100 flex items-center gap-2 mb-4">
+                <iconify-icon
+                  icon="lucide:pie-chart"
+                  style={{ fontSize: "16px" }}
+                  className="text-violet-600 dark:text-violet-400"
+                ></iconify-icon>
+                Events by Type
+              </h3>
+              <div className="space-y-3">
+                {eventTypeDistribution.map((item, idx) => {
+                  const percentage = Math.round(
+                    (item.count / (events.length || 1)) * 100,
+                  );
+                  const colors = [
+                    "bg-blue-600",
+                    "bg-emerald-600",
+                    "bg-amber-600",
+                    "bg-violet-600",
+                    "bg-cyan-600",
+                  ];
+                  return (
+                    <div key={idx}>
+                      <div className="flex justify-between text-xs mb-1.5">
+                        <span className="font-medium text-slate-800 dark:text-slate-200">
+                          {item.type}
+                        </span>
+                        <span className="text-slate-500 dark:text-slate-400">
+                          {item.count} ({percentage}%)
+                        </span>
+                      </div>
+                      <div className="h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                        <div
+                          className={`h-full ${colors[idx % colors.length]} rounded-full transition-all duration-300`}
+                          style={{ width: `${percentage}%` }}
+                        ></div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
           </div>
 
-          {/* College Stats */}
-          <div
-            style={{
-              background: "linear-gradient(135deg, #1e3a8a, #3b82f6)",
-              borderRadius: "12px",
-              padding: "20px",
-              color: "white",
-            }}
-          >
-            <h3
-              style={{
-                fontSize: "15px",
-                fontWeight: 600,
-                margin: "0 0 16px 0",
-                display: "flex",
-                alignItems: "center",
-                gap: "8px",
-              }}
-            >
-              <iconify-icon
-                icon="lucide:school"
-                style={{ fontSize: "16px" }}
-              ></iconify-icon>
-              College Overview
-            </h3>
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "1fr 1fr",
-                gap: "12px",
-              }}
-            >
-              <div
-                style={{
-                  background: "rgba(255,255,255,0.15)",
-                  borderRadius: "8px",
-                  padding: "12px",
-                  textAlign: "center",
-                }}
-              >
-                <div style={{ fontSize: "20px", fontWeight: 700 }}>
-                  {COLLEGE_INFO.totalStudents.toLocaleString()}
+          {/* Right Column (1 col wide on large screens) */}
+          <div className="space-y-5">
+
+            {/* Event Status Overview */}
+            <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
+              <h3 className="text-sm md:text-base font-semibold text-slate-900 dark:text-slate-100 flex items-center gap-2 mb-4">
+                <iconify-icon
+                  icon="lucide:activity"
+                  style={{ fontSize: "16px" }}
+                  className="text-emerald-600 dark:text-emerald-400"
+                ></iconify-icon>
+                Event Status
+              </h3>
+              <div className="space-y-2.5">
+                <div className="flex justify-between items-center p-3 bg-emerald-50 dark:bg-emerald-950/30 rounded-lg">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-2.5 h-2.5 rounded-full bg-emerald-500"></div>
+                    <span className="text-xs md:text-sm font-medium text-slate-800 dark:text-slate-200">
+                      Ongoing
+                    </span>
+                  </div>
+                  <span className="text-base font-bold text-emerald-600 dark:text-emerald-400">
+                    {metrics.ongoingEvents}
+                  </span>
                 </div>
-                <div style={{ fontSize: "11px", opacity: 0.8 }}>Students</div>
-              </div>
-              <div
-                style={{
-                  background: "rgba(255,255,255,0.15)",
-                  borderRadius: "8px",
-                  padding: "12px",
-                  textAlign: "center",
-                }}
-              >
-                <div style={{ fontSize: "20px", fontWeight: 700 }}>
-                  {COLLEGE_INFO.totalFaculty}
+                <div className="flex justify-between items-center p-3 bg-amber-50 dark:bg-amber-950/30 rounded-lg">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-2.5 h-2.5 rounded-full bg-amber-500"></div>
+                    <span className="text-xs md:text-sm font-medium text-slate-800 dark:text-slate-200">
+                      Upcoming
+                    </span>
+                  </div>
+                  <span className="text-base font-bold text-amber-600 dark:text-amber-400">
+                    {metrics.upcomingEvents}
+                  </span>
                 </div>
-                <div style={{ fontSize: "11px", opacity: 0.8 }}>Faculty</div>
-              </div>
-              <div
-                style={{
-                  background: "rgba(255,255,255,0.15)",
-                  borderRadius: "8px",
-                  padding: "12px",
-                  textAlign: "center",
-                }}
-              >
-                <div style={{ fontSize: "20px", fontWeight: 700 }}>
-                  {COLLEGE_INFO.departments.length}
-                </div>
-                <div style={{ fontSize: "11px", opacity: 0.8 }}>
-                  Departments
+                <div className="flex justify-between items-center p-3 bg-slate-50 dark:bg-slate-800/40 rounded-lg">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-2.5 h-2.5 rounded-full bg-slate-400"></div>
+                    <span className="text-xs md:text-sm font-medium text-slate-800 dark:text-slate-200">
+                      Completed
+                    </span>
+                  </div>
+                  <span className="text-base font-bold text-slate-600 dark:text-slate-400">
+                    {metrics.completedEvents}
+                  </span>
                 </div>
               </div>
-              <div
-                style={{
-                  background: "rgba(255,255,255,0.15)",
-                  borderRadius: "8px",
-                  padding: "12px",
-                  textAlign: "center",
-                }}
-              >
-                <div style={{ fontSize: "20px", fontWeight: 700 }}>
-                  {metrics.totalTeams}
+            </div>
+
+            {/* Upcoming Deadlines */}
+            <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
+              <h3 className="text-sm md:text-base font-semibold text-slate-900 dark:text-slate-100 flex items-center gap-2 mb-4">
+                <iconify-icon
+                  icon="lucide:clock"
+                  style={{ fontSize: "16px" }}
+                  className="text-rose-600 dark:text-rose-400"
+                ></iconify-icon>
+                Upcoming Deadlines
+              </h3>
+              {upcomingDeadlines.length === 0 ? (
+                <div className="text-center py-5 text-slate-400 dark:text-slate-500 text-xs">
+                  No upcoming deadlines
                 </div>
-                <div style={{ fontSize: "11px", opacity: 0.8 }}>Teams</div>
+              ) : (
+                <div className="space-y-2.5">
+                  {upcomingDeadlines.map((deadline) => (
+                    <div
+                      key={deadline.id}
+                      className={`p-3 bg-slate-50 dark:bg-slate-800/40 rounded-lg border-l-4 ${
+                        deadline.daysLeft <= 3
+                          ? "border-l-rose-500"
+                          : "border-l-amber-500"
+                      }`}
+                    >
+                      <div className="text-xs md:text-sm font-semibold text-slate-900 dark:text-slate-100 truncate mb-1">
+                        {deadline.title}
+                      </div>
+                      <div className="flex justify-between items-center text-xs">
+                        <span className="text-slate-500 dark:text-slate-400 text-[11px]">
+                          {deadline.type}
+                        </span>
+                        <span
+                          className={`text-[11px] font-semibold ${
+                            deadline.daysLeft <= 3
+                              ? "text-rose-600 dark:text-rose-400"
+                              : "text-amber-600 dark:text-amber-400"
+                          }`}
+                        >
+                          {deadline.daysLeft === 0
+                            ? "Today"
+                            : deadline.daysLeft === 1
+                              ? "1 day left"
+                              : `${deadline.daysLeft} days left`}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* College Stats */}
+            <div className="bg-gradient-to-br from-blue-700 via-blue-800 to-indigo-900 dark:from-blue-900 dark:via-slate-900 dark:to-indigo-950 rounded-xl p-5 text-white shadow-sm border border-blue-600/30 dark:border-slate-800">
+              <h3 className="text-sm md:text-base font-semibold flex items-center gap-2 mb-4">
+                <iconify-icon
+                  icon="lucide:school"
+                  style={{ fontSize: "16px" }}
+                ></iconify-icon>
+                College Overview
+              </h3>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="bg-white/10 dark:bg-white/5 backdrop-blur-xs rounded-lg p-3 text-center border border-white/10">
+                  <div className="text-lg md:text-xl font-bold">
+                    {COLLEGE_INFO.totalStudents.toLocaleString()}
+                  </div>
+                  <div className="text-[11px] text-blue-100/80">Students</div>
+                </div>
+                <div className="bg-white/10 dark:bg-white/5 backdrop-blur-xs rounded-lg p-3 text-center border border-white/10">
+                  <div className="text-lg md:text-xl font-bold">
+                    {COLLEGE_INFO.totalFaculty}
+                  </div>
+                  <div className="text-[11px] text-blue-100/80">Faculty</div>
+                </div>
+                <div className="bg-white/10 dark:bg-white/5 backdrop-blur-xs rounded-lg p-3 text-center border border-white/10">
+                  <div className="text-lg md:text-xl font-bold">
+                    {COLLEGE_INFO.departments.length}
+                  </div>
+                  <div className="text-[11px] text-blue-100/80">Departments</div>
+                </div>
+                <div className="bg-white/10 dark:bg-white/5 backdrop-blur-xs rounded-lg p-3 text-center border border-white/10">
+                  <div className="text-lg md:text-xl font-bold">
+                    {metrics.totalTeams}
+                  </div>
+                  <div className="text-[11px] text-blue-100/80">Teams</div>
+                </div>
               </div>
             </div>
           </div>

@@ -265,21 +265,21 @@ export default function Winners() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 p-6">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 p-6 text-slate-900 dark:text-slate-100 transition-colors">
       <div className="max-w-7xl mx-auto">
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="text-2xl font-bold text-slate-900">
+            <h1 className="text-2xl font-bold text-slate-900 dark:text-white">
               Winners & Hall of Fame
             </h1>
-            <p className="text-sm text-slate-600">
+            <p className="text-sm text-slate-600 dark:text-slate-400">
               Top performing students ranked by total wins across college events
             </p>
           </div>
           <div className="flex gap-3">
             <button
               onClick={exportToExcel}
-              className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded text-sm font-medium hover:bg-green-700"
+              className="flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white rounded text-sm font-medium hover:bg-emerald-700 shadow-sm transition-colors"
             >
               <Download size={16} />
               Export to Excel
@@ -288,27 +288,27 @@ export default function Winners() {
         </div>
 
         {/* Filters */}
-        <div className="bg-white rounded-lg p-6 shadow-md mb-6">
+        <div className="bg-white dark:bg-slate-900 rounded-lg p-6 shadow-md dark:border dark:border-slate-800 mb-6 transition-colors">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
             <div className="relative flex-1">
               <Search
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500"
                 size={16}
               />
               <input
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Search by name or roll number..."
-                className="w-full pl-10 pr-4 py-2 border border-slate-200 rounded-lg text-sm"
+                className="w-full pl-10 pr-4 py-2 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
             <select
               value={selectedYear}
               onChange={(e) => setSelectedYear(e.target.value)}
-              className="px-3 py-2 border border-slate-200 rounded-lg text-sm"
+              className="px-3 py-2 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               {YEARS.map((year) => (
-                <option key={year} value={year}>
+                <option key={year} value={year} className="dark:bg-slate-800">
                   {year}
                 </option>
               ))}
@@ -316,10 +316,10 @@ export default function Winners() {
             <select
               value={selectedDepartment}
               onChange={(e) => setSelectedDepartment(e.target.value)}
-              className="px-3 py-2 border border-slate-200 rounded-lg text-sm"
+              className="px-3 py-2 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               {DEPARTMENTS.map((dept) => (
-                <option key={dept} value={dept}>
+                <option key={dept} value={dept} className="dark:bg-slate-800">
                   {dept}
                 </option>
               ))}
@@ -327,22 +327,22 @@ export default function Winners() {
             <select
               value={limit}
               onChange={(e) => setLimit(Number(e.target.value))}
-              className="px-3 py-2 border border-slate-200 rounded-lg text-sm"
+              className="px-3 py-2 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
-              <option value={10}>Show 10</option>
-              <option value={25}>Show 25</option>
-              <option value={50}>Show 50</option>
-              <option value={100}>Show All</option>
+              <option value={10} className="dark:bg-slate-800">Show 10</option>
+              <option value={25} className="dark:bg-slate-800">Show 25</option>
+              <option value={50} className="dark:bg-slate-800">Show 50</option>
+              <option value={100} className="dark:bg-slate-800">Show All</option>
             </select>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <select
               value={selectedEventType}
               onChange={(e) => setSelectedEventType(e.target.value)}
-              className="px-3 py-2 border border-slate-200 rounded-lg text-sm"
+              className="px-3 py-2 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               {EVENT_TYPES.map((type) => (
-                <option key={type} value={type}>
+                <option key={type} value={type} className="dark:bg-slate-800">
                   {type}
                 </option>
               ))}
@@ -350,10 +350,10 @@ export default function Winners() {
             <select
               value={selectedEventName}
               onChange={(e) => setSelectedEventName(e.target.value)}
-              className="px-3 py-2 border border-slate-200 rounded-lg text-sm"
+              className="px-3 py-2 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               {allEventNames.map((eventName) => (
-                <option key={eventName} value={eventName}>
+                <option key={eventName} value={eventName} className="dark:bg-slate-800">
                   {eventName}
                 </option>
               ))}
@@ -366,13 +366,13 @@ export default function Winners() {
                 setSelectedEventType("All Event Types");
                 setSelectedEventName("All Events");
               }}
-              className="px-4 py-2 bg-slate-100 text-slate-700 rounded-lg text-sm font-medium hover:bg-slate-200"
+              className="px-4 py-2 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-lg text-sm font-medium hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
             >
               Clear Filters
             </button>
           </div>
           {filtered.length > 0 && (
-            <div className="mt-3 text-sm text-slate-600">
+            <div className="mt-3 text-sm text-slate-600 dark:text-slate-400">
               Showing {filtered.length} winner{filtered.length !== 1 ? "s" : ""}
             </div>
           )}
@@ -384,31 +384,31 @@ export default function Winners() {
             {topThree.map((t, i) => (
               <div
                 key={t.id}
-                className={`bg-white rounded-lg p-6 shadow-md border-2 ${
+                className={`bg-white dark:bg-slate-900 rounded-lg p-6 shadow-md border-2 transition-colors ${
                   i === 0
-                    ? "border-yellow-400"
+                    ? "border-yellow-400 dark:border-yellow-500/80 shadow-yellow-500/10"
                     : i === 1
-                      ? "border-slate-400"
-                      : "border-orange-400"
+                      ? "border-slate-400 dark:border-slate-600 shadow-slate-500/10"
+                      : "border-orange-400 dark:border-orange-500/80 shadow-orange-500/10"
                 }`}
               >
                 <div className="flex items-center justify-between mb-4">
                   <div>
-                    <div className="text-sm font-semibold text-slate-600">
+                    <div className="text-sm font-semibold text-slate-600 dark:text-slate-400">
                       {i === 0
                         ? "🥇 1st Place"
                         : i === 1
                           ? "🥈 2nd Place"
                           : "🥉 3rd Place"}
                     </div>
-                    <div className="text-lg font-bold text-slate-900">
+                    <div className="text-lg font-bold text-slate-900 dark:text-white">
                       {t.name}
                     </div>
-                    <div className="text-xs text-slate-500 mt-1">
+                    <div className="text-xs text-slate-500 dark:text-slate-400 mt-1">
                       {t.rollNo}
                     </div>
                   </div>
-                  <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center font-bold text-white text-xl">
+                  <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center font-bold text-white text-xl shadow-md">
                     {t.name
                       .split(" ")
                       .map((s) => s[0])
@@ -418,22 +418,22 @@ export default function Winners() {
                 </div>
                 <div className="space-y-2 mb-4">
                   <div className="flex justify-between text-xs">
-                    <span className="text-slate-500">Department:</span>
-                    <span className="font-medium">{t.dept}</span>
+                    <span className="text-slate-500 dark:text-slate-400">Department:</span>
+                    <span className="font-medium text-slate-900 dark:text-slate-200">{t.dept}</span>
                   </div>
                   <div className="flex justify-between text-xs">
-                    <span className="text-slate-500">Year:</span>
-                    <span className="font-medium">{t.year}</span>
+                    <span className="text-slate-500 dark:text-slate-400">Year:</span>
+                    <span className="font-medium text-slate-900 dark:text-slate-200">{t.year}</span>
                   </div>
                   <div className="flex justify-between text-xs">
-                    <span className="text-slate-500">Total Wins:</span>
-                    <span className="font-bold text-yellow-600">
+                    <span className="text-slate-500 dark:text-slate-400">Total Wins:</span>
+                    <span className="font-bold text-yellow-600 dark:text-yellow-400">
                       {t.totalWins}
                     </span>
                   </div>
                   <div className="flex justify-between text-xs">
-                    <span className="text-slate-500">Events:</span>
-                    <span className="font-medium">
+                    <span className="text-slate-500 dark:text-slate-400">Events:</span>
+                    <span className="font-medium text-slate-900 dark:text-slate-200">
                       {t.eventsParticipated.length}
                     </span>
                   </div>
@@ -444,18 +444,18 @@ export default function Winners() {
         )}
 
         {/* Winners table */}
-        <div className="bg-white rounded-lg p-6 shadow-md">
+        <div className="bg-white dark:bg-slate-900 rounded-lg p-6 shadow-md dark:border dark:border-slate-800 transition-colors">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold">
+            <h2 className="text-lg font-semibold text-slate-900 dark:text-white">
               All Winners ({filtered.length})
             </h2>
-            <div className="text-sm text-slate-600">Ranked by Total Wins</div>
+            <div className="text-sm text-slate-600 dark:text-slate-400">Ranked by Total Wins</div>
           </div>
 
           {filtered.length === 0 ? (
             <div className="py-12 text-center">
-              <Award size={48} className="mx-auto mb-4 text-slate-300" />
-              <p className="text-slate-600">
+              <Award size={48} className="mx-auto mb-4 text-slate-300 dark:text-slate-600" />
+              <p className="text-slate-600 dark:text-slate-400">
                 No winners found matching your filters
               </p>
             </div>
@@ -463,32 +463,32 @@ export default function Winners() {
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
-                  <tr className="border-b border-slate-200">
-                    <th className="text-left py-3 px-4 text-slate-600 font-semibold">
+                  <tr className="border-b border-slate-200 dark:border-slate-800">
+                    <th className="text-left py-3 px-4 text-slate-600 dark:text-slate-400 font-semibold">
                       Rank
                     </th>
-                    <th className="text-left py-3 px-4 text-slate-600 font-semibold">
+                    <th className="text-left py-3 px-4 text-slate-600 dark:text-slate-400 font-semibold">
                       Student Name
                     </th>
-                    <th className="text-left py-3 px-4 text-slate-600 font-semibold">
+                    <th className="text-left py-3 px-4 text-slate-600 dark:text-slate-400 font-semibold">
                       Roll Number
                     </th>
-                    <th className="text-left py-3 px-4 text-slate-600 font-semibold">
+                    <th className="text-left py-3 px-4 text-slate-600 dark:text-slate-400 font-semibold">
                       Department
                     </th>
-                    <th className="text-left py-3 px-4 text-slate-600 font-semibold">
+                    <th className="text-left py-3 px-4 text-slate-600 dark:text-slate-400 font-semibold">
                       Year
                     </th>
-                    <th className="text-center py-3 px-4 text-slate-600 font-semibold">
+                    <th className="text-center py-3 px-4 text-slate-600 dark:text-slate-400 font-semibold">
                       Total Wins
                     </th>
-                    <th className="text-left py-3 px-4 text-slate-600 font-semibold">
+                    <th className="text-left py-3 px-4 text-slate-600 dark:text-slate-400 font-semibold">
                       Events Participated
                     </th>
-                    <th className="text-left py-3 px-4 text-slate-600 font-semibold">
+                    <th className="text-left py-3 px-4 text-slate-600 dark:text-slate-400 font-semibold">
                       Status
                     </th>
-                    <th className="text-left py-3 px-4 text-slate-600 font-semibold">
+                    <th className="text-left py-3 px-4 text-slate-600 dark:text-slate-400 font-semibold">
                       Actions
                     </th>
                   </tr>
@@ -497,39 +497,39 @@ export default function Winners() {
                   {filtered.slice(0, limit).map((w, idx) => (
                     <tr
                       key={w.id}
-                      className="border-b border-slate-100 hover:bg-slate-50"
+                      className="border-b border-slate-100 dark:border-slate-800/60 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors"
                     >
-                      <td className="py-3 px-4 font-bold text-slate-900">
+                      <td className="py-3 px-4 font-bold text-slate-900 dark:text-white">
                         #{idx + 1}
                       </td>
-                      <td className="py-3 px-4 font-semibold text-slate-900">
+                      <td className="py-3 px-4 font-semibold text-slate-900 dark:text-slate-100">
                         {w.name}
                       </td>
-                      <td className="py-3 px-4 text-slate-600 font-mono text-sm">
+                      <td className="py-3 px-4 text-slate-600 dark:text-slate-400 font-mono text-sm">
                         {w.rollNo}
                       </td>
                       <td className="py-3 px-4">
-                        <span className="inline-block px-2.5 py-1 text-sm font-medium rounded bg-blue-100 text-blue-700">
+                        <span className="inline-block px-2.5 py-1 text-sm font-medium rounded bg-blue-100 dark:bg-blue-950/70 text-blue-700 dark:text-blue-300 dark:border dark:border-blue-800/50">
                           {w.dept}
                         </span>
                       </td>
                       <td className="py-3 px-4">
-                        <span className="inline-block px-2.5 py-1 text-sm font-medium rounded bg-purple-100 text-purple-700">
+                        <span className="inline-block px-2.5 py-1 text-sm font-medium rounded bg-purple-100 dark:bg-purple-950/70 text-purple-700 dark:text-purple-300 dark:border dark:border-purple-800/50">
                           {w.year}
                         </span>
                       </td>
                       <td className="py-3 px-4 text-center">
-                        <span className="inline-block px-2.5 py-1 text-sm font-bold rounded bg-yellow-100 text-yellow-700">
+                        <span className="inline-block px-2.5 py-1 text-sm font-bold rounded bg-yellow-100 dark:bg-yellow-950/70 text-yellow-700 dark:text-yellow-400 dark:border dark:border-yellow-800/50">
                           {w.totalWins}
                         </span>
                       </td>
                       <td className="py-3 px-4">
                         <div className="flex flex-col gap-1">
-                          <span className="text-sm font-medium text-slate-700">
+                          <span className="text-sm font-medium text-slate-700 dark:text-slate-300">
                             {w.eventsParticipated.length} Events
                           </span>
                           <span
-                            className="text-xs text-slate-500 truncate max-w-[200px]"
+                            className="text-xs text-slate-500 dark:text-slate-400 truncate max-w-[200px]"
                             title={w.eventsParticipated
                               .map((e) => e.name)
                               .join(", ")}
@@ -541,12 +541,12 @@ export default function Winners() {
                         </div>
                       </td>
                       <td className="py-3 px-4">
-                        <span className="px-2.5 py-1 rounded-full text-sm font-medium bg-green-100 text-green-700">
+                        <span className="px-2.5 py-1 rounded-full text-sm font-medium bg-green-100 dark:bg-green-950/70 text-green-700 dark:text-green-300 dark:border dark:border-green-800/50">
                           {w.status}
                         </span>
                       </td>
                       <td className="py-3 px-4">
-                        <button className="text-slate-500 hover:text-slate-700 text-lg">
+                        <button className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 text-lg transition-colors">
                           ⋮
                         </button>
                       </td>
@@ -558,11 +558,11 @@ export default function Winners() {
           )}
 
           {filtered.length > limit && (
-            <div className="mt-4 text-center text-sm text-slate-600">
+            <div className="mt-4 text-center text-sm text-slate-600 dark:text-slate-400">
               Showing {limit} of {filtered.length} winners
               <button
                 onClick={() => setLimit(filtered.length)}
-                className="ml-2 text-blue-600 hover:text-blue-700 font-medium"
+                className="ml-2 text-blue-600 dark:text-blue-400 hover:underline font-medium"
               >
                 View All
               </button>

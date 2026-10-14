@@ -22,25 +22,25 @@ import { useAuth, ROLES } from "../context/AuthContext";
 
 // ── Constants ──────────────────────────────────────────────────────────────
 const CATEGORIES = [
-  { value: "bug",        label: "Bug Report",       icon: Bug,            color: "text-red-600 bg-red-50" },
-  { value: "feature",    label: "Feature Request",  icon: Lightbulb,      color: "text-yellow-600 bg-yellow-50" },
-  { value: "general",    label: "General Query",    icon: MessageCircle,  color: "text-blue-600 bg-blue-50" },
-  { value: "performance",label: "Performance Issue",icon: Zap,            color: "text-orange-600 bg-orange-50" },
-  { value: "access",     label: "Access Issue",     icon: Lock,           color: "text-purple-600 bg-purple-50" },
+  { value: "bug",        label: "Bug Report",       icon: Bug,            color: "text-red-600 bg-red-50 dark:text-red-400 dark:bg-red-950/50" },
+  { value: "feature",    label: "Feature Request",  icon: Lightbulb,      color: "text-yellow-600 bg-yellow-50 dark:text-yellow-400 dark:bg-yellow-950/50" },
+  { value: "general",    label: "General Query",    icon: MessageCircle,  color: "text-blue-600 bg-blue-50 dark:text-blue-400 dark:bg-blue-950/50" },
+  { value: "performance",label: "Performance Issue",icon: Zap,            color: "text-orange-600 bg-orange-50 dark:text-orange-400 dark:bg-orange-950/50" },
+  { value: "access",     label: "Access Issue",     icon: Lock,           color: "text-purple-600 bg-purple-50 dark:text-purple-400 dark:bg-purple-950/50" },
 ];
 
 const PRIORITIES = [
-  { value: "low",      label: "Low",      color: "bg-slate-100 text-slate-700" },
-  { value: "medium",   label: "Medium",   color: "bg-blue-100 text-blue-700" },
-  { value: "high",     label: "High",     color: "bg-orange-100 text-orange-700" },
-  { value: "critical", label: "Critical", color: "bg-red-100 text-red-700" },
+  { value: "low",      label: "Low",      color: "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300" },
+  { value: "medium",   label: "Medium",   color: "bg-blue-100 dark:bg-blue-950/50 text-blue-700 dark:text-blue-300" },
+  { value: "high",     label: "High",     color: "bg-orange-100 dark:bg-orange-950/50 text-orange-700 dark:text-orange-300" },
+  { value: "critical", label: "Critical", color: "bg-red-100 dark:bg-red-950/50 text-red-700 dark:text-red-300" },
 ];
 
 const STATUSES = [
-  { value: "open",        label: "Open",        color: "bg-blue-100 text-blue-700",   icon: AlertCircle },
-  { value: "in_progress", label: "In Progress", color: "bg-yellow-100 text-yellow-700", icon: Clock },
-  { value: "replied",     label: "Replied",     color: "bg-purple-100 text-purple-700", icon: MessageSquare },
-  { value: "resolved",    label: "Resolved",    color: "bg-green-100 text-green-700", icon: CheckCircle },
+  { value: "open",        label: "Open",        color: "bg-blue-100 dark:bg-blue-950/50 text-blue-700 dark:text-blue-300",   icon: AlertCircle },
+  { value: "in_progress", label: "In Progress", color: "bg-yellow-100 dark:bg-yellow-950/50 text-yellow-700 dark:text-yellow-300", icon: Clock },
+  { value: "replied",     label: "Replied",     color: "bg-purple-100 dark:bg-purple-950/50 text-purple-700 dark:text-purple-300", icon: MessageSquare },
+  { value: "resolved",    label: "Resolved",    color: "bg-green-100 dark:bg-green-950/50 text-green-700 dark:text-green-300", icon: CheckCircle },
 ];
 
 const ROLE_LABELS = {
@@ -150,11 +150,11 @@ function TicketForm({ onSubmit, roleConfig }) {
   if (submitted) {
     return (
       <div className="flex flex-col items-center justify-center py-12 text-center">
-        <div className="w-14 h-14 rounded-full bg-green-100 flex items-center justify-center mb-4">
-          <CheckCircle size={30} className="text-green-600" />
+        <div className="w-14 h-14 rounded-full bg-green-100 dark:bg-green-950/60 flex items-center justify-center mb-4">
+          <CheckCircle size={30} className="text-green-600 dark:text-green-400" />
         </div>
-        <h3 className="text-lg font-semibold text-slate-900 mb-1">Ticket Submitted!</h3>
-        <p className="text-sm text-slate-500">We'll get back to you shortly.</p>
+        <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-1">Ticket Submitted!</h3>
+        <p className="text-sm text-slate-500 dark:text-slate-400">We'll get back to you shortly.</p>
       </div>
     );
   }
@@ -163,7 +163,7 @@ function TicketForm({ onSubmit, roleConfig }) {
     <form onSubmit={handleSubmit} className="space-y-5">
       {/* Title */}
       <div>
-        <label className="block text-sm font-medium text-slate-700 mb-1">
+        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
           Subject <span className="text-red-500">*</span>
         </label>
         <input
@@ -171,7 +171,7 @@ function TicketForm({ onSubmit, roleConfig }) {
           value={form.title}
           onChange={(e) => set("title", e.target.value)}
           placeholder={roleConfig?.placeholder || "Brief description of the issue"}
-          className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-3 py-2 border border-slate-300 dark:border-slate-700 rounded-lg text-sm bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
           required
         />
       </div>
@@ -179,16 +179,16 @@ function TicketForm({ onSubmit, roleConfig }) {
       {/* Affected Screen (role-specific) */}
       {roleConfig?.screens?.length > 0 && (
         <div>
-          <label className="block text-sm font-medium text-slate-700 mb-1">
+          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
             {roleConfig.screenLabel || "Affected Screen"}
           </label>
           <select
             value={form.affectedScreen}
             onChange={(e) => set("affectedScreen", e.target.value)}
-            className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+            className="w-full px-3 py-2 border border-slate-300 dark:border-slate-700 rounded-lg text-sm bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             {roleConfig.screens.map((s) => (
-              <option key={s} value={s}>{s}</option>
+              <option key={s} value={s} className="dark:bg-slate-800">{s}</option>
             ))}
           </select>
         </div>
@@ -196,7 +196,7 @@ function TicketForm({ onSubmit, roleConfig }) {
 
       {/* Category */}
       <div>
-        <label className="block text-sm font-medium text-slate-700 mb-2">Category</label>
+        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Category</label>
         <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
           {CATEGORIES.map(({ value, label, icon: Icon, color }) => (
             <button
@@ -205,12 +205,12 @@ function TicketForm({ onSubmit, roleConfig }) {
               onClick={() => set("category", value)}
               className={`flex items-center gap-2 px-3 py-2 rounded-lg border text-sm font-medium transition-all ${
                 form.category === value
-                  ? "border-blue-500 bg-blue-50 text-blue-700 ring-1 ring-blue-400"
-                  : "border-slate-200 text-slate-600 hover:border-slate-300 hover:bg-slate-50"
+                  ? "border-blue-500 bg-blue-50 dark:bg-blue-950/50 text-blue-700 dark:text-blue-300 ring-1 ring-blue-400"
+                  : "border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:border-slate-300 dark:hover:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-800"
               }`}
             >
-              <Icon size={14} />
-              {label}
+              <Icon size={14} className="shrink-0" />
+              <span className="truncate">{label}</span>
             </button>
           ))}
         </div>
@@ -218,7 +218,7 @@ function TicketForm({ onSubmit, roleConfig }) {
 
       {/* Priority */}
       <div>
-        <label className="block text-sm font-medium text-slate-700 mb-2">Priority</label>
+        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Priority</label>
         <div className="flex gap-2 flex-wrap">
           {PRIORITIES.map(({ value, label, color }) => (
             <button
@@ -228,7 +228,7 @@ function TicketForm({ onSubmit, roleConfig }) {
               className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-all ${
                 form.priority === value
                   ? `${color} border-transparent ring-2 ring-offset-1 ring-current`
-                  : "border-slate-200 text-slate-500 hover:bg-slate-50"
+                  : "border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800"
               }`}
             >
               {label}
@@ -239,7 +239,7 @@ function TicketForm({ onSubmit, roleConfig }) {
 
       {/* Description */}
       <div>
-        <label className="block text-sm font-medium text-slate-700 mb-1">
+        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
           Description <span className="text-red-500">*</span>
         </label>
         <textarea
@@ -247,14 +247,14 @@ function TicketForm({ onSubmit, roleConfig }) {
           onChange={(e) => set("description", e.target.value)}
           placeholder="Describe the issue in detail — steps to reproduce, expected vs actual behaviour, screenshots, etc."
           rows={5}
-          className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+          className="w-full px-3 py-2 border border-slate-300 dark:border-slate-700 rounded-lg text-sm bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
           required
         />
       </div>
 
       <button
         type="submit"
-        className="w-full flex items-center justify-center gap-2 bg-blue-600 text-white py-2.5 rounded-lg font-medium hover:bg-blue-700 transition-colors"
+        className="w-full flex items-center justify-center gap-2 bg-blue-600 text-white py-2.5 rounded-lg font-medium hover:bg-blue-700 transition-colors shadow-sm"
       >
         <Send size={16} />
         Submit Ticket
@@ -273,17 +273,17 @@ function TicketCard({ ticket, onDelete }) {
   const StaIcon = sta.icon;
 
   return (
-    <div className="border border-slate-200 rounded-lg overflow-hidden">
+    <div className="border border-slate-200 dark:border-slate-800 rounded-lg overflow-hidden bg-white dark:bg-slate-900">
       <button
-        className="w-full flex items-center gap-3 px-4 py-3 bg-white hover:bg-slate-50 transition-colors text-left"
+        className="w-full flex items-center gap-3 px-4 py-3 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800/60 transition-colors text-left"
         onClick={() => setOpen((o) => !o)}
       >
-        <span className={`p-1.5 rounded-md ${cat.color}`}>
+        <span className={`p-1.5 rounded-md shrink-0 ${cat.color}`}>
           <CatIcon size={14} />
         </span>
         <div className="flex-1 min-w-0">
-          <p className="font-medium text-slate-900 text-sm truncate">{ticket.title}</p>
-          <p className="text-xs text-slate-500">{formatDate(ticket.createdAt)}</p>
+          <p className="font-medium text-slate-900 dark:text-slate-100 text-sm truncate">{ticket.title}</p>
+          <p className="text-xs text-slate-500 dark:text-slate-400">{formatDate(ticket.createdAt)}</p>
         </div>
         <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium ${sta.color} shrink-0`}>
           <StaIcon size={11} />
@@ -296,22 +296,22 @@ function TicketCard({ ticket, onDelete }) {
       </button>
 
       {open && (
-        <div className="px-4 pb-4 bg-slate-50 border-t border-slate-100">
-          <p className="text-sm text-slate-700 mt-3 whitespace-pre-wrap">{ticket.description}</p>
+        <div className="px-4 pb-4 bg-slate-50 dark:bg-slate-800/40 border-t border-slate-100 dark:border-slate-800">
+          <p className="text-sm text-slate-700 dark:text-slate-300 mt-3 whitespace-pre-wrap">{ticket.description}</p>
 
           {ticket.adminReply && (
-            <div className="mt-4 bg-white border border-blue-100 rounded-lg p-3">
-              <p className="text-xs font-semibold text-blue-700 mb-1 flex items-center gap-1">
+            <div className="mt-4 bg-white dark:bg-slate-900 border border-blue-100 dark:border-blue-900/50 rounded-lg p-3">
+              <p className="text-xs font-semibold text-blue-700 dark:text-blue-400 mb-1 flex items-center gap-1">
                 <MessageSquare size={12} /> Admin Reply
               </p>
-              <p className="text-sm text-slate-700">{ticket.adminReply}</p>
+              <p className="text-sm text-slate-700 dark:text-slate-300">{ticket.adminReply}</p>
             </div>
           )}
 
           <div className="flex justify-end mt-3">
             <button
               onClick={() => onDelete(ticket.id)}
-              className="flex items-center gap-1 text-xs text-red-500 hover:text-red-700"
+              className="flex items-center gap-1 text-xs text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
             >
               <Trash2 size={13} /> Delete
             </button>
@@ -333,10 +333,10 @@ function AdminTicketRow({ ticket, onStatusChange, onReply, onDelete }) {
   const CatIcon = cat.icon;
 
   return (
-    <div className="border border-slate-200 rounded-xl overflow-hidden mb-3">
+    <div className="border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden mb-3 bg-white dark:bg-slate-900">
       {/* Row header */}
       <div
-        className="flex items-center gap-3 px-4 py-3 bg-white hover:bg-slate-50 cursor-pointer transition-colors"
+        className="flex items-center gap-3 px-4 py-3 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800/60 cursor-pointer transition-colors"
         onClick={() => setExpanded((e) => !e)}
       >
         <span className={`p-1.5 rounded-md shrink-0 ${cat.color}`}>
@@ -344,15 +344,15 @@ function AdminTicketRow({ ticket, onStatusChange, onReply, onDelete }) {
         </span>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
-            <p className="font-medium text-slate-900 text-sm truncate">{ticket.title}</p>
+            <p className="font-medium text-slate-900 dark:text-slate-100 text-sm truncate">{ticket.title}</p>
             <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${pri.color}`}>
               {pri.label}
             </span>
           </div>
-          <p className="text-xs text-slate-500 mt-0.5">
-            By <span className="font-medium">{ROLE_LABELS[ticket.submittedByRole] || ticket.submittedByRole}</span>
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+            By <span className="font-medium text-slate-700 dark:text-slate-300">{ROLE_LABELS[ticket.submittedByRole] || ticket.submittedByRole}</span>
             {ticket.affectedScreen && (
-              <span className="ml-1 px-1.5 py-0.5 bg-slate-100 text-slate-500 rounded text-xs">
+              <span className="ml-1 px-1.5 py-0.5 bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 rounded text-xs">
                 {ticket.affectedScreen}
               </span>
             )}
@@ -367,7 +367,7 @@ function AdminTicketRow({ ticket, onStatusChange, onReply, onDelete }) {
           className={`text-xs font-semibold px-2 py-1 rounded-full border-0 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-400 ${sta.color}`}
         >
           {STATUSES.map((s) => (
-            <option key={s.value} value={s.value}>{s.label}</option>
+            <option key={s.value} value={s.value} className="dark:bg-slate-800 text-slate-900 dark:text-slate-100">{s.label}</option>
           ))}
         </select>
         {expanded
@@ -377,11 +377,11 @@ function AdminTicketRow({ ticket, onStatusChange, onReply, onDelete }) {
 
       {/* Expanded detail + reply */}
       {expanded && (
-        <div className="px-4 pb-5 bg-slate-50 border-t border-slate-100">
-          <p className="text-sm text-slate-700 mt-3 mb-4 whitespace-pre-wrap">{ticket.description}</p>
+        <div className="px-4 pb-5 bg-slate-50 dark:bg-slate-800/40 border-t border-slate-100 dark:border-slate-800">
+          <p className="text-sm text-slate-700 dark:text-slate-300 mt-3 mb-4 whitespace-pre-wrap">{ticket.description}</p>
 
-          <div className="bg-white rounded-lg border border-slate-200 p-4">
-            <label className="block text-xs font-semibold text-slate-600 mb-2">
+          <div className="bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800 p-4">
+            <label className="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-2">
               Reply to this ticket
             </label>
             <textarea
@@ -389,12 +389,12 @@ function AdminTicketRow({ ticket, onStatusChange, onReply, onDelete }) {
               onChange={(e) => setReplyText(e.target.value)}
               rows={3}
               placeholder="Write a response..."
-              className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none mb-2"
+              className="w-full px-3 py-2 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none mb-2"
             />
             <div className="flex items-center justify-between">
               <button
                 onClick={() => onDelete(ticket.id)}
-                className="flex items-center gap-1 text-xs text-red-500 hover:text-red-700"
+                className="flex items-center gap-1 text-xs text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
               >
                 <Trash2 size={13} /> Delete Ticket
               </button>
@@ -407,7 +407,7 @@ function AdminTicketRow({ ticket, onStatusChange, onReply, onDelete }) {
               </button>
             </div>
             {ticket.adminReply && (
-              <p className="text-xs text-slate-400 mt-2">
+              <p className="text-xs text-slate-400 dark:text-slate-500 mt-2">
                 Last reply: "{ticket.adminReply.slice(0, 60)}{ticket.adminReply.length > 60 ? "…" : ""}"
               </p>
             )}
@@ -454,7 +454,7 @@ export default function Support() {
   const resolved   = tickets.filter((t) => t.status === "resolved" || t.status === "replied").length;
 
   return (
-    <div className="min-h-screen bg-slate-50 p-6">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 p-6 text-slate-900 dark:text-slate-100 transition-colors">
       <div className="max-w-7xl mx-auto">
 
         {/* ── Header ── */}
@@ -464,9 +464,9 @@ export default function Support() {
               <div className="w-9 h-9 rounded-lg bg-blue-600 flex items-center justify-center">
                 <LifeBuoy size={20} className="text-white" />
               </div>
-              <h1 className="text-3xl font-bold text-slate-900">Support</h1>
+              <h1 className="text-3xl font-bold text-slate-900 dark:text-white">Support</h1>
             </div>
-            <p className="text-slate-600 ml-12">
+            <p className="text-slate-600 dark:text-slate-400 ml-12">
               {roleConfig.tagline}
             </p>
           </div>
@@ -485,11 +485,11 @@ export default function Support() {
                 { label: "In Progress",   value: inProgress, color: "bg-yellow-500", sub: "Being handled" },
                 { label: "Resolved",      value: resolved,   color: "bg-green-600",  sub: "Closed / Replied" },
               ].map(({ label, value, color, sub }) => (
-                <div key={label} className="bg-white rounded-xl p-5 shadow-sm border border-slate-100">
+                <div key={label} className="bg-white dark:bg-slate-900 rounded-xl p-5 shadow-sm border border-slate-100 dark:border-slate-800">
                   <div className={`w-8 h-1.5 rounded-full ${color} mb-3`} />
-                  <p className="text-2xl font-extrabold text-slate-900 mb-0.5">{value}</p>
-                  <p className="text-sm font-medium text-slate-700">{label}</p>
-                  <p className="text-xs text-slate-400 mt-0.5">{sub}</p>
+                  <p className="text-2xl font-extrabold text-slate-900 dark:text-white mb-0.5">{value}</p>
+                  <p className="text-sm font-medium text-slate-700 dark:text-slate-300">{label}</p>
+                  <p className="text-xs text-slate-400 dark:text-slate-500 mt-0.5">{sub}</p>
                 </div>
               ))}
             </div>
@@ -497,12 +497,12 @@ export default function Support() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               {/* Left: all tickets */}
               <div className="lg:col-span-2">
-                <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-5">
+                <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800 p-5">
                   <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-lg font-bold text-slate-900">
+                    <h2 className="text-lg font-bold text-slate-900 dark:text-white">
                       All Tickets
                       {adminTickets.length !== tickets.length && (
-                        <span className="ml-2 text-sm font-normal text-slate-400">
+                        <span className="ml-2 text-sm font-normal text-slate-400 dark:text-slate-500">
                           {adminTickets.length} of {tickets.length}
                         </span>
                       )}
@@ -513,47 +513,47 @@ export default function Support() {
                   <div className="flex flex-wrap gap-2 mb-4">
                     {/* Search */}
                     <div className="relative flex-1 min-w-40">
-                      <Filter size={14} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400" />
+                      <Filter size={14} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500" />
                       <input
                         type="text"
                         placeholder="Search tickets…"
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
-                        className="w-full pl-8 pr-3 py-1.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                        className="w-full pl-8 pr-3 py-1.5 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
                       />
                     </div>
 
                     <select
                       value={filterStatus}
                       onChange={(e) => setFilterStatus(e.target.value)}
-                      className="text-xs border border-slate-200 rounded-lg px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                      className="text-xs border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 rounded-lg px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-400"
                     >
-                      <option value="all">All Statuses</option>
-                      {STATUSES.map((s) => <option key={s.value} value={s.value}>{s.label}</option>)}
+                      <option value="all" className="dark:bg-slate-800">All Statuses</option>
+                      {STATUSES.map((s) => <option key={s.value} value={s.value} className="dark:bg-slate-800">{s.label}</option>)}
                     </select>
 
                     <select
                       value={filterCategory}
                       onChange={(e) => setFilterCategory(e.target.value)}
-                      className="text-xs border border-slate-200 rounded-lg px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                      className="text-xs border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 rounded-lg px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-400"
                     >
-                      <option value="all">All Categories</option>
-                      {CATEGORIES.map((c) => <option key={c.value} value={c.value}>{c.label}</option>)}
+                      <option value="all" className="dark:bg-slate-800">All Categories</option>
+                      {CATEGORIES.map((c) => <option key={c.value} value={c.value} className="dark:bg-slate-800">{c.label}</option>)}
                     </select>
 
                     <select
                       value={filterPriority}
                       onChange={(e) => setFilterPriority(e.target.value)}
-                      className="text-xs border border-slate-200 rounded-lg px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                      className="text-xs border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 rounded-lg px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-400"
                     >
-                      <option value="all">All Priorities</option>
-                      {PRIORITIES.map((p) => <option key={p.value} value={p.value}>{p.label}</option>)}
+                      <option value="all" className="dark:bg-slate-800">All Priorities</option>
+                      {PRIORITIES.map((p) => <option key={p.value} value={p.value} className="dark:bg-slate-800">{p.label}</option>)}
                     </select>
 
                     {(filterStatus !== "all" || filterCategory !== "all" || filterPriority !== "all" || search) && (
                       <button
                         onClick={() => { setFilterStatus("all"); setFilterCategory("all"); setFilterPriority("all"); setSearch(""); }}
-                        className="flex items-center gap-1 text-xs text-slate-500 hover:text-slate-700 px-2 py-1.5 border border-slate-200 rounded-lg"
+                        className="flex items-center gap-1 text-xs text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 px-2 py-1.5 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 rounded-lg"
                       >
                         <X size={12} /> Clear
                       </button>
@@ -563,8 +563,8 @@ export default function Support() {
                   {/* Ticket list */}
                   {adminTickets.length === 0 ? (
                     <div className="text-center py-14">
-                      <LifeBuoy size={36} className="mx-auto text-slate-300 mb-3" />
-                      <p className="text-slate-400 text-sm">
+                      <LifeBuoy size={36} className="mx-auto text-slate-300 dark:text-slate-600 mb-3" />
+                      <p className="text-slate-400 dark:text-slate-500 text-sm">
                         {tickets.length === 0 ? "No tickets have been submitted yet." : "No tickets match your filters."}
                       </p>
                     </div>
@@ -585,22 +585,22 @@ export default function Support() {
               {/* Right: submit + stats breakdown */}
               <div className="flex flex-col gap-5">
                 {/* Submit own ticket */}
-                <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-5">
-                  <h2 className="text-base font-bold text-slate-900 mb-4">{roleConfig.formTitle}</h2>
+                <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800 p-5">
+                  <h2 className="text-base font-bold text-slate-900 dark:text-white mb-4">{roleConfig.formTitle}</h2>
                   <TicketForm onSubmit={handleSubmit} roleConfig={roleConfig} />
                 </div>
 
                 {/* Category breakdown */}
-                <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-5">
-                  <h3 className="text-sm font-bold text-slate-700 mb-3">By Category</h3>
+                <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800 p-5">
+                  <h3 className="text-sm font-bold text-slate-700 dark:text-slate-300 mb-3">By Category</h3>
                   <div className="space-y-2">
                     {CATEGORIES.map(({ value, label, icon: Icon, color }) => {
                       const count = tickets.filter((t) => t.category === value).length;
                       return (
                         <div key={value} className="flex items-center gap-2">
                           <span className={`p-1 rounded ${color}`}><Icon size={12} /></span>
-                          <span className="flex-1 text-xs text-slate-600">{label}</span>
-                          <span className="text-xs font-bold text-slate-800">{count}</span>
+                          <span className="flex-1 text-xs text-slate-600 dark:text-slate-400">{label}</span>
+                          <span className="text-xs font-bold text-slate-800 dark:text-slate-200">{count}</span>
                         </div>
                       );
                     })}
@@ -615,16 +615,16 @@ export default function Support() {
           ════════════════════════════════════════════════════════════ */
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Submit form */}
-            <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
-              <h2 className="text-lg font-bold text-slate-900 mb-1">{roleConfig.formTitle}</h2>
-              <p className="text-sm text-slate-500 mb-5">{roleConfig.formSubtitle}</p>
+            <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800 p-6">
+              <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-1">{roleConfig.formTitle}</h2>
+              <p className="text-sm text-slate-500 dark:text-slate-400 mb-5">{roleConfig.formSubtitle}</p>
               <TicketForm onSubmit={handleSubmit} roleConfig={roleConfig} />
 
               {/* Help tips */}
               {roleConfig.tips.length > 0 && (
-                <div className="mt-6 bg-slate-50 rounded-lg p-4 border border-slate-100">
-                  <p className="text-xs font-semibold text-slate-600 mb-2">💡 Tips for a faster response</p>
-                  <ul className="text-xs text-slate-500 space-y-1 list-disc list-inside">
+                <div className="mt-6 bg-slate-50 dark:bg-slate-800/60 rounded-lg p-4 border border-slate-100 dark:border-slate-800">
+                  <p className="text-xs font-semibold text-slate-600 dark:text-slate-300 mb-2">💡 Tips for a faster response</p>
+                  <ul className="text-xs text-slate-500 dark:text-slate-400 space-y-1 list-disc list-inside">
                     {roleConfig.tips.map((tip) => (
                       <li key={tip}>{tip}</li>
                     ))}
@@ -634,18 +634,18 @@ export default function Support() {
             </div>
 
             {/* My tickets */}
-            <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+            <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800 p-6">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-bold text-slate-900">My Tickets</h2>
-                <span className="text-xs bg-slate-100 text-slate-600 font-semibold px-2 py-0.5 rounded-full">
+                <h2 className="text-lg font-bold text-slate-900 dark:text-white">My Tickets</h2>
+                <span className="text-xs bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 font-semibold px-2 py-0.5 rounded-full">
                   {myTickets.length}
                 </span>
               </div>
 
               {myTickets.length === 0 ? (
                 <div className="text-center py-12">
-                  <MessageCircle size={36} className="mx-auto text-slate-300 mb-3" />
-                  <p className="text-slate-400 text-sm">You haven't submitted any tickets yet.</p>
+                  <MessageCircle size={36} className="mx-auto text-slate-300 dark:text-slate-600 mb-3" />
+                  <p className="text-slate-400 dark:text-slate-500 text-sm">You haven't submitted any tickets yet.</p>
                 </div>
               ) : (
                 <div className="space-y-2 max-h-140 overflow-y-auto pr-1">

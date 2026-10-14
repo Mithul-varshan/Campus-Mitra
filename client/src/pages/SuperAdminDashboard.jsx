@@ -1,5 +1,5 @@
-import { useState, useMemo } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import { useEvents } from "../context/EventsContext";
 
 export default function SuperAdminDashboard() {
@@ -63,18 +63,18 @@ export default function SuperAdminDashboard() {
         trend: "+15%",
       },
       {
-        name: "VIT Vellore",
-        score: 8180,
-        students: 9800,
-        events: 41,
-        trend: "+6%",
+        name: "NIT Trichy",
+        score: 8210,
+        students: 6500,
+        events: 31,
+        trend: "+5%",
       },
       {
-        name: "NIT Trichy",
-        score: 7920,
-        students: 6500,
-        events: 35,
-        trend: "+10%",
+        name: "PSG Tech",
+        score: 7890,
+        students: 5800,
+        events: 28,
+        trend: "+3%",
       },
     ],
     [],
@@ -86,54 +86,54 @@ export default function SuperAdminDashboard() {
       {
         id: 1,
         level: "critical",
-        title: "Payment Gateway Issue",
-        text: "Razorpay webhook failing for 3 colleges",
-        time: "2 hours ago",
+        title: "Database Load High",
+        text: "Main replica at 88% CPU utilization",
+        time: "10 mins ago",
       },
       {
         id: 2,
         level: "warning",
-        title: "Policy Pending",
-        text: "42 colleges haven't accepted new privacy policy",
-        time: "1 day ago",
+        title: "Certificate Queue",
+        text: "1,240 certificates pending batch generation",
+        time: "45 mins ago",
       },
       {
         id: 3,
         level: "info",
-        title: "New College Request",
-        text: "5 new college registration requests pending",
-        time: "3 hours ago",
+        title: "New College Signup",
+        text: "Sathyabama Institute requested trial onboarding",
+        time: "2 hours ago",
       },
     ],
     [],
   );
 
-  // Recent activities
+  // Recent platform activities
   const recentActivities = useMemo(
     () => [
       {
         id: 1,
         type: "college",
-        text: "New Tech Institute registered",
-        time: "2 hours ago",
+        text: "SRM University upgraded to Enterprise Plan",
+        time: "15 mins ago",
       },
       {
         id: 2,
         type: "event",
-        text: "National AI Hackathon created by IIT Delhi",
-        time: "4 hours ago",
+        text: "Inter-College AI Hackathon 2025 published (2,400 expected)",
+        time: "1 hour ago",
       },
       {
         id: 3,
         type: "certificate",
-        text: "1,250 certificates issued for Tech Summit",
-        time: "6 hours ago",
+        text: "Batch of 450 certificates issued for Web3 Sprint",
+        time: "3 hours ago",
       },
       {
         id: 4,
         type: "subscription",
-        text: "BITS Pilani upgraded to Premium plan",
-        time: "1 day ago",
+        text: "PSG Tech subscription renewed for 1 year",
+        time: "5 hours ago",
       },
       {
         id: 5,
@@ -152,40 +152,45 @@ export default function SuperAdminDashboard() {
       label: "Manage Colleges",
       description: "View and manage all registered colleges",
       path: "/colleges",
-      color: "#1e3a8a",
-      bg: "#eff6ff",
+      colorClass: "text-blue-600 dark:text-blue-400",
+      bgClass: "bg-blue-50 dark:bg-blue-950/50",
+      borderHover: "hover:border-blue-500 dark:hover:border-blue-400",
     },
     {
       icon: "lucide:users",
       label: "Global Students",
       description: "Platform-wide student directory",
-      path: "/global-students",
-      color: "#059669",
-      bg: "#ecfdf5",
+      path: "/students",
+      colorClass: "text-emerald-600 dark:text-emerald-400",
+      bgClass: "bg-emerald-50 dark:bg-emerald-950/50",
+      borderHover: "hover:border-emerald-500 dark:hover:border-emerald-400",
     },
     {
       icon: "lucide:calendar",
       label: "Events Monitor",
       description: "Track all cross-college events",
       path: "/events-monitor",
-      color: "#b45309",
-      bg: "#fef3c7",
+      colorClass: "text-amber-600 dark:text-amber-400",
+      bgClass: "bg-amber-50 dark:bg-amber-950/50",
+      borderHover: "hover:border-amber-500 dark:hover:border-amber-400",
     },
     {
       icon: "lucide:credit-card",
       label: "Subscriptions",
       description: "Manage college subscription plans",
       path: "/subscriptions",
-      color: "#dc2626",
-      bg: "#fef2f2",
+      colorClass: "text-rose-600 dark:text-rose-400",
+      bgClass: "bg-rose-50 dark:bg-rose-950/50",
+      borderHover: "hover:border-rose-500 dark:hover:border-rose-400",
     },
     {
       icon: "lucide:settings",
       label: "Platform Settings",
       description: "Global settings & configurations",
       path: "/platform-settings",
-      color: "#64748b",
-      bg: "#f8fafc",
+      colorClass: "text-violet-600 dark:text-violet-400",
+      bgClass: "bg-violet-50 dark:bg-violet-950/50",
+      borderHover: "hover:border-violet-500 dark:hover:border-violet-400",
     },
   ];
 
@@ -196,16 +201,16 @@ export default function SuperAdminDashboard() {
       label: "Total Colleges",
       value: metrics.totalColleges,
       subtitle: `${metrics.activePlans} active subscriptions`,
-      color: "#1e3a8a",
-      bg: "#eff6ff",
+      colorClass: "text-blue-600 dark:text-blue-400",
+      bgClass: "bg-blue-50 dark:bg-blue-950/50",
     },
     {
       icon: "lucide:users",
       label: "Total Students",
       value: metrics.totalStudents.toLocaleString(),
       subtitle: `${metrics.totalFaculty.toLocaleString()} faculty`,
-      color: "#059669",
-      bg: "#ecfdf5",
+      colorClass: "text-emerald-600 dark:text-emerald-400",
+      bgClass: "bg-emerald-50 dark:bg-emerald-950/50",
       trend: "+8.2%",
     },
     {
@@ -213,16 +218,16 @@ export default function SuperAdminDashboard() {
       label: "Total Events",
       value: metrics.totalEvents,
       subtitle: `${metrics.activeEvents} active`,
-      color: "#b45309",
-      bg: "#fef3c7",
+      colorClass: "text-amber-600 dark:text-amber-400",
+      bgClass: "bg-amber-50 dark:bg-amber-950/50",
     },
     {
       icon: "lucide:award",
       label: "Certificates Issued",
       value: metrics.certificatesIssued.toLocaleString(),
       subtitle: "Across all colleges",
-      color: "#7c3aed",
-      bg: "#f3e8ff",
+      colorClass: "text-violet-600 dark:text-violet-400",
+      bgClass: "bg-violet-50 dark:bg-violet-950/50",
       trend: "+15%",
     },
     {
@@ -230,8 +235,8 @@ export default function SuperAdminDashboard() {
       label: "Total Revenue",
       value: `₹${(metrics.totalRevenue / 100000).toFixed(1)}L`,
       subtitle: "This financial year",
-      color: "#16a34a",
-      bg: "#dcfce7",
+      colorClass: "text-green-600 dark:text-green-400",
+      bgClass: "bg-green-50 dark:bg-green-950/50",
       trend: "+22%",
     },
     {
@@ -239,8 +244,8 @@ export default function SuperAdminDashboard() {
       label: "Cross-College Rate",
       value: metrics.crossParticipationRate,
       subtitle: `${metrics.crossCollegeEvents} inter-college events`,
-      color: "#0891b2",
-      bg: "#ecfeff",
+      colorClass: "text-cyan-600 dark:text-cyan-400",
+      bgClass: "bg-cyan-50 dark:bg-cyan-950/50",
     },
   ];
 
@@ -266,11 +271,11 @@ export default function SuperAdminDashboard() {
       case "college":
         return "#1e3a8a";
       case "event":
-        return "#b45309";
+        return "#059669";
       case "certificate":
         return "#7c3aed";
       case "subscription":
-        return "#16a34a";
+        return "#0891b2";
       case "alert":
         return "#dc2626";
       default:
@@ -279,867 +284,355 @@ export default function SuperAdminDashboard() {
   };
 
   return (
-    <div
-      style={{
-        padding: "24px 32px",
-        maxWidth: "1500px",
-        margin: "0 auto",
-        fontFamily: "Inter, sans-serif",
-      }}
-    >
-      {/* Page Header */}
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "flex-start",
-          marginBottom: "28px",
-        }}
-      >
-        <div>
-          <h1
-            style={{
-              fontSize: "26px",
-              fontWeight: 700,
-              margin: "0 0 8px 0",
-              color: "#1e293b",
-              display: "flex",
-              alignItems: "center",
-              gap: "10px",
-            }}
-          >
-            <iconify-icon
-              icon="lucide:shield-check"
-              style={{ fontSize: "28px", color: "#7c3aed" }}
-            ></iconify-icon>
-            Super Admin Control Center
-          </h1>
-          <p style={{ fontSize: "14px", color: "#64748b", margin: 0 }}>
-            Platform-wide overview, analytics, and management
-          </p>
-        </div>
-        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-          <button
-            onClick={() => navigate("/reports-exports")}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "8px",
-              padding: "10px 16px",
-              background: "white",
-              color: "#1e293b",
-              border: "1px solid #e2e8f0",
-              borderRadius: "8px",
-              fontSize: "13px",
-              fontWeight: 500,
-              cursor: "pointer",
-            }}
-          >
-            <iconify-icon
-              icon="lucide:download"
-              style={{ fontSize: "16px" }}
-            ></iconify-icon>
-            Export Reports
-          </button>
-          <button
-            onClick={() => navigate("/platform-settings")}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "8px",
-              padding: "10px 18px",
-              background: "#7c3aed",
-              color: "white",
-              border: "none",
-              borderRadius: "8px",
-              fontSize: "13px",
-              fontWeight: 600,
-              cursor: "pointer",
-            }}
-          >
-            <iconify-icon
-              icon="lucide:settings"
-              style={{ fontSize: "16px" }}
-            ></iconify-icon>
-            Settings
-          </button>
-        </div>
-      </div>
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 p-6 md:p-8 transition-colors">
+      <div className="max-w-7xl mx-auto space-y-7">
 
-      {/* Alerts Banner */}
-      {/* {alerts.filter((a) => a.level === "critical").length > 0 && (
-        <div
-          style={{
-            background: "linear-gradient(135deg, #fef2f2, #fee2e2)",
-            borderRadius: "12px",
-            padding: "16px 20px",
-            marginBottom: "24px",
-            border: "1px solid #fecaca",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
-          <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-            <iconify-icon
-              icon="lucide:alert-circle"
-              style={{ fontSize: "24px", color: "#dc2626" }}
-            ></iconify-icon>
-            <div>
-              <div
-                style={{ fontSize: "14px", fontWeight: 600, color: "#991b1b" }}
-              >
-                {alerts.filter((a) => a.level === "critical").length} Critical
-                Alert(s)
-              </div>
-              <div style={{ fontSize: "13px", color: "#b91c1c" }}>
-                {alerts.find((a) => a.level === "critical")?.text}
-              </div>
-            </div>
+        {/* Page Header */}
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <div>
+            <h1 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white flex items-center gap-2.5 mb-1.5">
+              <iconify-icon
+                icon="lucide:shield-check"
+                style={{ fontSize: "28px" }}
+                className="text-violet-600 dark:text-violet-400"
+              ></iconify-icon>
+              Super Admin Control Center
+            </h1>
+            <p className="text-sm text-slate-500 dark:text-slate-400">
+              Platform-wide overview, analytics, and management
+            </p>
           </div>
-          <button
-            style={{
-              padding: "8px 14px",
-              background: "#dc2626",
-              color: "white",
-              border: "none",
-              borderRadius: "6px",
-              fontSize: "12px",
-              fontWeight: 600,
-              cursor: "pointer",
-            }}
-          >
-            View All Alerts
-          </button>
-        </div>
-      )} */}
-
-      {/* Stats Cards */}
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(6, 1fr)",
-          gap: "14px",
-          marginBottom: "28px",
-        }}
-      >
-        {statsCards.map((stat, idx) => (
-          <div
-            key={idx}
-            style={{
-              background: "white",
-              borderRadius: "12px",
-              padding: "18px",
-              border: "1px solid #e2e8f0",
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                marginBottom: "12px",
-              }}
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => navigate("/reports-exports")}
+              className="flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 rounded-lg text-xs md:text-sm font-semibold hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors shadow-sm cursor-pointer"
             >
-              <div
-                style={{
-                  width: "40px",
-                  height: "40px",
-                  borderRadius: "10px",
-                  background: stat.bg,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <iconify-icon
-                  icon={stat.icon}
-                  style={{ fontSize: "20px", color: stat.color }}
-                ></iconify-icon>
-              </div>
-              {stat.trend && (
-                <span
-                  style={{
-                    fontSize: "11px",
-                    fontWeight: 600,
-                    color: "#16a34a",
-                    background: "#dcfce7",
-                    padding: "2px 6px",
-                    borderRadius: "4px",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "2px",
-                  }}
+              <iconify-icon
+                icon="lucide:download"
+                style={{ fontSize: "16px" }}
+              ></iconify-icon>
+              Export Reports
+            </button>
+            <button
+              onClick={() => navigate("/platform-settings")}
+              className="flex items-center gap-2 px-4 py-2.5 bg-violet-600 hover:bg-violet-700 text-white rounded-lg text-xs md:text-sm font-semibold transition-colors shadow-sm cursor-pointer"
+            >
+              <iconify-icon
+                icon="lucide:settings"
+                style={{ fontSize: "16px" }}
+              ></iconify-icon>
+              Settings
+            </button>
+          </div>
+        </div>
+
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3.5">
+          {statsCards.map((stat, idx) => (
+            <div
+              key={idx}
+              className="bg-white dark:bg-slate-900 rounded-xl p-4 border border-slate-200 dark:border-slate-800 shadow-sm"
+            >
+              <div className="flex items-center justify-between mb-3">
+                <div
+                  className={`w-10 h-10 rounded-xl ${stat.bgClass} flex items-center justify-center shrink-0`}
                 >
                   <iconify-icon
-                    icon="lucide:trending-up"
-                    style={{ fontSize: "10px" }}
+                    icon={stat.icon}
+                    style={{ fontSize: "20px" }}
+                    className={stat.colorClass}
                   ></iconify-icon>
-                  {stat.trend}
-                </span>
-              )}
-            </div>
-            <div
-              style={{
-                fontSize: "11px",
-                color: "#64748b",
-                marginBottom: "4px",
-              }}
-            >
-              {stat.label}
-            </div>
-            <div
-              style={{ fontSize: "22px", fontWeight: 700, color: "#1e293b" }}
-            >
-              {stat.value}
-            </div>
-            <div
-              style={{ fontSize: "11px", color: "#94a3b8", marginTop: "2px" }}
-            >
-              {stat.subtitle}
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Quick Actions */}
-      <div style={{ marginBottom: "28px" }}>
-        <h2
-          style={{
-            fontSize: "16px",
-            fontWeight: 600,
-            color: "#1e293b",
-            margin: "0 0 16px 0",
-          }}
-        >
-          Quick Actions
-        </h2>
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(4, 1fr)",
-            gap: "12px",
-          }}
-        >
-          {quickActions.map((action, idx) => (
-            <Link
-              key={idx}
-              to={action.path}
-              style={{
-                textDecoration: "none",
-                background: "white",
-                borderRadius: "12px",
-                padding: "16px 18px",
-                border: "1px solid #e2e8f0",
-                display: "flex",
-                alignItems: "center",
-                gap: "14px",
-                transition: "all 0.2s",
-                cursor: "pointer",
-              }}
-              onMouseOver={(e) => {
-                e.currentTarget.style.borderColor = action.color;
-                e.currentTarget.style.boxShadow = `0 4px 12px ${action.color}15`;
-              }}
-              onMouseOut={(e) => {
-                e.currentTarget.style.borderColor = "#e2e8f0";
-                e.currentTarget.style.boxShadow = "none";
-              }}
-            >
-              <div
-                style={{
-                  width: "42px",
-                  height: "42px",
-                  borderRadius: "10px",
-                  background: action.bg,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  flexShrink: 0,
-                }}
-              >
-                <iconify-icon
-                  icon={action.icon}
-                  style={{ fontSize: "20px", color: action.color }}
-                ></iconify-icon>
-              </div>
-              <div>
-                <div
-                  style={{
-                    fontSize: "13px",
-                    fontWeight: 600,
-                    color: "#1e293b",
-                    marginBottom: "2px",
-                  }}
-                >
-                  {action.label}
                 </div>
-                <div style={{ fontSize: "11px", color: "#64748b" }}>
-                  {action.description}
-                </div>
+                {stat.trend && (
+                  <span className="text-[11px] font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 px-2 py-0.5 rounded-full">
+                    {stat.trend}
+                  </span>
+                )}
               </div>
-            </Link>
+              <div className="text-xl font-bold text-slate-900 dark:text-white mb-0.5 truncate">
+                {stat.value}
+              </div>
+              <div className="text-xs text-slate-600 dark:text-slate-300 font-medium truncate mb-1">
+                {stat.label}
+              </div>
+              <div className="text-[11px] text-slate-400 dark:text-slate-500 truncate">
+                {stat.subtitle}
+              </div>
+            </div>
           ))}
         </div>
-      </div>
 
-      {/* Main Content Grid */}
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "2fr 1fr",
-          gap: "20px",
-        }}
-      >
-        {/* Left Column */}
-        <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
-          {/* Top Colleges */}
-          <div
-            style={{
-              background: "white",
-              borderRadius: "12px",
-              border: "1px solid #e2e8f0",
-              padding: "20px",
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                marginBottom: "16px",
-              }}
-            >
-              <h3
-                style={{
-                  fontSize: "15px",
-                  fontWeight: 600,
-                  color: "#1e293b",
-                  margin: 0,
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "8px",
-                }}
+        {/* Quick Actions */}
+        <div>
+          <h2 className="text-base font-semibold text-slate-900 dark:text-slate-100 mb-3.5">
+            Quick Actions
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5">
+            {quickActions.map((action, idx) => (
+              <button
+                key={idx}
+                onClick={() => navigate(action.path)}
+                className={`bg-white dark:bg-slate-900 rounded-xl p-4 border border-slate-200 dark:border-slate-800 ${action.borderHover} flex items-center gap-3.5 transition-all shadow-sm group text-left cursor-pointer`}
               >
+                <div
+                  className={`w-10 h-10 rounded-xl ${action.bgClass} flex items-center justify-center shrink-0`}
+                >
+                  <iconify-icon
+                    icon={action.icon}
+                    style={{ fontSize: "20px" }}
+                    className={action.colorClass}
+                  ></iconify-icon>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="text-xs md:text-sm font-semibold text-slate-900 dark:text-slate-100 group-hover:text-violet-600 dark:group-hover:text-violet-400 transition-colors truncate">
+                    {action.label}
+                  </div>
+                  <div className="text-[11px] text-slate-500 dark:text-slate-400 truncate">
+                    {action.description}
+                  </div>
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Main Content Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+
+          {/* Left Column (2 cols wide) */}
+          <div className="lg:col-span-2 space-y-5">
+
+            {/* Top Performing Colleges */}
+            <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
+              <h3 className="text-sm md:text-base font-semibold text-slate-900 dark:text-slate-100 flex items-center gap-2 mb-4">
                 <iconify-icon
-                  icon="lucide:trophy"
-                  style={{ fontSize: "16px", color: "#f59e0b" }}
+                  icon="lucide:award"
+                  style={{ fontSize: "16px" }}
+                  className="text-amber-600 dark:text-amber-400"
                 ></iconify-icon>
                 Top Performing Colleges
               </h3>
-              <Link
-                to="/colleges"
-                style={{
-                  fontSize: "12px",
-                  color: "#7c3aed",
-                  textDecoration: "none",
-                  fontWeight: 500,
-                }}
-              >
-                View All →
-              </Link>
-            </div>
-            <div style={{ overflowX: "auto" }}>
-              <table style={{ width: "100%", borderCollapse: "collapse" }}>
-                <thead>
-                  <tr style={{ borderBottom: "1px solid #f1f5f9" }}>
-                    <th
-                      style={{
-                        textAlign: "left",
-                        padding: "10px 12px",
-                        fontSize: "11px",
-                        fontWeight: 600,
-                        color: "#64748b",
-                        textTransform: "uppercase",
-                      }}
-                    >
-                      Rank
-                    </th>
-                    <th
-                      style={{
-                        textAlign: "left",
-                        padding: "10px 12px",
-                        fontSize: "11px",
-                        fontWeight: 600,
-                        color: "#64748b",
-                        textTransform: "uppercase",
-                      }}
-                    >
-                      College
-                    </th>
-                    <th
-                      style={{
-                        textAlign: "center",
-                        padding: "10px 12px",
-                        fontSize: "11px",
-                        fontWeight: 600,
-                        color: "#64748b",
-                        textTransform: "uppercase",
-                      }}
-                    >
-                      Students
-                    </th>
-                    <th
-                      style={{
-                        textAlign: "center",
-                        padding: "10px 12px",
-                        fontSize: "11px",
-                        fontWeight: 600,
-                        color: "#64748b",
-                        textTransform: "uppercase",
-                      }}
-                    >
-                      Events
-                    </th>
-                    <th
-                      style={{
-                        textAlign: "center",
-                        padding: "10px 12px",
-                        fontSize: "11px",
-                        fontWeight: 600,
-                        color: "#64748b",
-                        textTransform: "uppercase",
-                      }}
-                    >
-                      Score
-                    </th>
-                    <th
-                      style={{
-                        textAlign: "center",
-                        padding: "10px 12px",
-                        fontSize: "11px",
-                        fontWeight: 600,
-                        color: "#64748b",
-                        textTransform: "uppercase",
-                      }}
-                    >
-                      Trend
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {topColleges.map((college, idx) => (
-                    <tr
-                      key={idx}
-                      style={{
-                        borderBottom: "1px solid #f8fafc",
-                        cursor: "pointer",
-                      }}
-                      onMouseOver={(e) =>
-                        (e.currentTarget.style.background = "#fafafa")
-                      }
-                      onMouseOut={(e) =>
-                        (e.currentTarget.style.background = "white")
-                      }
-                    >
-                      <td style={{ padding: "12px" }}>
-                        <div
-                          style={{
-                            width: "28px",
-                            height: "28px",
-                            borderRadius: "50%",
-                            background:
-                              idx === 0
-                                ? "linear-gradient(135deg, #fbbf24, #f59e0b)"
-                                : idx === 1
-                                  ? "linear-gradient(135deg, #e5e7eb, #9ca3af)"
-                                  : idx === 2
-                                    ? "linear-gradient(135deg, #fdba74, #ea580c)"
-                                    : "#f1f5f9",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            color: idx < 3 ? "white" : "#64748b",
-                            fontWeight: 700,
-                            fontSize: "12px",
-                          }}
-                        >
-                          {idx + 1}
-                        </div>
-                      </td>
-                      <td style={{ padding: "12px" }}>
-                        <div
-                          style={{
-                            fontSize: "13px",
-                            fontWeight: 600,
-                            color: "#1e293b",
-                          }}
-                        >
-                          {college.name}
-                        </div>
-                      </td>
-                      <td
-                        style={{
-                          padding: "12px",
-                          textAlign: "center",
-                          fontSize: "13px",
-                          color: "#1e293b",
-                        }}
-                      >
-                        {college.students.toLocaleString()}
-                      </td>
-                      <td
-                        style={{
-                          padding: "12px",
-                          textAlign: "center",
-                          fontSize: "13px",
-                          color: "#1e293b",
-                        }}
-                      >
-                        {college.events}
-                      </td>
-                      <td style={{ padding: "12px", textAlign: "center" }}>
-                        <span
-                          style={{
-                            fontSize: "13px",
-                            fontWeight: 700,
-                            color: "#7c3aed",
-                          }}
-                        >
-                          {college.score.toLocaleString()}
-                        </span>
-                      </td>
-                      <td style={{ padding: "12px", textAlign: "center" }}>
-                        <span
-                          style={{
-                            fontSize: "11px",
-                            fontWeight: 600,
-                            color: "#16a34a",
-                            background: "#dcfce7",
-                            padding: "3px 8px",
-                            borderRadius: "4px",
-                          }}
-                        >
-                          {college.trend}
-                        </span>
-                      </td>
+              <div className="overflow-x-auto">
+                <table className="w-full text-xs md:text-sm">
+                  <thead>
+                    <tr className="border-b border-slate-100 dark:border-slate-800 text-left text-slate-500 dark:text-slate-400">
+                      <th className="pb-3 w-10">#</th>
+                      <th className="pb-3">College</th>
+                      <th className="pb-3 text-center">Students</th>
+                      <th className="pb-3 text-center">Events</th>
+                      <th className="pb-3 text-center">Score</th>
+                      <th className="pb-3 text-center">Trend</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+                    {topColleges.map((college, idx) => (
+                      <tr
+                        key={idx}
+                        className="hover:bg-slate-50/50 dark:hover:bg-slate-800/40 transition-colors"
+                      >
+                        <td className="py-3">
+                          <div
+                            className={`w-6 h-6 rounded-full flex items-center justify-center font-bold text-xs ${
+                              idx < 3
+                                ? "bg-amber-500 text-white"
+                                : "text-slate-400 dark:text-slate-500"
+                            }`}
+                          >
+                            {idx + 1}
+                          </div>
+                        </td>
+                        <td className="py-3 font-semibold text-slate-900 dark:text-slate-100">
+                          {college.name}
+                        </td>
+                        <td className="py-3 text-center text-slate-600 dark:text-slate-300">
+                          {college.students.toLocaleString()}
+                        </td>
+                        <td className="py-3 text-center text-slate-600 dark:text-slate-300">
+                          {college.events}
+                        </td>
+                        <td className="py-3 text-center font-bold text-violet-600 dark:text-violet-400">
+                          {college.score.toLocaleString()}
+                        </td>
+                        <td className="py-3 text-center">
+                          <span className="font-semibold text-[11px] text-green-700 dark:text-green-300 bg-green-100 dark:bg-green-950/60 px-2 py-0.5 rounded">
+                            {college.trend}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
-          </div>
 
-          {/* Recent Activity */}
-          <div
-            style={{
-              background: "white",
-              borderRadius: "12px",
-              border: "1px solid #e2e8f0",
-              padding: "20px",
-            }}
-          >
-            <h3
-              style={{
-                fontSize: "15px",
-                fontWeight: 600,
-                color: "#1e293b",
-                margin: "0 0 16px 0",
-                display: "flex",
-                alignItems: "center",
-                gap: "8px",
-              }}
-            >
-              <iconify-icon
-                icon="lucide:activity"
-                style={{ fontSize: "16px", color: "#0891b2" }}
-              ></iconify-icon>
-              Recent Platform Activity
-            </h3>
-            <div
-              style={{ display: "flex", flexDirection: "column", gap: "10px" }}
-            >
-              {recentActivities.map((activity) => (
-                <div
-                  key={activity.id}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "12px",
-                    padding: "12px",
-                    background: "#fafafa",
-                    borderRadius: "8px",
-                  }}
-                >
-                  <div
-                    style={{
-                      width: "36px",
-                      height: "36px",
-                      borderRadius: "8px",
-                      background: `${getActivityColor(activity.type)}15`,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      flexShrink: 0,
-                    }}
-                  >
-                    <iconify-icon
-                      icon={getActivityIcon(activity.type)}
-                      style={{
-                        fontSize: "16px",
-                        color: getActivityColor(activity.type),
-                      }}
-                    ></iconify-icon>
-                  </div>
-                  <div style={{ flex: 1 }}>
-                    <div style={{ fontSize: "13px", color: "#1e293b" }}>
-                      {activity.text}
-                    </div>
-                    <div style={{ fontSize: "11px", color: "#94a3b8" }}>
-                      {activity.time}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Right Column */}
-        <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
-          {/* Platform Alerts */}
-          <div
-            style={{
-              background: "white",
-              borderRadius: "12px",
-              border: "1px solid #e2e8f0",
-              padding: "20px",
-            }}
-          >
-            <h3
-              style={{
-                fontSize: "15px",
-                fontWeight: 600,
-                color: "#1e293b",
-                margin: "0 0 16px 0",
-                display: "flex",
-                alignItems: "center",
-                gap: "8px",
-              }}
-            >
-              <iconify-icon
-                icon="lucide:bell"
-                style={{ fontSize: "16px", color: "#dc2626" }}
-              ></iconify-icon>
-              Platform Alerts
-            </h3>
-            <div
-              style={{ display: "flex", flexDirection: "column", gap: "10px" }}
-            >
-              {alerts.map((alert) => (
-                <div
-                  key={alert.id}
-                  style={{
-                    padding: "12px 14px",
-                    borderRadius: "8px",
-                    background:
-                      alert.level === "critical"
-                        ? "#fef2f2"
-                        : alert.level === "warning"
-                          ? "#fefce8"
-                          : "#f0f9ff",
-                    borderLeft: `3px solid ${
-                      alert.level === "critical"
-                        ? "#dc2626"
-                        : alert.level === "warning"
-                          ? "#f59e0b"
-                          : "#0ea5e9"
-                    }`,
-                  }}
-                >
-                  <div
-                    style={{
-                      fontSize: "13px",
-                      fontWeight: 600,
-                      color: "#1e293b",
-                      marginBottom: "2px",
-                    }}
-                  >
-                    {alert.title}
-                  </div>
-                  <div
-                    style={{
-                      fontSize: "12px",
-                      color: "#64748b",
-                      marginBottom: "4px",
-                    }}
-                  >
-                    {alert.text}
-                  </div>
-                  <div style={{ fontSize: "10px", color: "#94a3b8" }}>
-                    {alert.time}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Pending Approvals */}
-          <div
-            style={{
-              background: "white",
-              borderRadius: "12px",
-              border: "1px solid #e2e8f0",
-              padding: "20px",
-            }}
-          >
-            <h3
-              style={{
-                fontSize: "15px",
-                fontWeight: 600,
-                color: "#1e293b",
-                margin: "0 0 16px 0",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-              }}
-            >
-              <span
-                style={{ display: "flex", alignItems: "center", gap: "8px" }}
-              >
+            {/* Recent Platform Activity */}
+            <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
+              <h3 className="text-sm md:text-base font-semibold text-slate-900 dark:text-slate-100 flex items-center gap-2 mb-4">
                 <iconify-icon
-                  icon="lucide:clock"
-                  style={{ fontSize: "16px", color: "#f59e0b" }}
+                  icon="lucide:activity"
+                  style={{ fontSize: "16px" }}
+                  className="text-cyan-600 dark:text-cyan-400"
                 ></iconify-icon>
-                Pending Approvals
-              </span>
-              <span
-                style={{
-                  fontSize: "11px",
-                  fontWeight: 600,
-                  background: "#fef3c7",
-                  color: "#b45309",
-                  padding: "3px 8px",
-                  borderRadius: "10px",
-                }}
-              >
-                {metrics.pendingApprovals}
-              </span>
-            </h3>
-            <div
-              style={{ display: "flex", flexDirection: "column", gap: "8px" }}
-            >
-              {[
-                {
-                  type: "College Registration",
-                  count: 5,
-                  icon: "lucide:building-2",
-                },
-                { type: "Event Approvals", count: 4, icon: "lucide:calendar" },
-                {
-                  type: "Certificate Requests",
-                  count: 3,
-                  icon: "lucide:award",
-                },
-              ].map((item, idx) => (
-                <div
-                  key={idx}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    padding: "10px 12px",
-                    background: "#fafafa",
-                    borderRadius: "8px",
-                    cursor: "pointer",
-                  }}
-                >
+                Recent Platform Activity
+              </h3>
+              <div className="space-y-2.5">
+                {recentActivities.map((activity) => (
                   <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "10px",
-                    }}
+                    key={activity.id}
+                    className="flex items-center gap-3 p-3 bg-slate-50 dark:bg-slate-800/40 rounded-lg"
                   >
-                    <iconify-icon
-                      icon={item.icon}
-                      style={{ fontSize: "16px", color: "#64748b" }}
-                    ></iconify-icon>
-                    <span style={{ fontSize: "13px", color: "#1e293b" }}>
-                      {item.type}
-                    </span>
+                    <div
+                      className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0"
+                      style={{
+                        background: `${getActivityColor(activity.type)}15`,
+                      }}
+                    >
+                      <iconify-icon
+                        icon={getActivityIcon(activity.type)}
+                        style={{
+                          fontSize: "16px",
+                          color: getActivityColor(activity.type),
+                        }}
+                      ></iconify-icon>
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="text-xs md:text-sm font-medium text-slate-800 dark:text-slate-200 truncate">
+                        {activity.text}
+                      </div>
+                      <div className="text-[11px] text-slate-400 dark:text-slate-500 mt-0.5">
+                        {activity.time}
+                      </div>
+                    </div>
                   </div>
-                  <span
-                    style={{
-                      fontSize: "12px",
-                      fontWeight: 600,
-                      color: "#b45309",
-                    }}
-                  >
-                    {item.count}
-                  </span>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
 
-          {/* Platform Health */}
-          <div
-            style={{
-              background: "linear-gradient(135deg, #7c3aed, #a855f7)",
-              borderRadius: "12px",
-              padding: "20px",
-              color: "white",
-            }}
-          >
-            <h3
-              style={{
-                fontSize: "15px",
-                fontWeight: 600,
-                margin: "0 0 16px 0",
-                display: "flex",
-                alignItems: "center",
-                gap: "8px",
-              }}
-            >
-              <iconify-icon
-                icon="lucide:heart-pulse"
-                style={{ fontSize: "16px" }}
-              ></iconify-icon>
-              Platform Health
-            </h3>
-            <div
-              style={{ display: "flex", flexDirection: "column", gap: "12px" }}
-            >
-              {[
-                { label: "API Uptime", value: "99.9%", status: "healthy" },
-                { label: "Database", value: "Optimal", status: "healthy" },
-                { label: "Payment Gateway", value: "Issue", status: "warning" },
-                { label: "Email Service", value: "Active", status: "healthy" },
-              ].map((item, idx) => (
-                <div
-                  key={idx}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <span style={{ fontSize: "13px", opacity: 0.9 }}>
-                    {item.label}
-                  </span>
+          {/* Right Column */}
+          <div className="space-y-5">
+
+            {/* Platform Alerts */}
+            <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
+              <h3 className="text-sm md:text-base font-semibold text-slate-900 dark:text-slate-100 flex items-center gap-2 mb-4">
+                <iconify-icon
+                  icon="lucide:bell"
+                  style={{ fontSize: "16px" }}
+                  className="text-rose-600 dark:text-rose-400"
+                ></iconify-icon>
+                Platform Alerts
+              </h3>
+              <div className="space-y-2.5">
+                {alerts.map((alert) => (
                   <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "6px",
-                    }}
+                    key={alert.id}
+                    className={`p-3 rounded-lg border-l-4 ${
+                      alert.level === "critical"
+                        ? "bg-rose-50 dark:bg-rose-950/30 border-l-rose-600"
+                        : alert.level === "warning"
+                          ? "bg-amber-50 dark:bg-amber-950/30 border-l-amber-500"
+                          : "bg-blue-50 dark:bg-blue-950/30 border-l-blue-500"
+                    }`}
                   >
-                    <span style={{ fontSize: "13px", fontWeight: 600 }}>
-                      {item.value}
-                    </span>
-                    <div
-                      style={{
-                        width: "8px",
-                        height: "8px",
-                        borderRadius: "50%",
-                        background:
-                          item.status === "healthy" ? "#4ade80" : "#fbbf24",
-                      }}
-                    ></div>
+                    <div className="text-xs md:text-sm font-semibold text-slate-900 dark:text-slate-100 mb-0.5">
+                      {alert.title}
+                    </div>
+                    <div className="text-xs text-slate-600 dark:text-slate-400 mb-1">
+                      {alert.text}
+                    </div>
+                    <div className="text-[10px] text-slate-400 dark:text-slate-500">
+                      {alert.time}
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
+            </div>
+
+            {/* Pending Approvals */}
+            <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-sm md:text-base font-semibold text-slate-900 dark:text-slate-100 flex items-center gap-2">
+                  <iconify-icon
+                    icon="lucide:clock"
+                    style={{ fontSize: "16px" }}
+                    className="text-amber-600 dark:text-amber-400"
+                  ></iconify-icon>
+                  Pending Approvals
+                </h3>
+                <span className="text-xs font-semibold bg-amber-100 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 px-2 py-0.5 rounded-full">
+                  {metrics.pendingApprovals}
+                </span>
+              </div>
+              <div className="space-y-2">
+                {[
+                  {
+                    type: "College Registration",
+                    count: 5,
+                    icon: "lucide:building-2",
+                  },
+                  { type: "Event Approvals", count: 4, icon: "lucide:calendar" },
+                  {
+                    type: "Certificate Requests",
+                    count: 3,
+                    icon: "lucide:award",
+                  },
+                ].map((item, idx) => (
+                  <div
+                    key={idx}
+                    className="flex items-center justify-between p-2.5 bg-slate-50 dark:bg-slate-800/40 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors cursor-pointer"
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <iconify-icon
+                        icon={item.icon}
+                        style={{ fontSize: "16px" }}
+                        className="text-slate-500 dark:text-slate-400"
+                      ></iconify-icon>
+                      <span className="text-xs md:text-sm text-slate-800 dark:text-slate-200">
+                        {item.type}
+                      </span>
+                    </div>
+                    <span className="text-xs font-bold text-amber-600 dark:text-amber-400">
+                      {item.count}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Platform Health */}
+            <div className="bg-gradient-to-br from-violet-700 to-indigo-900 dark:from-violet-900 dark:to-slate-900 rounded-xl p-5 text-white shadow-sm border border-violet-600/30 dark:border-slate-800">
+              <h3 className="text-sm md:text-base font-semibold flex items-center gap-2 mb-4">
+                <iconify-icon
+                  icon="lucide:heart-pulse"
+                  style={{ fontSize: "16px" }}
+                ></iconify-icon>
+                Platform Health
+              </h3>
+              <div className="space-y-3">
+                {[
+                  { label: "API Uptime", value: "99.9%", status: "healthy" },
+                  { label: "Database", value: "Optimal", status: "healthy" },
+                  { label: "Payment Gateway", value: "Issue", status: "warning" },
+                  { label: "Email Service", value: "Active", status: "healthy" },
+                ].map((item, idx) => (
+                  <div
+                    key={idx}
+                    className="flex items-center justify-between text-xs md:text-sm"
+                  >
+                    <span className="text-violet-100/90">{item.label}</span>
+                    <div className="flex items-center gap-2">
+                      <span className="font-semibold">{item.value}</span>
+                      <div
+                        className={`w-2 h-2 rounded-full ${
+                          item.status === "healthy"
+                            ? "bg-emerald-400"
+                            : "bg-amber-400"
+                        }`}
+                      ></div>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>

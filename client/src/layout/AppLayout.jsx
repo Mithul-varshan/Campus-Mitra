@@ -143,6 +143,7 @@ export default function AppLayout() {
         <Route path="/students" element={<Students />} />
         <Route path="/faculty" element={<Faculty />} />
         <Route path="/bulk-import" element={<BulkImport />} />
+        <Route path="/bulk_import" element={<Navigate to="/bulk-import" replace />} />
         <Route path="/analytics" element={<Analytics />} />
         <Route path="/naac-reports" element={<NaacReports />} />
         <Route path="/winners" element={<Winners />} />
