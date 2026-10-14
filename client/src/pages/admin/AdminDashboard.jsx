@@ -4,7 +4,7 @@ import { useEvents } from "../../context/EventsContext";
 
 // College info (would come from auth context in production)
 const COLLEGE_INFO = {
-  name: "Dr.SNS Rajalakshmi College Of Arts and Science",
+  name: "DHANALAKSHMI SRINIVASAN UNIVERSITY",
   code: "SSEC-2024",
   naacGrade: "A++",
   departments: ["CSE", "ECE", "IT", "MECH", "CIVIL", "EEE", "AIDS", "AIML"],

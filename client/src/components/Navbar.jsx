@@ -38,7 +38,7 @@ export default function Navbar() {
           icon="lucide:building-2"
           style={{ fontSize: "16px" }}
         ></iconify-icon>
-        Dr.SNS Rajalakshmi College Of Arts and Science
+        DHANALAKSHMI SRINIVASAN UNIVERSITY
       </div>
 
       {/* Search Bar */}
