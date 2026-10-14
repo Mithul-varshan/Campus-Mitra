@@ -6,7 +6,7 @@ import {
 } from "lucide-react";
 import { generateEventReportExcel } from "../utils/eventReportExcel";
 
-const instituteName = "SNS Rajalakshmi College of Engineering";
+const instituteName = "Dhanalakshmi Srinivasan University";
 
 // ─── Stat Card ────────────────────────────────────────────────────────────────
 function StatCard({ label, value, sub, icon: Icon, trend, accentColor = "border-blue-500", iconBg = "bg-blue-50", iconColor = "text-blue-600" }) {

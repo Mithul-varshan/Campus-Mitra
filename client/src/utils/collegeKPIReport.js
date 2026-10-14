@@ -2,7 +2,7 @@
 import autoTable from "jspdf-autotable";
 
 export function generateCollegeKPIReport({
-  instituteName = "SNS Rajalakshmi College of Engineering",
+  instituteName = "Dhanalakshmi Srinivasan University",
   academicYear = "2024-25"
 } = {}) {
   const doc = new jsPDF("l", "mm", "a4");

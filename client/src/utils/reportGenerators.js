@@ -2,11 +2,11 @@
 import autoTable from "jspdf-autotable";
 
 /* â”€â”€ Palette â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
-const DARK    = [30,  30,  30];
-const GRAY    = [100, 100, 100];
+const DARK = [30, 30, 30];
+const GRAY = [100, 100, 100];
 const LIGHT_G = [240, 240, 240]; // #f0f0f0 â€” header fills
-const MID_G   = [220, 220, 220]; // sub-header row fill
-const BORDER  = [190, 190, 190];
+const MID_G = [220, 220, 220]; // sub-header row fill
+const BORDER = [190, 190, 190];
 
 /* â”€â”€ Shared helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 function centeredText(doc, text, y, size = 10, style = "normal", color = DARK) {
@@ -54,8 +54,8 @@ function addPageNumber(doc) {
 
 /* Shared table defaults â€” #f0f0f0 head, dark text everywhere */
 const BASE = {
-  styles:             { fontSize: 6.5, cellPadding: 1.4, lineColor: BORDER, lineWidth: 0.2, textColor: DARK, overflow: "linebreak" },
-  headStyles:         { fillColor: LIGHT_G, textColor: DARK, fontStyle: "bold", fontSize: 6.5, lineColor: BORDER, lineWidth: 0.2 },
+  styles: { fontSize: 6.5, cellPadding: 1.4, lineColor: BORDER, lineWidth: 0.2, textColor: DARK, overflow: "linebreak" },
+  headStyles: { fillColor: LIGHT_G, textColor: DARK, fontStyle: "bold", fontSize: 6.5, lineColor: BORDER, lineWidth: 0.2 },
   alternateRowStyles: { fillColor: [248, 248, 248] },
 };
 
@@ -69,13 +69,13 @@ export function generateNIRFReport({
   dateFrom,
   dateTo,
   subReportName,
-  instituteName = "SNS Rajalakshmi College of Engineering",
+  instituteName = "Dhanalakshmi Srinivasan University",
   instituteCode = "IR-E-C-00000",
 }) {
-  const toYear   = dateTo   ? parseInt(dateTo.slice(0, 4))   : new Date().getFullYear();
+  const toYear = dateTo ? parseInt(dateTo.slice(0, 4)) : new Date().getFullYear();
   const fromYear = dateFrom ? parseInt(dateFrom.slice(0, 4)) : toYear - 1;
   const ay = (y) => `${y}-${String(y + 1).slice(-2)}`;
-  const yrs = [toYear-1, toYear-2, toYear-3, toYear-4, toYear-5, toYear-6];
+  const yrs = [toYear - 1, toYear - 2, toYear - 3, toYear - 4, toYear - 5, toYear - 6];
 
   const doc = new jsPDF({ orientation: "landscape", unit: "mm", format: "a4" });
   const W = doc.internal.pageSize.getWidth();
@@ -89,9 +89,9 @@ export function generateNIRFReport({
   doc.setFillColor(...LIGHT_G);
   doc.setDrawColor(...BORDER); doc.setLineWidth(0.3);
   doc.rect(M, y - 4, TW, 26, "FD");
-  centeredText(doc, "National Institutional Ranking Framework", y + 2,  11, "bold",   DARK);
-  centeredText(doc, "Ministry of Education  |  Government of India",    y + 8,  8,  "normal", GRAY);
-  centeredText(doc, "Welcome to Data Capturing System: ENGINEERING",    y + 14, 8,  "bold",   DARK);
+  centeredText(doc, "National Institutional Ranking Framework", y + 2, 11, "bold", DARK);
+  centeredText(doc, "Ministry of Education  |  Government of India", y + 8, 8, "normal", GRAY);
+  centeredText(doc, "Welcome to Data Capturing System: ENGINEERING", y + 14, 8, "bold", DARK);
   y += 26;
 
   doc.setLineWidth(0.2); doc.setDrawColor(...BORDER);
@@ -101,15 +101,15 @@ export function generateNIRFReport({
   doc.text(`Submitted Institute Data for NIRF'${toYear}`, M, y); y += 4;
   doc.setFont("helvetica", "normal"); doc.setFontSize(7.5); doc.setTextColor(...GRAY);
   doc.text(`Institute Name: ${instituteName} [${instituteCode}]`, M, y); y += 4;
-  doc.text(`Reporting Period: ${ay(fromYear)} to ${ay(toYear-1)}`, M, y); y += 5;
+  doc.text(`Reporting Period: ${ay(fromYear)} to ${ay(toYear - 1)}`, M, y); y += 5;
 
   y = sectionHeader(doc, "Sanctioned (Approved) Intake", y, W);
   autoTable(doc, {
     ...T, startY: y,
     head: [["Academic Year", ay(yrs[0]), ay(yrs[1]), ay(yrs[2]), ay(yrs[3]), ay(yrs[4]), ay(yrs[5])]],
     body: [
-      ["UG [4 Years Program(s)]", "180","180","180","180","180","180"],
-      ["PG [2 Year Program(s)]",  "18", "18", "18", "18", "18","18"],
+      ["UG [4 Years Program(s)]", "180", "180", "180", "180", "180", "180"],
+      ["PG [2 Year Program(s)]", "18", "18", "18", "18", "18", "18"],
     ],
   });
   y = doc.lastAutoTable.finalY + 3;
@@ -119,19 +119,19 @@ export function generateNIRFReport({
     ...T, startY: y,
     styles: { ...T.styles, fontSize: 5.5 }, headStyles: { ...T.headStyles, fontSize: 5.5 },
     head: [[
-      "All programs\n(all years)","No. of Male\nStudents","No. of Female\nStudents","Total\nStudents",
-      "Within State\n(M & F)","Outside State\n(M & F)","Outside\nCountry","Economically\nBackward",
-      "Socially\nChallenged\n(SC+ST+OBC)","Full Tuition\nReimb.\nState/Govt","Full Tuition\nReimb.\nInstitution",
-      "Full Tuition\nReimb.\nPrivate Bodies","Not Receiving\nFull Tuition\nReimb.",
+      "All programs\n(all years)", "No. of Male\nStudents", "No. of Female\nStudents", "Total\nStudents",
+      "Within State\n(M & F)", "Outside State\n(M & F)", "Outside\nCountry", "Economically\nBackward",
+      "Socially\nChallenged\n(SC+ST+OBC)", "Full Tuition\nReimb.\nState/Govt", "Full Tuition\nReimb.\nInstitution",
+      "Full Tuition\nReimb.\nPrivate Bodies", "Not Receiving\nFull Tuition\nReimb.",
     ]],
     body: [
-      ["UG [4 Years\nProgram(s)]","45","625","670","650","20","0","180","245","120","0","0","305"],
-      ["PG [2 Year\nProgram(s)]", "8","32","40","40","0","0","10","15","8","0","0","17"],
+      ["UG [4 Years\nProgram(s)]", "45", "625", "670", "650", "20", "0", "180", "245", "120", "0", "0", "305"],
+      ["PG [2 Year\nProgram(s)]", "8", "32", "40", "40", "0", "0", "10", "15", "8", "0", "0", "17"],
     ],
     columnStyles: {
-      0:{cellWidth:22},1:{cellWidth:13},2:{cellWidth:13},3:{cellWidth:13},
-      4:{cellWidth:17},5:{cellWidth:17},6:{cellWidth:13},7:{cellWidth:17},
-      8:{cellWidth:21},9:{cellWidth:21},10:{cellWidth:21},11:{cellWidth:21},12:{cellWidth:21},
+      0: { cellWidth: 22 }, 1: { cellWidth: 13 }, 2: { cellWidth: 13 }, 3: { cellWidth: 13 },
+      4: { cellWidth: 17 }, 5: { cellWidth: 17 }, 6: { cellWidth: 13 }, 7: { cellWidth: 17 },
+      8: { cellWidth: 21 }, 9: { cellWidth: 21 }, 10: { cellWidth: 21 }, 11: { cellWidth: 21 }, 12: { cellWidth: 21 },
     },
   });
   y = doc.lastAutoTable.finalY + 3;
@@ -141,14 +141,14 @@ export function generateNIRFReport({
   autoTable(doc, {
     ...T, startY: y,
     styles: { ...T.styles, fontSize: 6 }, headStyles: { ...T.headStyles, fontSize: 6 },
-    head: [["Academic Year","No. of first year\nstudents intake\nin year","No. of first year\nstudents admitted\nin year",
-            "Academic Year","No. of students\nadmitted through\nLateral entry","Academic Year",
-            "No. of students\ngraduating in\nmin. stipulated time","No. of students\nplaced",
-            "Median salary of\nplaced graduates\n(Amount in Rs.)","No. of students\nselected for\nHigher Studies"]],
+    head: [["Academic Year", "No. of first year\nstudents intake\nin year", "No. of first year\nstudents admitted\nin year",
+      "Academic Year", "No. of students\nadmitted through\nLateral entry", "Academic Year",
+      "No. of students\ngraduating in\nmin. stipulated time", "No. of students\nplaced",
+      "Median salary of\nplaced graduates\n(Amount in Rs.)", "No. of students\nselected for\nHigher Studies"]],
     body: [
-      [ay(toYear-6),"180","165",ay(toYear-5),"25",ay(toYear-3),"182","145","450000\n(Four Lac Fifty Thousand only)","28"],
-      [ay(toYear-5),"180","170",ay(toYear-4),"28",ay(toYear-2),"188","158","520000\n(Five Lac Twenty Thousand only)","22"],
-      [ay(toYear-4),"180","168",ay(toYear-3),"30",ay(toYear-1),"192","165","580000\n(Five Lac Eighty Thousand only)","18"],
+      [ay(toYear - 6), "180", "165", ay(toYear - 5), "25", ay(toYear - 3), "182", "145", "450000\n(Four Lac Fifty Thousand only)", "28"],
+      [ay(toYear - 5), "180", "170", ay(toYear - 4), "28", ay(toYear - 2), "188", "158", "520000\n(Five Lac Twenty Thousand only)", "22"],
+      [ay(toYear - 4), "180", "168", ay(toYear - 3), "30", ay(toYear - 1), "192", "165", "580000\n(Five Lac Eighty Thousand only)", "18"],
     ],
   });
   y = doc.lastAutoTable.finalY + 3;
@@ -157,13 +157,13 @@ export function generateNIRFReport({
   autoTable(doc, {
     ...T, startY: y,
     styles: { ...T.styles, fontSize: 6 }, headStyles: { ...T.headStyles, fontSize: 6 },
-    head: [["Academic Year","No. of first year\nstudents intake\nin year","No. of first year\nstudents admitted\nin year",
-            "Academic Year","No. of students\ngraduating in\nmin. stipulated time",
-            "No. of students\nplaced","Median salary of\nplaced graduates\n(Amount in Rs.)","No. of students\nselected for\nHigher Studies"]],
+    head: [["Academic Year", "No. of first year\nstudents intake\nin year", "No. of first year\nstudents admitted\nin year",
+      "Academic Year", "No. of students\ngraduating in\nmin. stipulated time",
+      "No. of students\nplaced", "Median salary of\nplaced graduates\n(Amount in Rs.)", "No. of students\nselected for\nHigher Studies"]],
     body: [
-      [ay(toYear-4),"18","15",ay(toYear-3),"13","8","650000\n(Six Lac Fifty Thousand only)","3"],
-      [ay(toYear-3),"18","16",ay(toYear-2),"14","10","720000\n(Seven Lac Twenty Thousand only)","2"],
-      [ay(toYear-2),"18","18",ay(toYear-1),"16","12","780000\n(Seven Lac Eighty Thousand only)","2"],
+      [ay(toYear - 4), "18", "15", ay(toYear - 3), "13", "8", "650000\n(Six Lac Fifty Thousand only)", "3"],
+      [ay(toYear - 3), "18", "16", ay(toYear - 2), "14", "10", "720000\n(Seven Lac Twenty Thousand only)", "2"],
+      [ay(toYear - 2), "18", "18", ay(toYear - 1), "16", "12", "780000\n(Seven Lac Eighty Thousand only)", "2"],
     ],
   });
 
@@ -173,12 +173,12 @@ export function generateNIRFReport({
   y = sectionHeader(doc, "Ph.D Student Details", y, W);
   autoTable(doc, {
     ...T, startY: y,
-    head: [[{ content: `Ph.D â€” Students pursuing doctoral program till ${toYear-1}-${String(toYear).slice(-2)}`, colSpan: 2 }],
-           ["", "Total Students"]],
+    head: [[{ content: `Ph.D â€” Students pursuing doctoral program till ${toYear - 1}-${String(toYear).slice(-2)}`, colSpan: 2 }],
+    ["", "Total Students"]],
     body: [
-      ["Full Time","0"],["Part Time","0"],
+      ["Full Time", "0"], ["Part Time", "0"],
       [{ content: "No. of Ph.D students graduated (including Integrated Ph.D)", colSpan: 2, styles: SUB_ROW }],
-      ["Full Time","0 / 0 / 0"],["Part Time","0 / 0 / 0"],
+      ["Full Time", "0 / 0 / 0"], ["Part Time", "0 / 0 / 0"],
     ],
   });
   y = doc.lastAutoTable.finalY + 3;
@@ -187,15 +187,15 @@ export function generateNIRFReport({
   autoTable(doc, {
     ...T, startY: y,
     head: [
-      [{ content:"Academic Year", rowSpan:2 }, { content:ay(toYear-1) }, { content:ay(toYear-2) }, { content:ay(toYear-3) }],
-      ["Utilised Amount","Utilised Amount","Utilised Amount"],
-      [{ content:"Annual Capital Expenditure on Academic Activities and Resources (excl. buildings)", colSpan:4, styles: SUB_ROW }],
+      [{ content: "Academic Year", rowSpan: 2 }, { content: ay(toYear - 1) }, { content: ay(toYear - 2) }, { content: ay(toYear - 3) }],
+      ["Utilised Amount", "Utilised Amount", "Utilised Amount"],
+      [{ content: "Annual Capital Expenditure on Academic Activities and Resources (excl. buildings)", colSpan: 4, styles: SUB_ROW }],
     ],
     body: [
-      ["Library (Books, Journals and e-Resources only)","245000 (Two Lac Forty Five Thousand)","198000 (One Lac Ninety Eight Thousand)","175000 (One Lac Seventy Five Thousand)"],
-      ["New Equipment and software for Laboratories","3250000 (Thirty Two Lac Fifty Thousand)","2850000 (Twenty Eight Lac Fifty Thousand)","2450000 (Twenty Four Lac Fifty Thousand)"],
-      ["Engineering Workshops","125000 (One Lac Twenty Five Thousand)","98000 (Ninety Eight Thousand)","85000 (Eighty Five Thousand)"],
-      ["Other expenditure on Capital Assets","175000 (One Lac Seventy Five Thousand)","150000 (One Lac Fifty Thousand)","125000 (One Lac Twenty Five Thousand)"],
+      ["Library (Books, Journals and e-Resources only)", "245000 (Two Lac Forty Five Thousand)", "198000 (One Lac Ninety Eight Thousand)", "175000 (One Lac Seventy Five Thousand)"],
+      ["New Equipment and software for Laboratories", "3250000 (Thirty Two Lac Fifty Thousand)", "2850000 (Twenty Eight Lac Fifty Thousand)", "2450000 (Twenty Four Lac Fifty Thousand)"],
+      ["Engineering Workshops", "125000 (One Lac Twenty Five Thousand)", "98000 (Ninety Eight Thousand)", "85000 (Eighty Five Thousand)"],
+      ["Other expenditure on Capital Assets", "175000 (One Lac Seventy Five Thousand)", "150000 (One Lac Fifty Thousand)", "125000 (One Lac Twenty Five Thousand)"],
     ],
   });
   y = doc.lastAutoTable.finalY + 3;
@@ -204,14 +204,14 @@ export function generateNIRFReport({
   autoTable(doc, {
     ...T, startY: y,
     head: [
-      [{ content:"Academic Year", rowSpan:2 }, { content:ay(toYear-1) }, { content:ay(toYear-2) }, { content:ay(toYear-3) }],
-      ["Utilised Amount","Utilised Amount","Utilised Amount"],
-      [{ content:"Annual Operational Expenditure", colSpan:4, styles: SUB_ROW }],
+      [{ content: "Academic Year", rowSpan: 2 }, { content: ay(toYear - 1) }, { content: ay(toYear - 2) }, { content: ay(toYear - 3) }],
+      ["Utilised Amount", "Utilised Amount", "Utilised Amount"],
+      [{ content: "Annual Operational Expenditure", colSpan: 4, styles: SUB_ROW }],
     ],
     body: [
-      ["Salaries (Teaching and Non Teaching staff)","45500000 (Four Crore Fifty Five Lac)","42800000 (Four Crore Twenty Eight Lac)","39500000 (Three Crore Ninety Five Lac)"],
-      ["Maintenance of Academic Infrastructure and other running expenditures","1850000 (Eighteen Lac Fifty Thousand)","1650000 (Sixteen Lac Fifty Thousand)","1450000 (Fourteen Lac Fifty Thousand)"],
-      ["Seminars/Conferences/Workshops","385000 (Three Lac Eighty Five Thousand)","325000 (Three Lac Twenty Five Thousand)","285000 (Two Lac Eighty Five Thousand)"],
+      ["Salaries (Teaching and Non Teaching staff)", "45500000 (Four Crore Fifty Five Lac)", "42800000 (Four Crore Twenty Eight Lac)", "39500000 (Three Crore Ninety Five Lac)"],
+      ["Maintenance of Academic Infrastructure and other running expenditures", "1850000 (Eighteen Lac Fifty Thousand)", "1650000 (Sixteen Lac Fifty Thousand)", "1450000 (Fourteen Lac Fifty Thousand)"],
+      ["Seminars/Conferences/Workshops", "385000 (Three Lac Eighty Five Thousand)", "325000 (Three Lac Twenty Five Thousand)", "285000 (Two Lac Eighty Five Thousand)"],
     ],
   });
   y = doc.lastAutoTable.finalY + 3;
@@ -219,8 +219,8 @@ export function generateNIRFReport({
   y = sectionHeader(doc, "IPR", y, W);
   autoTable(doc, {
     ...T, startY: y,
-    head: [["Calendar year", String(toYear-1), String(toYear-2), String(toYear-3)]],
-    body: [["No. of Patents Published","4","3","2"],["No. of Patents Granted","2","1","1"]],
+    head: [["Calendar year", String(toYear - 1), String(toYear - 2), String(toYear - 3)]],
+    body: [["No. of Patents Published", "4", "3", "2"], ["No. of Patents Granted", "2", "1", "1"]],
   });
 
   /* â”€â”€ PAGE 3 â”€â”€ */
@@ -229,12 +229,12 @@ export function generateNIRFReport({
   y = sectionHeader(doc, "Sponsored Research Details", y, W);
   autoTable(doc, {
     ...T, startY: y,
-    head: [["Financial Year", ay(toYear-1), ay(toYear-2), ay(toYear-3)]],
+    head: [["Financial Year", ay(toYear - 1), ay(toYear - 2), ay(toYear - 3)]],
     body: [
-      ["Total no. of Sponsored Projects","2","1","1"],
-      ["Total no. of Funding Agencies","2","1","1"],
-      ["Total Amount Received (Amount in Rs.)","285000","150000","150000"],
-      ["Amount Received in Words","Two Lac Eighty Five Thousand only","One Lac Fifty Thousand only","One Lac Fifty Thousand only"],
+      ["Total no. of Sponsored Projects", "2", "1", "1"],
+      ["Total no. of Funding Agencies", "2", "1", "1"],
+      ["Total Amount Received (Amount in Rs.)", "285000", "150000", "150000"],
+      ["Amount Received in Words", "Two Lac Eighty Five Thousand only", "One Lac Fifty Thousand only", "One Lac Fifty Thousand only"],
     ],
   });
   y = doc.lastAutoTable.finalY + 3;
@@ -242,12 +242,12 @@ export function generateNIRFReport({
   y = sectionHeader(doc, "Consultancy Project Details", y, W);
   autoTable(doc, {
     ...T, startY: y,
-    head: [["Financial Year", ay(toYear-1), ay(toYear-2), ay(toYear-3)]],
+    head: [["Financial Year", ay(toYear - 1), ay(toYear - 2), ay(toYear - 3)]],
     body: [
-      ["Total no. of Consultancy Projects","0","0","0"],
-      ["Total no. of Client Organizations","0","0","0"],
-      ["Total Amount Received (Amount in Rs.)","0","0","0"],
-      ["Amount Received in Words","Zero","Zero","Zero"],
+      ["Total no. of Consultancy Projects", "0", "0", "0"],
+      ["Total no. of Client Organizations", "0", "0", "0"],
+      ["Total Amount Received (Amount in Rs.)", "0", "0", "0"],
+      ["Amount Received in Words", "Zero", "Zero", "Zero"],
     ],
   });
   y = doc.lastAutoTable.finalY + 3;
@@ -255,11 +255,11 @@ export function generateNIRFReport({
   y = sectionHeader(doc, "PCS Facilities: Facilities of physically challenged students", y, W);
   autoTable(doc, {
     ...T, startY: y,
-    head: [["Question","Response"]],
+    head: [["Question", "Response"]],
     body: [
-      ["1. Do your institution buildings have Lifts/Ramps?","Yes, more than 80% of the buildings"],
-      ["2. Do your institution have provision for walking aids, including wheelchairs and transportation from one building to another for handicapped students?","Yes"],
-      ["3. Do your institution buildings have specially designed toilets for handicapped students?","Yes, more than 80% of the buildings"],
+      ["1. Do your institution buildings have Lifts/Ramps?", "Yes, more than 80% of the buildings"],
+      ["2. Do your institution have provision for walking aids, including wheelchairs and transportation from one building to another for handicapped students?", "Yes"],
+      ["3. Do your institution buildings have specially designed toilets for handicapped students?", "Yes, more than 80% of the buildings"],
     ],
     columnStyles: { 0: { cellWidth: 160 } },
   });
@@ -269,23 +269,23 @@ export function generateNIRFReport({
   autoTable(doc, {
     ...T, startY: y,
     styles: { ...T.styles, fontSize: 6 }, headStyles: { ...T.headStyles, fontSize: 6 },
-    head: [["Srno","Name","Age","Designation","Gender","Qualification","Experience\n(In Months)","Currently\nWorking?","Joining Date","Leaving Date","Association\nType"]],
+    head: [["Srno", "Name", "Age", "Designation", "Gender", "Qualification", "Experience\n(In Months)", "Currently\nWorking?", "Joining Date", "Leaving Date", "Association\nType"]],
     body: [
-      ["1","Dr. Rajesh Kumar","45","Professor","Male","Ph.D","240","Yes","15-07-2010","–","Regular"],
-      ["2","Dr. Priya Sharma","38","Associate Professor","Female","Ph.D","156","Yes","10-08-2012","–","Regular"],
-      ["3","Arun Patel","42","Assistant Professor","Male","M.Tech","180","Yes","20-06-2011","–","Regular"],
-      ["4","Sneha Reddy","35","Assistant Professor","Female","M.Tech","120","Yes","05-09-2015","–","Regular"],
-      ["5","Dr. Karthik Iyer","40","Associate Professor","Male","Ph.D","168","Yes","12-07-2013","–","Regular"],
+      ["1", "Dr. Rajesh Kumar", "45", "Professor", "Male", "Ph.D", "240", "Yes", "15-07-2010", "–", "Regular"],
+      ["2", "Dr. Priya Sharma", "38", "Associate Professor", "Female", "Ph.D", "156", "Yes", "10-08-2012", "–", "Regular"],
+      ["3", "Arun Patel", "42", "Assistant Professor", "Male", "M.Tech", "180", "Yes", "20-06-2011", "–", "Regular"],
+      ["4", "Sneha Reddy", "35", "Assistant Professor", "Female", "M.Tech", "120", "Yes", "05-09-2015", "–", "Regular"],
+      ["5", "Dr. Karthik Iyer", "40", "Associate Professor", "Male", "Ph.D", "168", "Yes", "12-07-2013", "–", "Regular"],
     ],
     columnStyles: {
-      0:{cellWidth:10},1:{cellWidth:34},2:{cellWidth:10},3:{cellWidth:32},
-      4:{cellWidth:14},5:{cellWidth:20},6:{cellWidth:16},7:{cellWidth:16},
-      8:{cellWidth:20},9:{cellWidth:20},10:{cellWidth:22},
+      0: { cellWidth: 10 }, 1: { cellWidth: 34 }, 2: { cellWidth: 10 }, 3: { cellWidth: 32 },
+      4: { cellWidth: 14 }, 5: { cellWidth: 20 }, 6: { cellWidth: 16 }, 7: { cellWidth: 16 },
+      8: { cellWidth: 20 }, 9: { cellWidth: 20 }, 10: { cellWidth: 22 },
     },
   });
 
   addPageNumber(doc);
-  doc.save(`NIRF_Report_${toYear}_${instituteName.replace(/\s+/g,"_")}.pdf`);
+  doc.save(`NIRF_Report_${toYear}_${instituteName.replace(/\s+/g, "_")}.pdf`);
 }
 
 
@@ -296,16 +296,16 @@ export function generateNAACReport({
   dateFrom,
   dateTo,
   subReportName,
-  instituteName = "SNS Rajalakshmi College of Engineering",
-  instituteCode  = "NAAC-A-00000",
+  instituteName = "Dhanalakshmi Srinivasan University",
+  instituteCode = "NAAC-A-00000",
 }) {
-  const toYear   = dateTo   ? parseInt(dateTo.slice(0, 4))   : new Date().getFullYear();
+  const toYear = dateTo ? parseInt(dateTo.slice(0, 4)) : new Date().getFullYear();
   const fromYear = dateFrom ? parseInt(dateFrom.slice(0, 4)) : toYear - 1;
-  const ay = (y) => `${y}-${String(y+1).slice(-2)}`;
+  const ay = (y) => `${y}-${String(y + 1).slice(-2)}`;
 
   const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
-  const W  = doc.internal.pageSize.getWidth();
-  const M  = 12;
+  const W = doc.internal.pageSize.getWidth();
+  const M = 12;
   const TW = W - M * 2;
   const T = { ...BASE, margin: { left: M, right: M }, tableWidth: TW };
 
@@ -315,22 +315,22 @@ export function generateNAACReport({
   doc.setFillColor(...LIGHT_G);
   doc.setDrawColor(...BORDER); doc.setLineWidth(0.3);
   doc.rect(0, 0, W, 20, "FD");
-  centeredText(doc, "NATIONAL ASSESSMENT AND ACCREDITATION COUNCIL (NAAC)", 10, 10, "bold",   DARK);
-  centeredText(doc, "Accreditation Data Report",                              17,  8, "normal", GRAY);
+  centeredText(doc, "NATIONAL ASSESSMENT AND ACCREDITATION COUNCIL (NAAC)", 10, 10, "bold", DARK);
+  centeredText(doc, "Accreditation Data Report", 17, 8, "normal", GRAY);
 
   y = 28;
   doc.setFillColor(...LIGHT_G);
   doc.setDrawColor(...BORDER); doc.setLineWidth(0.4);
   doc.rect(M, y, TW, 50, "FD");
 
-  centeredText(doc, instituteName,                y + 11, 13, "bold",   DARK);
-  centeredText(doc, `[${instituteCode}]`,          y + 18,  8, "normal", GRAY);
+  centeredText(doc, instituteName, y + 11, 13, "bold", DARK);
+  centeredText(doc, `[${instituteCode}]`, y + 18, 8, "normal", GRAY);
   doc.setDrawColor(...BORDER); doc.setLineWidth(0.2);
-  doc.line(M+16, y+22, W-M-16, y+22);
-  centeredText(doc, "Accreditation Report",                                   y + 28, 10, "bold",   DARK);
-  centeredText(doc, subReportName || "Criterion-wise Student Data Report",    y + 35,  8, "normal", DARK);
-  centeredText(doc, `Reporting Period: ${ay(fromYear)} to ${ay(toYear-1)}`,   y + 41,  7, "normal", GRAY);
-  centeredText(doc, `Report Year: ${toYear}`,                                 y + 46,  7, "normal", GRAY);
+  doc.line(M + 16, y + 22, W - M - 16, y + 22);
+  centeredText(doc, "Accreditation Report", y + 28, 10, "bold", DARK);
+  centeredText(doc, subReportName || "Criterion-wise Student Data Report", y + 35, 8, "normal", DARK);
+  centeredText(doc, `Reporting Period: ${ay(fromYear)} to ${ay(toYear - 1)}`, y + 41, 7, "normal", GRAY);
+  centeredText(doc, `Report Year: ${toYear}`, y + 46, 7, "normal", GRAY);
 
   y += 56;
 
@@ -338,73 +338,78 @@ export function generateNAACReport({
     ...T, startY: y,
     theme: "grid",
     body: [
-      ["Report Type",      "NAAC â€” Self Study Report (SSR) Data"],
-      ["Report Name",      subReportName || "Student Participation & Engagement Report"],
-      ["Prepared For",     `Year ${toYear}`],
-      ["Reporting Period", `${ay(fromYear)} to ${ay(toYear-1)}`],
-      ["Institute",        instituteName],
-      ["Institute Code",   instituteCode],
-      ["Date Generated",   new Date().toLocaleDateString("en-IN",{day:"2-digit",month:"long",year:"numeric"})],
-      ["Status",           "Draft â€” For Internal Review"],
+      ["Report Type", "NAAC â€” Self Study Report (SSR) Data"],
+      ["Report Name", subReportName || "Student Participation & Engagement Report"],
+      ["Prepared For", `Year ${toYear}`],
+      ["Reporting Period", `${ay(fromYear)} to ${ay(toYear - 1)}`],
+      ["Institute", instituteName],
+      ["Institute Code", instituteCode],
+      ["Date Generated", new Date().toLocaleDateString("en-IN", { day: "2-digit", month: "long", year: "numeric" })],
+      ["Status", "Draft â€” For Internal Review"],
     ],
-    columnStyles: { 0: { fontStyle:"bold", cellWidth:44, fillColor: LIGHT_G, textColor: DARK } },
+    columnStyles: { 0: { fontStyle: "bold", cellWidth: 44, fillColor: LIGHT_G, textColor: DARK } },
   });
   y = doc.lastAutoTable.finalY + 3;
-  centeredText(doc, "Auto-generated by CampusMitra for NAAC accreditation preparation.", y,   7, "italic", GRAY);
-  centeredText(doc, "Contains sample/representative institutional data.",                  y+4, 7, "italic", GRAY);
+  centeredText(doc, "Auto-generated by CampusMitra for NAAC accreditation preparation.", y, 7, "italic", GRAY);
+  centeredText(doc, "Contains sample/representative institutional data.", y + 4, 7, "italic", GRAY);
 
   /* â”€â”€ PAGE 2 â€” Criterion I & II â”€â”€ */
   doc.addPage(); y = 12;
   y = sectionHeader(doc, "CRITERION I & II â€” Students & Teaching-Learning Environment", y, W);
 
   y = subHeader(doc, "1.1  Student Enrollment Trend", y, M);
-  autoTable(doc, { ...T, startY: y,
-    head: [["Program", ay(toYear-5), ay(toYear-4), ay(toYear-3), ay(toYear-2), ay(toYear-1)]],
+  autoTable(doc, {
+    ...T, startY: y,
+    head: [["Program", ay(toYear - 5), ay(toYear - 4), ay(toYear - 3), ay(toYear - 2), ay(toYear - 1)]],
     body: [
-      ["B.E. / B.Tech","180","180","180","180","180"],
-      ["M.E. / M.Tech","18","18","18","18","18"],
-      ["Ph.D","0","0","0","0","0"],
-      [{ content:"Total", styles:{fontStyle:"bold"} },"198","198","198","198","198"],
+      ["B.E. / B.Tech", "180", "180", "180", "180", "180"],
+      ["M.E. / M.Tech", "18", "18", "18", "18", "18"],
+      ["Ph.D", "0", "0", "0", "0", "0"],
+      [{ content: "Total", styles: { fontStyle: "bold" } }, "198", "198", "198", "198", "198"],
     ],
   });
   y = doc.lastAutoTable.finalY + 3;
 
   y = subHeader(doc, "1.2  Gender Distribution of Students", y, M);
-  autoTable(doc, { ...T, startY: y,
-    head: [["Academic Year","Male Students","Female Students","Total Students","Female %"]],
-    body: [[ay(toYear-1),"285","425","710","59.9%"],[ay(toYear-2),"280","405","685","59.1%"],[ay(toYear-3),"275","390","665","58.6%"]],
+  autoTable(doc, {
+    ...T, startY: y,
+    head: [["Academic Year", "Male Students", "Female Students", "Total Students", "Female %"]],
+    body: [[ay(toYear - 1), "285", "425", "710", "59.9%"], [ay(toYear - 2), "280", "405", "685", "59.1%"], [ay(toYear - 3), "275", "390", "665", "58.6%"]],
   });
   y = doc.lastAutoTable.finalY + 3;
 
   y = subHeader(doc, "1.3  State-wise Student Distribution", y, M);
-  autoTable(doc, { ...T, startY: y,
-    head: [["Category", ay(toYear-1), ay(toYear-2), ay(toYear-3)]],
-    body: [["Within State Students","680","660","640"],["Outside State Students","30","25","25"],["Outside Country","0","0","0"]],
+  autoTable(doc, {
+    ...T, startY: y,
+    head: [["Category", ay(toYear - 1), ay(toYear - 2), ay(toYear - 3)]],
+    body: [["Within State Students", "680", "660", "640"], ["Outside State Students", "30", "25", "25"], ["Outside Country", "0", "0", "0"]],
   });
   y = doc.lastAutoTable.finalY + 3;
 
   y = subHeader(doc, "1.4  Economically Weaker & Socially Challenged Students", y, M);
-  autoTable(doc, { ...T, startY: y,
-    head: [["Category", ay(toYear-1), ay(toYear-2), ay(toYear-3)]],
+  autoTable(doc, {
+    ...T, startY: y,
+    head: [["Category", ay(toYear - 1), ay(toYear - 2), ay(toYear - 3)]],
     body: [
-      ["Economically Backward","185","180","175"],
-      ["Socially Challenged (SC+ST+OBC)","280","270","265"],
-      ["Full tuition fee reimb. (Govt)","165","158","152"],
-      ["Full tuition fee reimb. (Institution)","0","0","0"],
-      ["Not receiving any fee reimb.","360","355","348"],
+      ["Economically Backward", "185", "180", "175"],
+      ["Socially Challenged (SC+ST+OBC)", "280", "270", "265"],
+      ["Full tuition fee reimb. (Govt)", "165", "158", "152"],
+      ["Full tuition fee reimb. (Institution)", "0", "0", "0"],
+      ["Not receiving any fee reimb.", "360", "355", "348"],
     ],
   });
   y = doc.lastAutoTable.finalY + 3;
 
   y = subHeader(doc, "2.1  Teaching & Learning Quality Indicators", y, M);
-  autoTable(doc, { ...T, startY: y,
-    head: [["Indicator", ay(toYear-1), ay(toYear-2), ay(toYear-3)]],
+  autoTable(doc, {
+    ...T, startY: y,
+    head: [["Indicator", ay(toYear - 1), ay(toYear - 2), ay(toYear - 3)]],
     body: [
-      ["Student-Teacher Ratio","18:1","18:1","19:1"],
-      ["Faculty with Ph.D","15","14","12"],
-      ["Visiting Faculty / Guest Lectures","24","22","20"],
-      ["NPTEL / MOOC Enrolments","185","165","145"],
-      ["Value Added Courses Offered","12","10","8"],
+      ["Student-Teacher Ratio", "18:1", "18:1", "19:1"],
+      ["Faculty with Ph.D", "15", "14", "12"],
+      ["Visiting Faculty / Guest Lectures", "24", "22", "20"],
+      ["NPTEL / MOOC Enrolments", "185", "165", "145"],
+      ["Value Added Courses Offered", "12", "10", "8"],
     ],
   });
 
@@ -413,41 +418,45 @@ export function generateNAACReport({
   y = sectionHeader(doc, "CRITERION III â€” Research, Innovation & Extension Activities", y, W);
 
   y = subHeader(doc, "3.1  Student Research & Innovation Participation", y, M);
-  autoTable(doc, { ...T, startY: y,
-    head: [["Activity", ay(toYear-1), ay(toYear-2), ay(toYear-3)]],
+  autoTable(doc, {
+    ...T, startY: y,
+    head: [["Activity", ay(toYear - 1), ay(toYear - 2), ay(toYear - 3)]],
     body: [
-      ["Students participated in Hackathons","125","110","95"],
-      ["Students with Research Publications","8","6","5"],
-      ["Mini-Projects Completed","165","155","140"],
-      ["Capstone Projects Completed","85","78","72"],
-      ["Patents Filed by Students","2","1","1"],
-      ["Startups / Entrepreneurship Ventures","3","2","1"],
-      ["Awards Won at National Level","12","10","8"],
-      ["Awards Won at State Level","28","24","20"],
+      ["Students participated in Hackathons", "125", "110", "95"],
+      ["Students with Research Publications", "8", "6", "5"],
+      ["Mini-Projects Completed", "165", "155", "140"],
+      ["Capstone Projects Completed", "85", "78", "72"],
+      ["Patents Filed by Students", "2", "1", "1"],
+      ["Startups / Entrepreneurship Ventures", "3", "2", "1"],
+      ["Awards Won at National Level", "12", "10", "8"],
+      ["Awards Won at State Level", "28", "24", "20"],
     ],
   });
   y = doc.lastAutoTable.finalY + 3;
 
   y = subHeader(doc, "3.2  Sponsored Research & Consultancy", y, M);
-  autoTable(doc, { ...T, startY: y,
-    head: [["Parameter", ay(toYear-1), ay(toYear-2), ay(toYear-3)]],
+  autoTable(doc, {
+    ...T, startY: y,
+    head: [["Parameter", ay(toYear - 1), ay(toYear - 2), ay(toYear - 3)]],
     body: [
-      ["Sponsored Projects","2","1","1"],["Funding Agencies","2","1","1"],["Total Amount Received (₹)","285000","150000","150000"],["Consultancy Projects","0","0","0"],["Consultancy Revenue (₹)","0","0","0"],
+      ["Sponsored Projects", "2", "1", "1"], ["Funding Agencies", "2", "1", "1"], ["Total Amount Received (₹)", "285000", "150000", "150000"], ["Consultancy Projects", "0", "0", "0"], ["Consultancy Revenue (₹)", "0", "0", "0"],
     ],
   });
   y = doc.lastAutoTable.finalY + 3;
 
   y = subHeader(doc, "3.3  IPR – Patents & Publications", y, M);
-  autoTable(doc, { ...T, startY: y,
-    head: [["Category","2022","2021","2020"]],
-    body: [["Patents Published","4","3","2"],["Patents Granted","2","1","1"],["Journal Publications (Faculty)","15","12","10"],["Conference Papers","8","6","5"]],
+  autoTable(doc, {
+    ...T, startY: y,
+    head: [["Category", "2022", "2021", "2020"]],
+    body: [["Patents Published", "4", "3", "2"], ["Patents Granted", "2", "1", "1"], ["Journal Publications (Faculty)", "15", "12", "10"], ["Conference Papers", "8", "6", "5"]],
   });
   y = doc.lastAutoTable.finalY + 3;
 
   y = subHeader(doc, "3.4  Extension & Outreach Activities", y, M);
-  autoTable(doc, { ...T, startY: y,
-    head: [["Activity", ay(toYear-1), ay(toYear-2), ay(toYear-3)]],
-    body: [["NSS / NCC Activities","5","4","3"],["Community Service Events","3","2","2"],["Blood Donation Camps","2","2","1"],["Students Benefited (Outreach)","250","200","180"]],
+  autoTable(doc, {
+    ...T, startY: y,
+    head: [["Activity", ay(toYear - 1), ay(toYear - 2), ay(toYear - 3)]],
+    body: [["NSS / NCC Activities", "5", "4", "3"], ["Community Service Events", "3", "2", "2"], ["Blood Donation Camps", "2", "2", "1"], ["Students Benefited (Outreach)", "250", "200", "180"]],
   });
 
   /* â”€â”€ PAGE 4 â€” Criterion V â”€â”€ */
@@ -455,37 +464,41 @@ export function generateNAACReport({
   y = sectionHeader(doc, "CRITERION V â€” Student Support & Progression", y, W);
 
   y = subHeader(doc, "5.1  Student Placement & Higher Studies", y, M);
-  autoTable(doc, { ...T, startY: y,
-    head: [["Parameter", ay(toYear-3), ay(toYear-2), ay(toYear-1)]],
+  autoTable(doc, {
+    ...T, startY: y,
+    head: [["Parameter", ay(toYear - 3), ay(toYear - 2), ay(toYear - 1)]],
     body: [
-      ["UG Students Graduating","226","216","224"],["Students Placed","184","196","151"],
-      ["Placement % (UG)","81.4%","90.7%","67.4%"],["Median Salary (UG) (â‚¹)","3,50,000","4,00,000","5,40,000"],
-      ["Students for Higher Studies","16","4","8"],["PG Students Graduating","0","2","2"],["PG Students Placed","0","0","0"],
+      ["UG Students Graduating", "226", "216", "224"], ["Students Placed", "184", "196", "151"],
+      ["Placement % (UG)", "81.4%", "90.7%", "67.4%"], ["Median Salary (UG) (â‚¹)", "3,50,000", "4,00,000", "5,40,000"],
+      ["Students for Higher Studies", "16", "4", "8"], ["PG Students Graduating", "0", "2", "2"], ["PG Students Placed", "0", "0", "0"],
     ],
   });
   y = doc.lastAutoTable.finalY + 3;
 
   y = subHeader(doc, "5.2  Scholarships & Financial Aid", y, M);
-  autoTable(doc, { ...T, startY: y,
-    head: [["Scheme", ay(toYear-1), ay(toYear-2), ay(toYear-3)]],
-    body: [["Govt. Scholarship Beneficiaries","320","298","285"],["Institute Scholarship Beneficiaries","45","38","32"],["Total Scholarship Amount (₹)","2850000","2550000","2300000"],["Students with Education Loans","125","118","110"]],
+  autoTable(doc, {
+    ...T, startY: y,
+    head: [["Scheme", ay(toYear - 1), ay(toYear - 2), ay(toYear - 3)]],
+    body: [["Govt. Scholarship Beneficiaries", "320", "298", "285"], ["Institute Scholarship Beneficiaries", "45", "38", "32"], ["Total Scholarship Amount (₹)", "2850000", "2550000", "2300000"], ["Students with Education Loans", "125", "118", "110"]],
   });
   y = doc.lastAutoTable.finalY + 3;
 
   y = subHeader(doc, "5.3  Student Achievements & Recognition", y, M);
-  autoTable(doc, { ...T, startY: y,
-    head: [["Category", ay(toYear-1), ay(toYear-2), ay(toYear-3)]],
+  autoTable(doc, {
+    ...T, startY: y,
+    head: [["Category", ay(toYear - 1), ay(toYear - 2), ay(toYear - 3)]],
     body: [
-      ["National Level Competitions â€” Top 3","18","14","12"],["State Level Competitions â€” Top 3","42","38","30"],
-      ["Internal Events Conducted","28","22","18"],["Students Participated in Events","850","780","720"],["Inter-college Events Won","12","9","8"],
+      ["National Level Competitions â€” Top 3", "18", "14", "12"], ["State Level Competitions â€” Top 3", "42", "38", "30"],
+      ["Internal Events Conducted", "28", "22", "18"], ["Students Participated in Events", "850", "780", "720"], ["Inter-college Events Won", "12", "9", "8"],
     ],
   });
   y = doc.lastAutoTable.finalY + 3;
 
   y = subHeader(doc, "5.4  Alumni Engagement", y, M);
-  autoTable(doc, { ...T, startY: y,
-    head: [["Parameter", ay(toYear-1), ay(toYear-2), ay(toYear-3)]],
-    body: [["Alumni Guest Lectures Delivered","12","10","8"],["Alumni Mentoring Students","35","28","22"],["Alumni Contributions (₹)","450000","380000","320000"]],
+  autoTable(doc, {
+    ...T, startY: y,
+    head: [["Parameter", ay(toYear - 1), ay(toYear - 2), ay(toYear - 3)]],
+    body: [["Alumni Guest Lectures Delivered", "12", "10", "8"], ["Alumni Mentoring Students", "35", "28", "22"], ["Alumni Contributions (₹)", "450000", "380000", "320000"]],
   });
 
   /* â”€â”€ PAGE 5 â€” Criterion VI â”€â”€ */
@@ -493,40 +506,43 @@ export function generateNAACReport({
   y = sectionHeader(doc, "CRITERION VI â€” Governance, Leadership & Management", y, W);
 
   y = subHeader(doc, "6.1  Financial Management & Resource Mobilisation", y, M);
-  autoTable(doc, { ...T, startY: y,
-    head: [["Expenditure Head", ay(toYear-1)+" (â‚¹)", ay(toYear-2)+" (â‚¹)", ay(toYear-3)+" (â‚¹)"]],
+  autoTable(doc, {
+    ...T, startY: y,
+    head: [["Expenditure Head", ay(toYear - 1) + " (â‚¹)", ay(toYear - 2) + " (â‚¹)", ay(toYear - 3) + " (â‚¹)"]],
     body: [
-      ["Salaries (Teaching & Non-Teaching)","8,81,86,050","6,89,85,747","6,00,77,987"],
-      ["Academic Infrastructure & Consumables","14,40,976","11,47,032","10,77,403"],
-      ["Seminars / Conferences / Workshops","7,19,406","47,320","4,000"],
-      ["Library (Books, Journals, e-Resources)","1,78,308","1,39,018","1,15,957"],
-      ["New Equipment & Software","56,60,294","15,81,096","10,97,409"],
-      ["Other Capital Expenditure","63,200","0","13,930"],
+      ["Salaries (Teaching & Non-Teaching)", "8,81,86,050", "6,89,85,747", "6,00,77,987"],
+      ["Academic Infrastructure & Consumables", "14,40,976", "11,47,032", "10,77,403"],
+      ["Seminars / Conferences / Workshops", "7,19,406", "47,320", "4,000"],
+      ["Library (Books, Journals, e-Resources)", "1,78,308", "1,39,018", "1,15,957"],
+      ["New Equipment & Software", "56,60,294", "15,81,096", "10,97,409"],
+      ["Other Capital Expenditure", "63,200", "0", "13,930"],
     ],
   });
   y = doc.lastAutoTable.finalY + 3;
 
   y = subHeader(doc, "6.2  ICT & Digital Infrastructure", y, M);
-  autoTable(doc, { ...T, startY: y,
-    head: [["Facility","Available","Count / Capacity"]],
-    body: [["Computer Labs","Yes","5 Labs / 250 Systems"],["Internet Bandwidth","Yes","1 Gbps"],["Smart Classrooms","Yes","28 Classrooms"],["Software Licences (ERP/CAD)","Yes","MATLAB, AutoCAD, Solidworks"],["Digital Library Access","Yes","IEEE, Springer, Elsevier"],["Learning Management System","Yes","Moodle LMS"]],
+  autoTable(doc, {
+    ...T, startY: y,
+    head: [["Facility", "Available", "Count / Capacity"]],
+    body: [["Computer Labs", "Yes", "5 Labs / 250 Systems"], ["Internet Bandwidth", "Yes", "1 Gbps"], ["Smart Classrooms", "Yes", "28 Classrooms"], ["Software Licences (ERP/CAD)", "Yes", "MATLAB, AutoCAD, Solidworks"], ["Digital Library Access", "Yes", "IEEE, Springer, Elsevier"], ["Learning Management System", "Yes", "Moodle LMS"]],
   });
   y = doc.lastAutoTable.finalY + 3;
 
   y = subHeader(doc, "6.3  Faculty Development & Welfare", y, M);
-  autoTable(doc, { ...T, startY: y,
-    head: [["Parameter", ay(toYear-1), ay(toYear-2), ay(toYear-3)]],
+  autoTable(doc, {
+    ...T, startY: y,
+    head: [["Parameter", ay(toYear - 1), ay(toYear - 2), ay(toYear - 3)]],
     body: [
-      ["Faculty Development Programs Conducted","8","6","5"],
-      ["Faculty Participated in FDPs (External)","18","14","12"],
-      ["Faculty with Ph.D","12","10","9"],
-      ["Faculty pursuing Ph.D","5","4","3"],
-      ["Faculty with GATE / NET","22","20","18"],
+      ["Faculty Development Programs Conducted", "8", "6", "5"],
+      ["Faculty Participated in FDPs (External)", "18", "14", "12"],
+      ["Faculty with Ph.D", "12", "10", "9"],
+      ["Faculty pursuing Ph.D", "5", "4", "3"],
+      ["Faculty with GATE / NET", "22", "20", "18"],
     ],
   });
 
   addPageNumber(doc);
-  doc.save(`NAAC_Report_${toYear}_${instituteName.replace(/\s+/g,"_")}.pdf`);
+  doc.save(`NAAC_Report_${toYear}_${instituteName.replace(/\s+/g, "_")}.pdf`);
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -535,7 +551,7 @@ export function generateNAACReport({
 
 /** 1️⃣ Student Participation & Engagement Report */
 export function generateNAACStudentParticipationReport({
-  instituteName = "SNS Rajalakshmi College of Engineering",
+  instituteName = "Dhanalakshmi Srinivasan University",
   instituteCode = "XYZ123",
   academicYear = "2024-25",
   participationData = [],
@@ -603,12 +619,12 @@ export function generateNAACStudentParticipationReport({
   });
 
   addPageNumber(doc);
-  doc.save(`NAAC_Student_Participation_${academicYear.replace(/\s+/g,"_")}.pdf`);
+  doc.save(`NAAC_Student_Participation_${academicYear.replace(/\s+/g, "_")}.pdf`);
 }
 
 /** 2️⃣ Cultural, Extension & Social Impact Report */
 export function generateNAACCulturalExtensionReport({
-  instituteName = "SNS Rajalakshmi College of Engineering",
+  instituteName = "Dhanalakshmi Srinivasan University",
   instituteCode = "XYZ123",
   academicYear = "2024-25",
   activitiesData = []
@@ -669,12 +685,12 @@ export function generateNAACCulturalExtensionReport({
   });
 
   addPageNumber(doc);
-  doc.save(`NAAC_Cultural_Extension_${academicYear.replace(/\s+/g,"_")}.pdf`);
+  doc.save(`NAAC_Cultural_Extension_${academicYear.replace(/\s+/g, "_")}.pdf`);
 }
 
 /** 3️⃣ Student Achievement & Awards Report */
 export function generateNAACStudentAchievementReport({
-  instituteName = "SNS Rajalakshmi College of Engineering",
+  instituteName = "Dhanalakshmi Srinivasan University",
   instituteCode = "XYZ123",
   academicYear = "2024-25",
   achievementsData = []
@@ -735,12 +751,12 @@ export function generateNAACStudentAchievementReport({
   });
 
   addPageNumber(doc);
-  doc.save(`NAAC_Student_Achievements_${academicYear.replace(/\s+/g,"_")}.pdf`);
+  doc.save(`NAAC_Student_Achievements_${academicYear.replace(/\s+/g, "_")}.pdf`);
 }
 
 /** 4️⃣ Institutional Audit & Verification Report */
 export function generateNAACInstitutionalAuditReport({
-  instituteName = "SNS Rajalakshmi College of Engineering",
+  instituteName = "Dhanalakshmi Srinivasan University",
   instituteCode = "XYZ123",
   academicYear = "2024-25",
   auditData = []
@@ -801,7 +817,7 @@ export function generateNAACInstitutionalAuditReport({
   });
 
   addPageNumber(doc);
-  doc.save(`NAAC_Institutional_Audit_${academicYear.replace(/\s+/g,"_")}.pdf`);
+  doc.save(`NAAC_Institutional_Audit_${academicYear.replace(/\s+/g, "_")}.pdf`);
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -810,7 +826,7 @@ export function generateNAACInstitutionalAuditReport({
 
 /** 5️⃣ Student Activities & Participation Report (NIRF Supplement) */
 export function generateNIRFStudentActivitiesReport({
-  instituteName = "SNS Rajalakshmi College of Engineering",
+  instituteName = "Dhanalakshmi Srinivasan University",
   instituteCode = "XYZ123",
   academicYear = "2024-25",
   activitiesData = []
@@ -870,12 +886,12 @@ export function generateNIRFStudentActivitiesReport({
   });
 
   addPageNumber(doc);
-  doc.save(`NIRF_Student_Activities_${academicYear.replace(/\s+/g,"_")}.pdf`);
+  doc.save(`NIRF_Student_Activities_${academicYear.replace(/\s+/g, "_")}.pdf`);
 }
 
 /** 6️⃣ Innovation, Projects & Research Activities Report */
 export function generateNIRFInnovationResearchReport({
-  instituteName = "SNS Rajalakshmi College of Engineering",
+  instituteName = "Dhanalakshmi Srinivasan University",
   instituteCode = "XYZ123",
   academicYear = "2024-25",
   projectsData = []
@@ -936,7 +952,7 @@ export function generateNIRFInnovationResearchReport({
   });
 
   addPageNumber(doc);
-  doc.save(`NIRF_Innovation_Research_${academicYear.replace(/\s+/g,"_")}.pdf`);
+  doc.save(`NIRF_Innovation_Research_${academicYear.replace(/\s+/g, "_")}.pdf`);
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -945,7 +961,7 @@ export function generateNIRFInnovationResearchReport({
 
 /** 7️⃣ NBA KPI Report */
 export function generateNBAProgramActivityReport({
-  instituteName = "SNS Rajalakshmi College of Engineering",
+  instituteName = "Dhanalakshmi Srinivasan University",
   instituteCode = "XYZ123",
   programName = "B.E. Computer Science & Engineering",
   academicYear = "2024-25"
@@ -991,12 +1007,12 @@ export function generateNBAProgramActivityReport({
   });
 
   addPageNumber(doc);
-  doc.save(`NBA_KPI_Report_${programName.replace(/\s+/g,"_")}_${academicYear.replace(/\s+/g,"_")}.pdf`);
+  doc.save(`NBA_KPI_Report_${programName.replace(/\s+/g, "_")}_${academicYear.replace(/\s+/g, "_")}.pdf`);
 }
 
 /** 8️⃣ Capstone / Hackathon Participation Report */
 export function generateNBACapstoneHackathonReport({
-  instituteName = "SNS Rajalakshmi College of Engineering",
+  instituteName = "Dhanalakshmi Srinivasan University",
   instituteCode = "XYZ123",
   academicYear = "2024-25",
   projectsData = []
@@ -1057,5 +1073,5 @@ export function generateNBACapstoneHackathonReport({
   });
 
   addPageNumber(doc);
-  doc.save(`NBA_Capstone_Hackathon_${academicYear.replace(/\s+/g,"_")}.pdf`);
+  doc.save(`NBA_Capstone_Hackathon_${academicYear.replace(/\s+/g, "_")}.pdf`);
 }
