@@ -1,4 +1,12 @@
-import { useState } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
+import {
+  generateQRCodeDataURL,
+  triggerCertificateConfetti,
+  exportCertificatePDF,
+  exportCertificatePNG,
+  getLinkedInCertUrl,
+  computeVerificationHash,
+} from "../utils/certificateExporter";
 
 /* ─── Template Colors by Domain ─────────────────────────────────────── */
 const TEMPLATE_COLORS = {
@@ -193,37 +201,53 @@ const TABS = [
   "Ideathon",
 ];
 
-/* ─── QR Code visual ────────────────────────────────────────────────── */
-function QRBlock({ size = 52, accentColor = "#0f172a" }) {
+/* ─── Real Scannable QR Code Component ──────────────────────────────── */
+function QRBlock({ size = 52, accentColor = "#0f172a", credentialId = "CH-2024-2ND-2102" }) {
+  const [qrUrl, setQrUrl] = useState(null);
+
+  useEffect(() => {
+    let mounted = true;
+    const origin = typeof window !== "undefined" ? window.location.origin : "https://campusmitra.dsu.edu";
+    const verifyUrl = `${origin}/certificates?verify=${encodeURIComponent(credentialId)}`;
+    generateQRCodeDataURL(verifyUrl, {
+      width: Math.max(120, size * 3),
+      darkColor: accentColor,
+      margin: 0,
+    }).then((url) => {
+      if (mounted && url) setQrUrl(url);
+    });
+    return () => {
+      mounted = false;
+    };
+  }, [credentialId, size, accentColor]);
+
   return (
     <div
+      title={`Scan to verify credential: ${credentialId}`}
       style={{
         width: size,
         height: size,
         background: "#fff",
         borderRadius: 4,
-        padding: 4,
-        display: "grid",
-        gridTemplateColumns: "repeat(5,1fr)",
-        gap: 1.5,
+        padding: 3,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        boxShadow: "0 2px 6px rgba(0,0,0,0.08)",
+        border: "1px solid rgba(0,0,0,0.06)",
+        overflow: "hidden",
         flexShrink: 0,
       }}
     >
-      {Array.from({ length: 25 }).map((_, i) => {
-        const corners = [
-          0, 1, 4, 5, 9, 15, 19, 20, 23, 24, 2, 3, 6, 18, 21, 22,
-        ];
-        const filled = corners.includes(i) || (i % 3 === 0 && i > 5 && i < 20);
-        return (
-          <div
-            key={i}
-            style={{
-              background: filled ? accentColor : "transparent",
-              borderRadius: 1,
-            }}
-          />
-        );
-      })}
+      {qrUrl ? (
+        <img
+          src={qrUrl}
+          alt="Verification QR"
+          style={{ width: "100%", height: "100%", objectFit: "contain", imageRendering: "pixelated" }}
+        />
+      ) : (
+        <div style={{ fontSize: 8, color: accentColor, fontWeight: 700 }}>QR</div>
+      )}
     </div>
   );
 }
@@ -637,17 +661,66 @@ function CertModal({ cert, onClose }) {
     accent: "#475569",
   };
 
+  const certRef = useRef(null);
+  const [isExportingPDF, setIsExportingPDF] = useState(false);
+  const [isExportingPNG, setIsExportingPNG] = useState(false);
+  const [showShareModal, setShowShareModal] = useState(false);
+  const [copiedLink, setCopiedLink] = useState(false);
+
+  const verifyUrl = typeof window !== "undefined"
+    ? `${window.location.origin}/certificates?verify=${encodeURIComponent(cert.credentialId || "")}`
+    : "";
+
+  const linkedInUrl = getLinkedInCertUrl(cert);
+  const authHash = computeVerificationHash(cert.credentialId);
+
+  const handleDownloadPDF = async () => {
+    if (!certRef.current) return;
+    try {
+      setIsExportingPDF(true);
+      await exportCertificatePDF(certRef.current, cert);
+      triggerCertificateConfetti();
+    } catch (err) {
+      console.error("PDF export error:", err);
+      alert("Failed to export certificate PDF.");
+    } finally {
+      setIsExportingPDF(false);
+    }
+  };
+
+  const handleDownloadPNG = async () => {
+    if (!certRef.current) return;
+    try {
+      setIsExportingPNG(true);
+      await exportCertificatePNG(certRef.current, `${cert.credentialId || "Certificate"}.png`);
+      triggerCertificateConfetti();
+    } catch (err) {
+      console.error("PNG export error:", err);
+      alert("Failed to export certificate PNG.");
+    } finally {
+      setIsExportingPNG(false);
+    }
+  };
+
+  const handleCopyLink = () => {
+    if (navigator?.clipboard) {
+      navigator.clipboard.writeText(verifyUrl);
+      setCopiedLink(true);
+      setTimeout(() => setCopiedLink(false), 2200);
+    }
+  };
+
   return (
     <div
       style={{
         position: "fixed",
         inset: 0,
-        background: "rgba(15,23,42,0.55)",
+        background: "rgba(15,23,42,0.6)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
         zIndex: 200,
-        backdropFilter: "blur(3px)",
+        backdropFilter: "blur(4px)",
       }}
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
@@ -657,17 +730,18 @@ function CertModal({ cert, onClose }) {
         style={{
           background: "#fff",
           borderRadius: 16,
-          width: 600,
-          maxWidth: "92vw",
-          maxHeight: "90vh",
+          width: 620,
+          maxWidth: "94vw",
+          maxHeight: "92vh",
           overflow: "auto",
           boxShadow: "0 32px 72px -12px rgba(0,0,0,0.3)",
         }}
       >
-        {/* Certificate Preview */}
+        {/* Certificate Preview (Export Target) */}
         <div
+          ref={certRef}
           style={{
-            height: 280,
+            height: 290,
             background: colors.bg,
             position: "relative",
             display: "flex",
@@ -689,7 +763,7 @@ function CertModal({ cert, onClose }) {
                 fontWeight: 700,
                 color: colors.accent,
                 letterSpacing: "2px",
-                marginBottom: 8,
+                marginBottom: 6,
               }}
             >
               CAMPUSMITRA
@@ -698,7 +772,7 @@ function CertModal({ cert, onClose }) {
               style={{
                 fontSize: 10,
                 color: colors.accent,
-                opacity: 0.7,
+                opacity: 0.75,
               }}
             >
               {cert.issuer}
@@ -711,17 +785,17 @@ function CertModal({ cert, onClose }) {
               style={{
                 fontSize: 13,
                 color: colors.accent,
-                marginBottom: 10,
+                marginBottom: 8,
               }}
             >
               Certificate of {cert.category}
             </div>
             <div
               style={{
-                fontSize: 28,
+                fontSize: 26,
                 fontWeight: 700,
                 color: colors.accent,
-                marginBottom: 10,
+                marginBottom: 8,
               }}
             >
               {cert.studentName || "[Student Name]"}
@@ -741,7 +815,7 @@ function CertModal({ cert, onClose }) {
           <div
             style={{
               borderTop: `2px solid ${colors.accent}`,
-              paddingTop: 14,
+              paddingTop: 12,
               display: "flex",
               justifyContent: "space-between",
               alignItems: "center",
@@ -763,11 +837,15 @@ function CertModal({ cert, onClose }) {
 
           {/* QR Code */}
           <div style={{ position: "absolute", bottom: 16, right: 20 }}>
-            <QRBlock size={52} accentColor={colors.accent} />
+            <QRBlock
+              size={54}
+              accentColor={colors.accent}
+              credentialId={cert.credentialId}
+            />
           </div>
         </div>
 
-        <div style={{ padding: "28px 32px 32px" }}>
+        <div style={{ padding: "26px 30px 30px" }}>
           {/* Close */}
           <div
             style={{
@@ -784,7 +862,7 @@ function CertModal({ cert, onClose }) {
                   fontWeight: 800,
                   color: cert.typeColor,
                   letterSpacing: "0.6px",
-                  marginBottom: 6,
+                  marginBottom: 4,
                 }}
               >
                 {cert.type}
@@ -816,7 +894,7 @@ function CertModal({ cert, onClose }) {
               gap: 6,
               fontSize: 13,
               color: "#64748b",
-              marginBottom: 16,
+              marginBottom: 14,
             }}
           >
             <iconify-icon icon="lucide:building-2" style={{ fontSize: 13 }} />
@@ -826,10 +904,10 @@ function CertModal({ cert, onClose }) {
           {cert.description && (
             <p
               style={{
-                fontSize: 14,
+                fontSize: 13.5,
                 color: "#475569",
-                lineHeight: 1.7,
-                marginBottom: 20,
+                lineHeight: 1.65,
+                marginBottom: 18,
               }}
             >
               {cert.description}
@@ -841,12 +919,12 @@ function CertModal({ cert, onClose }) {
             style={{
               display: "grid",
               gridTemplateColumns: "1fr 1fr",
-              gap: 12,
+              gap: 10,
               background: "#f8fafc",
               border: "1px solid #e2e8f0",
               borderRadius: 10,
-              padding: "16px 18px",
-              marginBottom: 24,
+              padding: "14px 16px",
+              marginBottom: 20,
             }}
           >
             {[
@@ -862,8 +940,8 @@ function CertModal({ cert, onClose }) {
                 icon: "lucide:hash",
               },
               {
-                label: "Status",
-                value: "Verified ✓",
+                label: "Integrity Stamp",
+                value: authHash,
                 icon: "lucide:shield-check",
               },
             ].map((m) => (
@@ -876,7 +954,7 @@ function CertModal({ cert, onClose }) {
                     fontSize: 11,
                     color: "#94a3b8",
                     fontWeight: 600,
-                    marginBottom: 4,
+                    marginBottom: 3,
                     letterSpacing: "0.4px",
                   }}
                 >
@@ -884,7 +962,7 @@ function CertModal({ cert, onClose }) {
                   {m.label}
                 </div>
                 <div
-                  style={{ fontSize: 13, fontWeight: 600, color: "#0f172a" }}
+                  style={{ fontSize: 12.5, fontWeight: 600, color: "#0f172a", wordBreak: "break-all" }}
                 >
                   {m.value}
                 </div>
@@ -893,42 +971,45 @@ function CertModal({ cert, onClose }) {
           </div>
 
           {/* Actions */}
-          <div style={{ display: "flex", gap: 10 }}>
+          <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
             <button
+              onClick={handleDownloadPDF}
+              disabled={isExportingPDF}
               style={{
-                flex: 1,
-                padding: "11px 0",
+                flex: "1 1 180px",
+                padding: "10px 0",
                 background: "var(--primary)",
                 color: "#fff",
                 border: "none",
                 borderRadius: 8,
-                fontSize: 14,
+                fontSize: 13.5,
                 fontWeight: 600,
-                cursor: "pointer",
+                cursor: isExportingPDF ? "wait" : "pointer",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
                 gap: 7,
               }}
-              onMouseEnter={(e) =>
-                (e.currentTarget.style.background = "#1e3fa8")
-              }
-              onMouseLeave={(e) =>
-                (e.currentTarget.style.background = "var(--primary)")
-              }
             >
-              <iconify-icon icon="lucide:download" style={{ fontSize: 15 }} />
-              Download PDF
+              <iconify-icon
+                icon={isExportingPDF ? "lucide:loader-2" : "lucide:download"}
+                style={{
+                  fontSize: 15,
+                  animation: isExportingPDF ? "spin 1s linear infinite" : "none",
+                }}
+              />
+              {isExportingPDF ? "Exporting PDF..." : "Download PDF"}
             </button>
             <button
-              style={{  
-                flex: 1,
-                padding: "11px 0",
+              onClick={() => setShowShareModal(!showShareModal)}
+              style={{
+                flex: "1 1 140px",
+                padding: "10px 0",
                 background: "#fff",
-                color: "#334155", 
+                color: "#334155",
                 border: "1px solid #e2e8f0",
                 borderRadius: 8,
-                fontSize: 14,
+                fontSize: 13.5,
                 fontWeight: 600,
                 cursor: "pointer",
                 display: "flex",
@@ -936,27 +1017,176 @@ function CertModal({ cert, onClose }) {
                 justifyContent: "center",
                 gap: 7,
               }}
-              onMouseEnter={(e) =>
-                (e.currentTarget.style.background = "#f8fafc")
-              }
-              onMouseLeave={(e) => (e.currentTarget.style.background = "#fff")}
             >
               <iconify-icon icon="lucide:share-2" style={{ fontSize: 15 }} />
-              Share Certificate
+              Share
             </button>
+            <a
+              href={linkedInUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                flex: "1 1 180px",
+                padding: "10px 0",
+                background: "#0a66c2",
+                color: "#fff",
+                border: "none",
+                borderRadius: 8,
+                fontSize: 13.5,
+                fontWeight: 600,
+                cursor: "pointer",
+                textDecoration: "none",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 7,
+              }}
+            >
+              <iconify-icon icon="lucide:linkedin" style={{ fontSize: 15 }} />
+              Add to LinkedIn
+            </a>
           </div>
+
+          {/* Share Modal Drawer */}
+          {showShareModal && (
+            <div
+              style={{
+                marginTop: 16,
+                padding: "14px 16px",
+                background: "#f1f5f9",
+                borderRadius: 10,
+                border: "1px solid #cbd5e1",
+              }}
+            >
+              <div style={{ fontSize: 12, fontWeight: 700, color: "#1e293b", marginBottom: 8 }}>
+                Public Verification Link
+              </div>
+              <div style={{ display: "flex", gap: 8, marginBottom: 10 }}>
+                <input
+                  type="text"
+                  readOnly
+                  value={verifyUrl}
+                  style={{
+                    flex: 1,
+                    background: "#fff",
+                    border: "1px solid #cbd5e1",
+                    borderRadius: 6,
+                    padding: "6px 10px",
+                    fontSize: 12,
+                    color: "#334155",
+                    outline: "none",
+                  }}
+                />
+                <button
+                  onClick={handleCopyLink}
+                  style={{
+                    background: copiedLink ? "#16a34a" : "var(--primary)",
+                    color: "#fff",
+                    border: "none",
+                    borderRadius: 6,
+                    padding: "6px 12px",
+                    fontSize: 12,
+                    fontWeight: 600,
+                    cursor: "pointer",
+                  }}
+                >
+                  {copiedLink ? "Copied!" : "Copy"}
+                </button>
+              </div>
+              <button
+                onClick={handleDownloadPNG}
+                disabled={isExportingPNG}
+                style={{
+                  background: "#fff",
+                  color: "#334155",
+                  border: "1px solid #cbd5e1",
+                  borderRadius: 6,
+                  padding: "6px 12px",
+                  fontSize: 12,
+                  fontWeight: 600,
+                  cursor: isExportingPNG ? "wait" : "pointer",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 5,
+                }}
+              >
+                <iconify-icon icon="lucide:image" style={{ fontSize: 13 }} />
+                {isExportingPNG ? "Generating PNG..." : "Export as High-Res PNG"}
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>
   );
 }
 
+/* ─── Load issued certificates dynamically from Admin ────────────── */
+const loadIssuedCertificates = () => {
+  try {
+    const raw = localStorage.getItem("campusMitra_issued_certificates");
+    if (!raw) return [];
+    const list = JSON.parse(raw);
+    if (!Array.isArray(list)) return [];
+    return list.map((item, idx) => ({
+      id: item.id || `issued-${idx}`,
+      type: item.type === "Winner" ? "HACKATHON" : "WORKSHOP",
+      typeColor: item.type === "Winner" ? "#b45309" : "#4f46e5",
+      title: item.eventName || "CampusMitra Achievement",
+      issuer: "Dhanalakshmi Srinivasan University",
+      studentName: item.studentName || "Riya Patel",
+      category: item.type || "Certificate of Excellence",
+      description: item.teamName
+        ? `Awarded to team "${item.teamName}" for outstanding technical performance.`
+        : "Officially conferred by DSU Academic Affairs.",
+      tag: item.type === "Winner" ? "Hackathon" : "Workshop",
+      verified: true,
+      verifiedLabel: "Verified",
+      featured: idx === 0,
+      date: item.issuedAt
+        ? new Date(item.issuedAt).toLocaleDateString("en-US", { month: "short", year: "numeric" })
+        : "Oct 2026",
+      credentialId: item.id || `DSU-ISS-${1000 + idx}`,
+      isNew: true,
+    }));
+  } catch (e) {
+    return [];
+  }
+};
+
 /* ─── Main Page ─────────────────────────────────────────────────────── */
 export default function Certificates() {
   const [activeTab, setActiveTab] = useState("All");
   const [selectedCert, setSelectedCert] = useState(null);
+  const [issuedCerts, setIssuedCerts] = useState(loadIssuedCertificates);
 
-  const filtered = CERTS.filter(
+  useEffect(() => {
+    const sync = () => setIssuedCerts(loadIssuedCertificates());
+    window.addEventListener("campusmitra:state-sync", sync);
+    window.addEventListener("storage", sync);
+    return () => {
+      window.removeEventListener("campusmitra:state-sync", sync);
+      window.removeEventListener("storage", sync);
+    };
+  }, []);
+
+  const allCerts = useMemo(() => {
+    return [...issuedCerts, ...CERTS];
+  }, [issuedCerts]);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const verifyId = params.get("verify");
+    if (verifyId) {
+      const match = allCerts.find((c) => c.credentialId === verifyId);
+      if (match) {
+        setSelectedCert(match);
+        triggerCertificateConfetti();
+      }
+    }
+  }, [allCerts]);
+
+  const filtered = allCerts.filter(
     (c) => activeTab === "All" || c.tag === activeTab,
   );
   const featured = filtered.find((c) => c.featured);

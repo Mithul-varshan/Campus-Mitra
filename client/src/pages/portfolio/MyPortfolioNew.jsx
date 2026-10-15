@@ -1,7 +1,11 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import profilePhoto from "../../assets/profile.jpg";
+import {
+  exportPortfolioPDF,
+  generatePortfolioQR,
+} from "../../utils/portfolioPdfExporter";
 
 // Fixed profile data
 const PROFILE_DATA = {
@@ -184,11 +188,23 @@ const LINKS_DATA = [
   },
 ];
 
-export default function MyPortfolio() {
+export default function MyPortfolio({ isPublic = false }) {
   const [activeTab, setActiveTab] = useState("Overview");
+  const [isExportingPDF, setIsExportingPDF] = useState(false);
+  const [showShareModal, setShowShareModal] = useState(false);
+  const [qrCodeDataUrl, setQrCodeDataUrl] = useState(null);
+  const [copiedLink, setCopiedLink] = useState(false);
+
+  const portfolioRef = useRef(null);
   const location = useLocation();
   const navigate = useNavigate();
+  const { user } = useAuth();
+
+  const queryParams = useMemo(() => new URLSearchParams(location.search), [location.search]);
+  const isPublicMode = isPublic || queryParams.get("public") === "true";
   const st = location.state?.student ?? null;
+
+  const candidateName = st?.name || queryParams.get("student") || user?.name || "Riya Patel";
 
   const activeProfile = st
     ? {
@@ -199,7 +215,43 @@ export default function MyPortfolio() {
         innovationScore: st.credits,
         cohortRank: st.rank,
       }
-    : PROFILE_DATA;
+    : {
+        ...PROFILE_DATA,
+        name: candidateName,
+      };
+
+  const publicPortfolioUrl = typeof window !== "undefined"
+    ? `${window.location.origin}/portfolio/public?student=${encodeURIComponent(activeProfile.name)}&public=true`
+    : "";
+
+  useEffect(() => {
+    if (showShareModal && publicPortfolioUrl) {
+      generatePortfolioQR(publicPortfolioUrl).then((url) => {
+        if (url) setQrCodeDataUrl(url);
+      });
+    }
+  }, [showShareModal, publicPortfolioUrl]);
+
+  const handleCopyLink = () => {
+    if (navigator?.clipboard) {
+      navigator.clipboard.writeText(publicPortfolioUrl);
+      setCopiedLink(true);
+      setTimeout(() => setCopiedLink(false), 2200);
+    }
+  };
+
+  const handleExportPDF = async () => {
+    if (!portfolioRef.current) return;
+    try {
+      setIsExportingPDF(true);
+      await exportPortfolioPDF(portfolioRef.current, activeProfile);
+    } catch (err) {
+      console.error("PDF export error:", err);
+      alert("Failed to export PDF. Please try again.");
+    } finally {
+      setIsExportingPDF(false);
+    }
+  };
 
   const activeSummary = st
     ? {
@@ -283,7 +335,101 @@ export default function MyPortfolio() {
 
   return (
     <div style={styles.scrollContainer}>
-      <div style={styles.container}>
+      <div ref={portfolioRef} style={styles.container}>
+        {/* Recruiter / Public Verification Header Banner */}
+        {isPublicMode && (
+          <div
+            style={{
+              background: "linear-gradient(135deg, #1e3a8a 0%, #312e81 100%)",
+              color: "#ffffff",
+              padding: "16px 22px",
+              borderRadius: "12px",
+              marginBottom: "20px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              flexWrap: "wrap",
+              gap: "14px",
+              boxShadow: "0 10px 25px -5px rgba(30, 58, 138, 0.25)",
+              border: "1px solid rgba(255, 255, 255, 0.15)",
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+              <div
+                style={{
+                  width: "40px",
+                  height: "40px",
+                  borderRadius: "10px",
+                  background: "rgba(255, 255, 255, 0.15)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <iconify-icon
+                  icon="lucide:shield-check"
+                  style={{ fontSize: "24px", color: "#60a5fa" }}
+                ></iconify-icon>
+              </div>
+              <div>
+                <div style={{ fontWeight: 700, fontSize: "15px", letterSpacing: "0.2px" }}>
+                  Dhanalakshmi Srinivasan University • Verified Portfolio
+                </div>
+                <div style={{ fontSize: "12px", opacity: 0.85, marginTop: "2px" }}>
+                  NAAC Grade 'A' Accredited • Cryptographically Authenticated Student Record
+                </div>
+              </div>
+            </div>
+            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+              <button
+                onClick={handleExportPDF}
+                disabled={isExportingPDF}
+                style={{
+                  background: "#ffffff",
+                  color: "#1e3a8a",
+                  border: "none",
+                  borderRadius: "7px",
+                  padding: "8px 14px",
+                  fontSize: "12px",
+                  fontWeight: 600,
+                  cursor: isExportingPDF ? "wait" : "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "6px",
+                  boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
+                }}
+              >
+                <iconify-icon
+                  icon={isExportingPDF ? "lucide:loader-2" : "lucide:download"}
+                  style={{
+                    fontSize: "14px",
+                    animation: isExportingPDF ? "spin 1s linear infinite" : "none",
+                  }}
+                ></iconify-icon>
+                {isExportingPDF ? "Exporting..." : "Download PDF Resume"}
+              </button>
+              <a
+                href={`mailto:contact@dsuniversity.ac.in?subject=Recruitment%20Inquiry%20for%20${encodeURIComponent(activeProfile.name)}`}
+                style={{
+                  background: "rgba(255, 255, 255, 0.18)",
+                  color: "#ffffff",
+                  textDecoration: "none",
+                  borderRadius: "7px",
+                  padding: "8px 14px",
+                  fontSize: "12px",
+                  fontWeight: 600,
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "6px",
+                }}
+              >
+                <iconify-icon icon="lucide:mail" style={{ fontSize: "14px" }}></iconify-icon>
+                Contact Candidate
+              </a>
+            </div>
+          </div>
+        )}
+
         {st && (
           <button
             onClick={() => navigate(-1)}
@@ -336,19 +482,35 @@ export default function MyPortfolio() {
             </div>
           </div>
           <div style={styles.portfolioActions}>
-            <button style={styles.btnSecondary}>
+            <button
+              style={styles.btnSecondary}
+              onClick={() => setShowShareModal(true)}
+              title="Share verified public portfolio link"
+            >
               <iconify-icon
                 icon="lucide:external-link"
                 style={{ fontSize: "14px" }}
               ></iconify-icon>
               Public Portfolio
             </button>
-            <button style={styles.btnPrimary}>
+            <button
+              style={{
+                ...styles.btnPrimary,
+                opacity: isExportingPDF ? 0.75 : 1,
+                cursor: isExportingPDF ? "wait" : "pointer",
+              }}
+              onClick={handleExportPDF}
+              disabled={isExportingPDF}
+              title="Export ATS & Recruiter-ready Portfolio PDF"
+            >
               <iconify-icon
-                icon="lucide:download"
-                style={{ fontSize: "14px" }}
+                icon={isExportingPDF ? "lucide:loader-2" : "lucide:download"}
+                style={{
+                  fontSize: "14px",
+                  animation: isExportingPDF ? "spin 1s linear infinite" : "none",
+                }}
               ></iconify-icon>
-              Export PDF
+              {isExportingPDF ? "Exporting PDF..." : "Export PDF"}
             </button>
           </div>
         </section>
@@ -649,6 +811,257 @@ export default function MyPortfolio() {
             </div>
           </div>
         </section>
+
+        {/* Public Portfolio Share Modal */}
+        {showShareModal && (
+          <div
+            style={{
+              position: "fixed",
+              inset: 0,
+              background: "rgba(15, 23, 42, 0.65)",
+              backdropFilter: "blur(4px)",
+              zIndex: 9999,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              padding: "16px",
+            }}
+            onClick={() => setShowShareModal(false)}
+          >
+            <div
+              style={{
+                background: "#ffffff",
+                borderRadius: "16px",
+                padding: "26px",
+                width: "460px",
+                maxWidth: "100%",
+                boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
+                border: "1px solid #e2e8f0",
+              }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "flex-start",
+                  marginBottom: "16px",
+                }}
+              >
+                <div>
+                  <h3
+                    style={{
+                      margin: "0 0 4px",
+                      fontSize: "18px",
+                      fontWeight: 700,
+                      color: "#0f172a",
+                    }}
+                  >
+                    Public Portfolio Link
+                  </h3>
+                  <p
+                    style={{
+                      margin: 0,
+                      fontSize: "12.5px",
+                      color: "#64748b",
+                    }}
+                  >
+                    Shareable verified link for recruiters, judges & companies
+                  </p>
+                </div>
+                <button
+                  onClick={() => setShowShareModal(false)}
+                  style={{
+                    background: "none",
+                    border: "none",
+                    cursor: "pointer",
+                    color: "#94a3b8",
+                    padding: "4px",
+                  }}
+                >
+                  <iconify-icon
+                    icon="lucide:x"
+                    style={{ fontSize: "20px" }}
+                  ></iconify-icon>
+                </button>
+              </div>
+
+              {/* QR Code Container */}
+              <div
+                style={{
+                  textAlign: "center",
+                  background: "#f8fafc",
+                  borderRadius: "12px",
+                  padding: "16px",
+                  border: "1px solid #e2e8f0",
+                  marginBottom: "18px",
+                }}
+              >
+                {qrCodeDataUrl ? (
+                  <img
+                    src={qrCodeDataUrl}
+                    alt="Portfolio QR Code"
+                    style={{
+                      width: "160px",
+                      height: "160px",
+                      margin: "0 auto 8px",
+                      display: "block",
+                      borderRadius: "8px",
+                      border: "1px solid #cbd5e1",
+                    }}
+                  />
+                ) : (
+                  <div
+                    style={{
+                      width: "160px",
+                      height: "160px",
+                      margin: "0 auto 8px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      background: "#e2e8f0",
+                      borderRadius: "8px",
+                      color: "#64748b",
+                      fontSize: "12px",
+                    }}
+                  >
+                    Generating QR...
+                  </div>
+                )}
+                <div
+                  style={{
+                    fontSize: "11.5px",
+                    color: "#475569",
+                    fontWeight: 500,
+                  }}
+                >
+                  Scan with smartphone camera to inspect live candidate portfolio
+                </div>
+              </div>
+
+              {/* Public URL Box */}
+              <div style={{ marginBottom: "16px" }}>
+                <label
+                  style={{
+                    display: "block",
+                    fontSize: "12px",
+                    fontWeight: 600,
+                    color: "#334155",
+                    marginBottom: "6px",
+                  }}
+                >
+                  Direct Public URL
+                </label>
+                <div
+                  style={{
+                    display: "flex",
+                    gap: "8px",
+                    background: "#f1f5f9",
+                    padding: "6px 10px",
+                    borderRadius: "8px",
+                    border: "1px solid #cbd5e1",
+                  }}
+                >
+                  <input
+                    type="text"
+                    readOnly
+                    value={publicPortfolioUrl}
+                    style={{
+                      flex: 1,
+                      border: "none",
+                      background: "transparent",
+                      fontSize: "12px",
+                      color: "#1e293b",
+                      outline: "none",
+                    }}
+                  />
+                  <button
+                    onClick={handleCopyLink}
+                    style={{
+                      background: copiedLink ? "#16a34a" : "var(--primary)",
+                      color: "#ffffff",
+                      border: "none",
+                      borderRadius: "6px",
+                      padding: "6px 12px",
+                      fontSize: "12px",
+                      fontWeight: 600,
+                      cursor: "pointer",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "5px",
+                      transition: "background 0.2s",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    <iconify-icon
+                      icon={copiedLink ? "lucide:check" : "lucide:copy"}
+                      style={{ fontSize: "13px" }}
+                    ></iconify-icon>
+                    {copiedLink ? "Copied!" : "Copy"}
+                  </button>
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div style={{ display: "flex", gap: "10px" }}>
+                <button
+                  onClick={() => {
+                    window.open(publicPortfolioUrl, "_blank");
+                  }}
+                  style={{
+                    flex: 1,
+                    padding: "9px 0",
+                    background: "#ffffff",
+                    color: "#334155",
+                    border: "1px solid #cbd5e1",
+                    borderRadius: "8px",
+                    fontSize: "13px",
+                    fontWeight: 600,
+                    cursor: "pointer",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: "6px",
+                  }}
+                >
+                  <iconify-icon
+                    icon="lucide:external-link"
+                    style={{ fontSize: "14px" }}
+                  ></iconify-icon>
+                  Open Public View
+                </button>
+                <button
+                  onClick={handleExportPDF}
+                  disabled={isExportingPDF}
+                  style={{
+                    flex: 1,
+                    padding: "9px 0",
+                    background: "var(--primary)",
+                    color: "#ffffff",
+                    border: "none",
+                    borderRadius: "8px",
+                    fontSize: "13px",
+                    fontWeight: 600,
+                    cursor: isExportingPDF ? "wait" : "pointer",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: "6px",
+                  }}
+                >
+                  <iconify-icon
+                    icon={isExportingPDF ? "lucide:loader-2" : "lucide:download"}
+                    style={{
+                      fontSize: "14px",
+                      animation: isExportingPDF ? "spin 1s linear infinite" : "none",
+                    }}
+                  ></iconify-icon>
+                  {isExportingPDF ? "Exporting..." : "Download PDF"}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -1,4 +1,9 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import {
+  exportCertificatePDF,
+  triggerCertificateConfetti,
+  generateQRCodeDataURL,
+} from "../../utils/certificateExporter";
 
 const DECLARED_WINNERS_KEY = "campusMitra_declared_winners";
 const TEMPLATE_KEY = "campusMitra_certificate_template";

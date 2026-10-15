@@ -117,6 +117,9 @@ export default function AppLayout() {
       <Route path="/judge/dashboard" element={<JudgeDashboard />} />
       <Route path="/auth/callback" element={<OAuthCallback />} />
       <Route path="/" element={<LandingPage />} />
+      {/* Public Recruiter & Judge Portfolio Routes (No login required) */}
+      <Route path="/portfolio/public" element={<MyPortfolio isPublic={true} />} />
+      <Route path="/public-portfolio" element={<MyPortfolio isPublic={true} />} />
       {/* Protected layout with sidebar */}
       <Route
         element={
