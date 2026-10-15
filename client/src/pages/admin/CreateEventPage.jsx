@@ -103,14 +103,14 @@ const YEARS = ["1st Year", "2nd Year", "3rd Year", "4th Year", "All Years"];
 
 /* ===== DUMMY INSTITUTIONAL DATA (Auto-filled from login) ===== */
 const INSTITUTION_DATA = {
-  collegeName: "Sathyabama Institute of Science and Technology",
-  institutionCode: "SIST-2024",
-  naacGrade: "A++",
+  collegeName: "Dhanalakshmi Srinivasan University",
+  institutionCode: "DSU",
+  naacGrade: "A",
   department: "Computer Science & Engineering",
   coordinatorName: "Dr. Priya Sharma",
-  officialEmail: "events@sathyabama.edu",
+  officialEmail: "events@dsuniversity.ac.in",
   collegeLogo:
-    "https://upload.wikimedia.org/wikipedia/en/thumb/8/8e/Sathyabama_Institute_of_Science_and_Technology_logo.png/220px-Sathyabama_Institute_of_Science_and_Technology_logo.png",
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Dhanalakshmi_Srinivasan_University_logo.png/220px-Dhanalakshmi_Srinivasan_University_logo.png",
   isVerified: true,
 };
 
@@ -806,7 +806,7 @@ export default function CreateEventPage() {
                     style={{ fontSize: "20px", color: "#16a34a" }}
                   ></iconify-icon>
                 </div>
-                <p style={helpText}>Domain verified: @sathyabama.edu</p>
+                <p style={helpText}>Domain verified: @dsuniversity.ac.in</p>
               </div>
             </div>
           </div>

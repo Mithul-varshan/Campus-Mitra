@@ -11,20 +11,20 @@ const CAMPUSMITRA_LOGO = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/200
 const DEFAULT_COLLEGE_LOGO = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Ccircle cx='60' cy='60' r='55' fill='%232563eb' stroke='%23ffffff' stroke-width='2'/%3E%3Ctext x='60' y='40' font-size='16' font-weight='bold' fill='%23ffffff' text-anchor='middle' font-family='Georgia'%3EYour College%3C/text%3E%3Ctext x='60' y='65' font-size='12' fill='%23ffffff' text-anchor='middle' font-family='Georgia'%3EInstitution%3C/text%3E%3Ctext x='60' y='85' font-size='10' fill='%23ffffff' text-anchor='middle' font-family='Georgia'%3EEstablished%3C/text%3E%3C/svg%3E`;
 
 const DEFAULT_TEMPLATE = {
-  collegeName: "Your College Name",
-  issuerName: "Your Company Name",
+  collegeName: "Dhanalakshmi Srinivasan University",
+  issuerName: "Dhanalakshmi Srinivasan University",
   title: "Certificate of Completion",
   subtitle: "This certificate acknowledges that",
   programLine: "has successfully completed",
   detailsLine:
-    "Ensuring expertise in safety procedures and professional readiness.",
+    "Ensuring expertise in technical innovation and professional readiness.",
   accentColor: "#5b38c6",
   signatureImage: "",
   campusMitraLogo: CAMPUSMITRA_LOGO,
   collegeLogo: DEFAULT_COLLEGE_LOGO,
-  signatureName: "Training Coordinator",
-  signatureTitle: "Your company name",
-  contactLine: "yourcompany@gmail.com",
+  signatureName: "Dr. K. Elangovan",
+  signatureTitle: "Dean of Academic Affairs, DSU",
+  contactLine: "events@dsuniversity.ac.in",
 };
 
 const loadTemplate = () => {
