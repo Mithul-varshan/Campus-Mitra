@@ -308,7 +308,7 @@ export default function CandidateProfile() {
       </div>
 
       {/* ── Body: sidebar + tabbed content ───────────────────────── */}
-      <div style={{ display: "flex", gap: 0, alignItems: "flex-start", padding: "20px 28px", gap: 20 }}>
+      <div style={{ display: "flex", alignItems: "flex-start", padding: "20px 28px", gap: 20 }}>
 
         {/* ── LEFT SIDEBAR ── */}
         <div style={{ width: 240, flexShrink: 0, display: "flex", flexDirection: "column", gap: 12 }}>

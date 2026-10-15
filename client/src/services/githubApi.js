@@ -166,84 +166,132 @@ export async function getGithubReposForLinking(username, githubToken = "") {
   return mappedRepos;
 }
 
-export async function getGithubDashboardStats(username) {
+export async function getGithubDashboardStats(username, options = {}) {
+  const { forceRefresh = false, userToken = "" } = options;
   const dashboardCacheKey = `${username}:dashboard-stats`;
-  const cachedDashboardStats = readCache(dashboardCacheKey, DASHBOARD_CACHE_TTL_MS);
-  if (cachedDashboardStats && typeof cachedDashboardStats === "object") {
-    return cachedDashboardStats;
+
+  if (!forceRefresh) {
+    const cachedDashboardStats = readCache(dashboardCacheKey, DASHBOARD_CACHE_TTL_MS);
+    if (cachedDashboardStats && typeof cachedDashboardStats === "object") {
+      return { ...cachedDashboardStats, isFromCache: true };
+    }
   }
 
-  const profileResponse = await axios.get(
-    `https://api.github.com/users/${username}`,
-    { headers: githubHeaders },
-  );
-  const reposResponse = await axios.get(
-    `https://api.github.com/users/${username}/repos?per_page=100&sort=updated`,
-    { headers: githubHeaders },
-  );
+  // 1. Try CampusMithra Server Proxy
+  const serverBase = import.meta.env.VITE_OAUTH_SERVER_URL || "http://localhost:3001";
+  try {
+    const token = userToken || localStorage.getItem("campusos_github_token") || "";
+    const headers = token ? { Authorization: `Bearer ${token}` } : {};
+    const res = await axios.get(
+      `${serverBase}/api/github/stats/${encodeURIComponent(username)}${forceRefresh ? "?refresh=true" : ""}`,
+      { headers, timeout: 7000 }
+    );
+    if (res.data && !res.data.error) {
+      writeCache(dashboardCacheKey, res.data);
+      return res.data;
+    }
+  } catch (serverErr) {
+    // If rate-limited on server, return cached if available
+    if (serverErr.response?.data?.isFromCache) {
+      return serverErr.response.data;
+    }
+  }
 
-  const profile = profileResponse.data;
-  const repos = reposResponse.data;
-  const originalRepos = repos.filter((repo) => !repo.fork);
+  // 2. Direct client fallback to api.github.com
+  try {
+    const token = userToken || localStorage.getItem("campusos_github_token") || GITHUB_TOKEN;
+    const directHeaders = token
+      ? { Authorization: `Bearer ${token}`, Accept: "application/vnd.github.v3+json" }
+      : githubHeaders;
 
-  const stars = originalRepos.reduce(
-    (total, repo) => total + (repo.stargazers_count || 0),
-    0,
-  );
-  const forks = originalRepos.reduce(
-    (total, repo) => total + (repo.forks_count || 0),
-    0,
-  );
-  const openIssues = originalRepos.reduce(
-    (total, repo) => total + (repo.open_issues_count || 0),
-    0,
-  );
+    const [profileResponse, reposResponse] = await Promise.all([
+      axios.get(`https://api.github.com/users/${encodeURIComponent(username)}`, {
+        headers: directHeaders,
+        timeout: 6000,
+      }),
+      axios.get(
+        `https://api.github.com/users/${encodeURIComponent(username)}/repos?per_page=100&sort=updated`,
+        { headers: directHeaders, timeout: 6000 }
+      ),
+    ]);
 
-  const sortedRepos = [...originalRepos]
-    .sort(
-      (a, b) =>
-        new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime(),
-    )
-    .map((repo) => ({
-      id: repo.id,
-      name: repo.name,
-      description: repo.description,
-      htmlUrl: repo.html_url,
-      updatedAt: repo.updated_at,
-      language: repo.language,
-      stars: repo.stargazers_count || 0,
-      forks: repo.forks_count || 0,
-      openIssues: repo.open_issues_count || 0,
-      status: repo.archived ? "Archived" : "Active",
-      visibility: repo.private ? "Private" : "Public",
-    }));
+    const profile = profileResponse.data;
+    const repos = Array.isArray(reposResponse.data) ? reposResponse.data : [];
+    const originalRepos = repos.filter((repo) => !repo.fork);
 
-  const languageStats = await getProfileLanguageStats(
-    username,
-    sortedRepos.slice(0, 20),
-  );
+    const stars = originalRepos.reduce(
+      (total, repo) => total + (repo.stargazers_count || 0),
+      0,
+    );
+    const forks = originalRepos.reduce(
+      (total, repo) => total + (repo.forks_count || 0),
+      0,
+    );
+    const openIssues = originalRepos.reduce(
+      (total, repo) => total + (repo.open_issues_count || 0),
+      0,
+    );
 
-  const dashboardStats = {
-    username: profile.login,
-    name: profile.name || "",
-    bio: profile.bio || "",
-    company: profile.company || "",
-    location: profile.location || "",
-    blog: profile.blog || "",
-    avatarUrl: profile.avatar_url,
-    profileUrl: profile.html_url,
-    publicRepos: profile.public_repos || 0,
-    followers: profile.followers || 0,
-    following: profile.following || 0,
-    stars,
-    forks,
-    openIssues,
-    topLanguages: languageStats.slice(0, 3),
-    repos: sortedRepos,
-  };
+    const sortedRepos = [...originalRepos]
+      .sort(
+        (a, b) =>
+          new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime(),
+      )
+      .map((repo) => ({
+        id: repo.id,
+        name: repo.name,
+        description: repo.description,
+        htmlUrl: repo.html_url,
+        updatedAt: repo.updated_at,
+        language: repo.language,
+        stars: repo.stargazers_count || 0,
+        forks: repo.forks_count || 0,
+        openIssues: repo.open_issues_count || 0,
+        status: repo.archived ? "Archived" : "Active",
+        visibility: repo.private ? "Private" : "Public",
+      }));
 
-  writeCache(dashboardCacheKey, dashboardStats);
-  return dashboardStats;
+    const languageStats = await getProfileLanguageStats(
+      username,
+      sortedRepos.slice(0, 10),
+    );
+
+    const dashboardStats = {
+      username: profile.login,
+      name: profile.name || "",
+      bio: profile.bio || "",
+      company: profile.company || "",
+      location: profile.location || "",
+      blog: profile.blog || "",
+      avatarUrl: profile.avatar_url,
+      profileUrl: profile.html_url,
+      publicRepos: profile.public_repos || repos.length,
+      followers: profile.followers || 0,
+      following: profile.following || 0,
+      stars,
+      forks,
+      openIssues,
+      topLanguages: languageStats.slice(0, 4),
+      repos: sortedRepos,
+      dataSource: "github-direct",
+    };
+
+    writeCache(dashboardCacheKey, dashboardStats);
+    return dashboardStats;
+  } catch (directErr) {
+    const isRateLimited = directErr.response?.status === 403;
+    const cached = readCache(dashboardCacheKey, 24 * 60 * 60 * 1000); // accept older cache on failure
+    if (cached) {
+      return {
+        ...cached,
+        isFromCache: true,
+        warning: isRateLimited
+          ? "GitHub API rate limit reached. Displaying saved snapshot."
+          : "Could not reach GitHub. Displaying saved snapshot.",
+      };
+    }
+    throw directErr;
+  }
 }
 
 export async function getGithubRecentActivity(username) {

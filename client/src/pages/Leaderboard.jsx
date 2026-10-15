@@ -2061,7 +2061,6 @@ export default function Leaderboard() {
                 appearance: "none",
                 WebkitAppearance: "none",
                 minWidth: 145,
-                fontWeight: 600,
               }}
             >
               {LEVELS.map((l) => (

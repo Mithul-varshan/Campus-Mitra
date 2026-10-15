@@ -6,7 +6,8 @@
   "main": "src/index.js",
   "scripts": {
     "start": "node src/index.js",
-    "dev": "node --watch src/index.js"
+    "dev": "node --watch src/index.js",
+    "docker:leetcode": "docker run -d --name campusmitra_leetcode -p 3000:3000 alfaarghya/alfa-leetcode-api:2.0.4"
   },
   "dependencies": {
     "axios": "^1.13.2",

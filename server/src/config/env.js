@@ -15,6 +15,9 @@ const env = {
   DB_USER: process.env.DB_USER,
   DB_PASS: process.env.DB_PASS,
   DB_NAME: process.env.DB_NAME,
+
+  // LeetCode API (Docker alfa-leetcode-api container)
+  LEETCODE_API_URL: process.env.LEETCODE_API_URL || "http://localhost:3000",
 };
 
 // Warn at startup if OAuth secrets are missing

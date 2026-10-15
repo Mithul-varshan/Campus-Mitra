@@ -2229,13 +2229,20 @@ const DUMMY_PROJECTS = [
 
 const LEETCODE_FALLBACK = {
   username: "priya_innovator",
+  realName: "Priya Sharma",
   contestRating: 1847,
+  contestGlobalRanking: 14250,
+  streak: 18,
+  totalActiveDays: 142,
+  badgesCount: 4,
+  badges: [],
   easySolved: 245,
   mediumSolved: 180,
   hardSolved: 42,
   totalSolved: 467,
   totalQuestions: 3851,
   progressPercent: 14.6,
+  dataSource: "demo",
 };
 
 const GITHUB_FALLBACK = {
@@ -2679,13 +2686,14 @@ export default function Dashboard() {
       };
     }
 
-    const loadLeetcodeStats = async () => {
+    const loadLeetcodeStats = async (force = false) => {
       setIsLeetcodeLoading(true);
-      setLeetcodeStatus("");
+      setLeetcodeStatus(force ? "Syncing live stats..." : "");
 
       try {
         const liveStats = await getLeetCodeDashboardStats(
           configuredLeetcodeUsername,
+          { forceRefresh: force },
         );
         if (!active) return;
 
@@ -2694,14 +2702,28 @@ export default function Dashboard() {
           ...liveStats,
           username: liveStats.username || configuredLeetcodeUsername,
         });
-      } catch {
+
+        if (liveStats.dataSource === "docker-local") {
+          setLeetcodeStatus("Live from Docker (localhost:3000)");
+        } else if (liveStats.dataSource === "server-proxy") {
+          setLeetcodeStatus("Live via Server Proxy");
+        } else if (liveStats.dataSource === "render-hosted") {
+          setLeetcodeStatus("Live via Hosted LeetCode API");
+        } else if (liveStats.isFromCache) {
+          setLeetcodeStatus("Cached data (click Sync to refresh)");
+        }
+      } catch (err) {
         if (!active) return;
 
         setLeetcodeStats({
           ...LEETCODE_FALLBACK,
           username: configuredLeetcodeUsername,
         });
-        setLeetcodeStatus("Live data unavailable. Showing demo snapshot.");
+        setLeetcodeStatus(
+          err.message?.includes("Failed to reach")
+            ? "API unreachable. Run Docker container on :3000."
+            : "Live data unavailable. Showing demo snapshot.",
+        );
       } finally {
         if (active) {
           setIsLeetcodeLoading(false);
@@ -2715,6 +2737,34 @@ export default function Dashboard() {
       active = false;
     };
   }, [configuredLeetcodeUsername]);
+
+  const handleRefreshLeetcode = async () => {
+    if (!configuredLeetcodeUsername || isLeetcodeLoading) return;
+    setIsLeetcodeLoading(true);
+    setLeetcodeStatus("Syncing with live API...");
+    try {
+      const liveStats = await getLeetCodeDashboardStats(
+        configuredLeetcodeUsername,
+        { forceRefresh: true },
+      );
+      setLeetcodeStats({
+        ...LEETCODE_FALLBACK,
+        ...liveStats,
+        username: liveStats.username || configuredLeetcodeUsername,
+      });
+      setLeetcodeStatus(
+        liveStats.dataSource === "docker-local"
+          ? "Live from Docker (localhost:3000)"
+          : liveStats.dataSource === "server-proxy"
+          ? "Live via Server Proxy"
+          : "Live via Hosted LeetCode API",
+      );
+    } catch (err) {
+      setLeetcodeStatus(err.message || "Failed to sync live data.");
+    } finally {
+      setIsLeetcodeLoading(false);
+    }
+  };
 
   const leetcodeInitial = useMemo(
     () => (leetcodeStats.username?.[0] || "P").toUpperCase(),
@@ -2793,7 +2843,34 @@ export default function Dashboard() {
     return () => {
       active = false;
     };
-  }, [configuredGithubUsername]);
+  }, [configuredGithubUsername, user?.githubToken]);
+
+  const handleRefreshGithub = async () => {
+    if (!configuredGithubUsername || isGithubLoading) return;
+    setIsGithubLoading(true);
+    setGithubStatus("Syncing with GitHub API...");
+    try {
+      const liveStats = await getGithubDashboardStats(configuredGithubUsername, {
+        forceRefresh: true,
+        userToken: user?.githubToken || "",
+      });
+      setGithubStats({
+        ...GITHUB_FALLBACK,
+        ...liveStats,
+        username: liveStats.username || configuredGithubUsername,
+      });
+      setGithubStatus(
+        liveStats.warning ||
+          (liveStats.dataSource === "github-live"
+            ? "Synced live via GitHub Proxy"
+            : "Synced live with GitHub"),
+      );
+    } catch (err) {
+      setGithubStatus(err.message || "Failed to sync GitHub data.");
+    } finally {
+      setIsGithubLoading(false);
+    }
+  };
 
   const displayedRepos = useMemo(() => {
     return (githubStats.repos || []).slice(0, 10);
@@ -3462,59 +3539,297 @@ export default function Dashboard() {
         {/* LeetCode Profile */}
         <div style={card}>
           <div style={cardHeaderRow}>
-            <h3 style={cardTitle}>LeetCode Profile</h3>
-            <iconify-icon
-              icon="simple-icons:leetcode"
-              style={{ fontSize: "18px", color: "#FFA116" }}
-            ></iconify-icon>
+            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+              <iconify-icon
+                icon="simple-icons:leetcode"
+                style={{ fontSize: "20px", color: "#FFA116" }}
+              ></iconify-icon>
+              <h3 style={cardTitle}>LeetCode Profile</h3>
+              {leetcodeStats.dataSource === "docker-local" && (
+                <span
+                  style={{
+                    background: "#dcfce7",
+                    color: "#15803d",
+                    fontSize: "10px",
+                    fontWeight: 600,
+                    padding: "2px 6px",
+                    borderRadius: "4px",
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: "4px",
+                  }}
+                  title="Connected to local Docker container on localhost:3000"
+                >
+                  <span
+                    style={{
+                      width: "6px",
+                      height: "6px",
+                      borderRadius: "50%",
+                      background: "#22c55e",
+                    }}
+                  ></span>
+                  Docker Live
+                </span>
+              )}
+              {(leetcodeStats.dataSource === "render-hosted" ||
+                leetcodeStats.dataSource === "server-proxy") && (
+                <span
+                  style={{
+                    background: "#e0f2fe",
+                    color: "#0369a1",
+                    fontSize: "10px",
+                    fontWeight: 600,
+                    padding: "2px 6px",
+                    borderRadius: "4px",
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: "4px",
+                  }}
+                  title="Docker is offline; automatically using hosted live LeetCode API"
+                >
+                  <span
+                    style={{
+                      width: "6px",
+                      height: "6px",
+                      borderRadius: "50%",
+                      background: "#0284c7",
+                    }}
+                  ></span>
+                  Cloud Live
+                </span>
+              )}
+              {leetcodeStats.isFromCache &&
+                leetcodeStats.dataSource !== "docker-local" &&
+                leetcodeStats.dataSource !== "render-hosted" &&
+                leetcodeStats.dataSource !== "server-proxy" && (
+                  <span
+                    style={{
+                      background: "#fef3c7",
+                      color: "#b45309",
+                      fontSize: "10px",
+                      fontWeight: 600,
+                      padding: "2px 6px",
+                      borderRadius: "4px",
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: "4px",
+                    }}
+                    title="API unreachable; showing cached snapshot"
+                  >
+                    <span
+                      style={{
+                        width: "6px",
+                        height: "6px",
+                        borderRadius: "50%",
+                        background: "#f59e0b",
+                      }}
+                    ></span>
+                    Cached
+                  </span>
+                )}
+            </div>
+            <button
+              onClick={handleRefreshLeetcode}
+              disabled={isLeetcodeLoading || !configuredLeetcodeUsername}
+              title={
+                configuredLeetcodeUsername
+                  ? "Force sync with LeetCode API"
+                  : "Set username in Settings first"
+              }
+              style={{
+                background: "var(--muted)",
+                border: "1px solid var(--border)",
+                borderRadius: "6px",
+                padding: "3px 8px",
+                fontSize: "11px",
+                fontWeight: 500,
+                cursor:
+                  isLeetcodeLoading || !configuredLeetcodeUsername
+                    ? "not-allowed"
+                    : "pointer",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "4px",
+                color: "var(--foreground)",
+                opacity: !configuredLeetcodeUsername ? 0.6 : 1,
+              }}
+            >
+              <iconify-icon
+                icon="lucide:refresh-cw"
+                style={{
+                  fontSize: "12px",
+                  animation: isLeetcodeLoading
+                    ? "spin 1s linear infinite"
+                    : "none",
+                }}
+              ></iconify-icon>
+              Sync
+            </button>
           </div>
+
           <div
             style={{
               display: "flex",
               alignItems: "center",
               gap: "12px",
-              marginBottom: "16px",
+              marginBottom: "12px",
             }}
           >
-            <div
-              style={{
-                width: "48px",
-                height: "48px",
-                borderRadius: "50%",
-                background: "linear-gradient(135deg, #FFA116, #FF6B00)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                color: "white",
-                fontWeight: 700,
-                fontSize: "18px",
-              }}
-            >
-              {leetcodeInitial}
-            </div>
-            <div>
-              <div style={{ fontSize: "14px", fontWeight: 600 }}>
-                {leetcodeStats.username}
+            {leetcodeStats.avatar ? (
+              <img
+                src={leetcodeStats.avatar}
+                alt={leetcodeStats.username}
+                style={{
+                  width: "48px",
+                  height: "48px",
+                  borderRadius: "50%",
+                  border: "2px solid #FFA116",
+                  objectFit: "cover",
+                }}
+              />
+            ) : (
+              <div
+                style={{
+                  width: "48px",
+                  height: "48px",
+                  borderRadius: "50%",
+                  background: "linear-gradient(135deg, #FFA116, #FF6B00)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  color: "white",
+                  fontWeight: 700,
+                  fontSize: "18px",
+                  flexShrink: 0,
+                }}
+              >
+                {leetcodeInitial}
+              </div>
+            )}
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div
+                style={{
+                  fontSize: "14px",
+                  fontWeight: 600,
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "6px",
+                }}
+              >
+                <span
+                  style={{
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  {leetcodeStats.username}
+                </span>
+                {leetcodeStats.realName && (
+                  <span
+                    style={{
+                      fontSize: "11px",
+                      color: "var(--muted-foreground)",
+                      fontWeight: 400,
+                    }}
+                  >
+                    ({leetcodeStats.realName})
+                  </span>
+                )}
               </div>
               <div
-                style={{ fontSize: "12px", color: "var(--muted-foreground)" }}
+                style={{
+                  fontSize: "11px",
+                  color: "var(--muted-foreground)",
+                  marginTop: "2px",
+                }}
               >
-                Contest Rating: {Math.trunc(leetcodeStats.contestRating || 0)}
+                Contest:{" "}
+                <span style={{ fontWeight: 600, color: "var(--foreground)" }}>
+                  {Math.trunc(leetcodeStats.contestRating || 0)}
+                </span>
+                {leetcodeStats.contestGlobalRanking > 0 && (
+                  <span>
+                    {" "}
+                    • Rank #{leetcodeStats.contestGlobalRanking.toLocaleString()}
+                  </span>
+                )}
               </div>
               {isLeetcodeLoading ? (
                 <div
-                  style={{ fontSize: "11px", color: "var(--muted-foreground)" }}
+                  style={{
+                    fontSize: "10px",
+                    color: "var(--primary)",
+                    marginTop: "2px",
+                  }}
                 >
-                  Loading live stats...
+                  Syncing live stats...
                 </div>
               ) : null}
               {!isLeetcodeLoading && leetcodeStatus ? (
-                <div style={{ fontSize: "11px", color: "#d97706" }}>
+                <div
+                  style={{
+                    fontSize: "10px",
+                    color: leetcodeStatus.includes("Live")
+                      ? "#15803d"
+                      : "#d97706",
+                    marginTop: "2px",
+                  }}
+                >
                   {leetcodeStatus}
                 </div>
               ) : null}
             </div>
           </div>
+
+          {/* Activity Pills (Streak & Active Days) */}
+          {(leetcodeStats.streak > 0 || leetcodeStats.totalActiveDays > 0) && (
+            <div
+              style={{
+                display: "flex",
+                gap: "8px",
+                marginBottom: "12px",
+              }}
+            >
+              {leetcodeStats.streak > 0 && (
+                <div
+                  style={{
+                    background: "rgba(249, 115, 22, 0.1)",
+                    border: "1px solid rgba(249, 115, 22, 0.25)",
+                    borderRadius: "6px",
+                    padding: "4px 8px",
+                    fontSize: "11px",
+                    fontWeight: 600,
+                    color: "#ea580c",
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: "4px",
+                  }}
+                >
+                  🔥 {leetcodeStats.streak}d streak
+                </div>
+              )}
+              {leetcodeStats.totalActiveDays > 0 && (
+                <div
+                  style={{
+                    background: "var(--muted)",
+                    border: "1px solid var(--border)",
+                    borderRadius: "6px",
+                    padding: "4px 8px",
+                    fontSize: "11px",
+                    fontWeight: 500,
+                    color: "var(--muted-foreground)",
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: "4px",
+                  }}
+                >
+                  📅 {leetcodeStats.totalActiveDays}d active
+                </div>
+              )}
+            </div>
+          )}
+
           <div
             style={{
               display: "grid",
@@ -3526,13 +3841,13 @@ export default function Dashboard() {
             <div
               style={{
                 textAlign: "center",
-                padding: "12px 8px",
+                padding: "10px 6px",
                 background: "#dcfce7",
                 borderRadius: "8px",
               }}
             >
               <div
-                style={{ fontSize: "18px", fontWeight: 700, color: "#16a34a" }}
+                style={{ fontSize: "16px", fontWeight: 700, color: "#16a34a" }}
               >
                 {leetcodeStats.easySolved}
               </div>
@@ -3541,13 +3856,13 @@ export default function Dashboard() {
             <div
               style={{
                 textAlign: "center",
-                padding: "12px 8px",
+                padding: "10px 6px",
                 background: "#fef3c7",
                 borderRadius: "8px",
               }}
             >
               <div
-                style={{ fontSize: "18px", fontWeight: 700, color: "#d97706" }}
+                style={{ fontSize: "16px", fontWeight: 700, color: "#d97706" }}
               >
                 {leetcodeStats.mediumSolved}
               </div>
@@ -3556,19 +3871,20 @@ export default function Dashboard() {
             <div
               style={{
                 textAlign: "center",
-                padding: "12px 8px",
+                padding: "10px 6px",
                 background: "#fee2e2",
                 borderRadius: "8px",
               }}
             >
               <div
-                style={{ fontSize: "18px", fontWeight: 700, color: "#dc2626" }}
+                style={{ fontSize: "16px", fontWeight: 700, color: "#dc2626" }}
               >
                 {leetcodeStats.hardSolved}
               </div>
               <div style={{ fontSize: "10px", color: "#dc2626" }}>Hard</div>
             </div>
           </div>
+
           <div
             style={{
               display: "flex",
@@ -3580,7 +3896,7 @@ export default function Dashboard() {
             <span>Total Solved</span>
             <span style={{ fontWeight: 600, color: "var(--foreground)" }}>
               {leetcodeStats.totalSolved} /{" "}
-              {leetcodeStats.totalQuestions.toLocaleString()}
+              {leetcodeStats.totalQuestions?.toLocaleString() || "3,850"}
             </span>
           </div>
           <div
@@ -3601,16 +3917,129 @@ export default function Dashboard() {
               }}
             ></div>
           </div>
+
+          {/* Badges Preview */}
+          {Array.isArray(leetcodeStats.badges) &&
+            leetcodeStats.badges.length > 0 && (
+              <div
+                style={{
+                  marginTop: "14px",
+                  paddingTop: "12px",
+                  borderTop: "1px solid var(--border)",
+                }}
+              >
+                <div
+                  style={{
+                    fontSize: "11px",
+                    fontWeight: 600,
+                    color: "var(--muted-foreground)",
+                    marginBottom: "8px",
+                  }}
+                >
+                  Badges ({leetcodeStats.badgesCount || leetcodeStats.badges.length})
+                </div>
+                <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+                  {leetcodeStats.badges.slice(0, 4).map((badge, idx) => (
+                    <div
+                      key={badge.id || idx}
+                      title={badge.displayName}
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "4px",
+                        background: "var(--muted)",
+                        padding: "3px 6px",
+                        borderRadius: "6px",
+                        fontSize: "10px",
+                        color: "var(--foreground)",
+                      }}
+                    >
+                      {badge.icon && (
+                        <img
+                          src={badge.icon.startsWith("http") ? badge.icon : `https://leetcode.com${badge.icon}`}
+                          alt={badge.displayName}
+                          style={{ width: "16px", height: "16px" }}
+                        />
+                      )}
+                      <span>{badge.displayName}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
         </div>
 
         {/* GitHub Contributions */}
         <div style={card}>
           <div style={cardHeaderRow}>
-            <h3 style={cardTitle}>GitHub Contributions</h3>
-            <iconify-icon
-              icon="mdi:github"
-              style={{ fontSize: "20px" }}
-            ></iconify-icon>
+            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+              <iconify-icon
+                icon="mdi:github"
+                style={{ fontSize: "20px" }}
+              ></iconify-icon>
+              <h3 style={cardTitle}>GitHub Contributions</h3>
+              {githubStats.dataSource === "github-live" && (
+                <span
+                  style={{
+                    background: "#dcfce7",
+                    color: "#15803d",
+                    fontSize: "10px",
+                    fontWeight: 600,
+                    padding: "2px 6px",
+                    borderRadius: "4px",
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: "4px",
+                  }}
+                  title="Connected to GitHub Proxy API"
+                >
+                  <span
+                    style={{
+                      width: "6px",
+                      height: "6px",
+                      borderRadius: "50%",
+                      background: "#22c55e",
+                    }}
+                  ></span>
+                  Live
+                </span>
+              )}
+            </div>
+            <button
+              onClick={handleRefreshGithub}
+              disabled={isGithubLoading || !configuredGithubUsername}
+              title={
+                configuredGithubUsername
+                  ? "Force sync with GitHub API"
+                  : "Set username in Settings first"
+              }
+              style={{
+                background: "var(--muted)",
+                border: "1px solid var(--border)",
+                borderRadius: "6px",
+                padding: "3px 8px",
+                fontSize: "11px",
+                fontWeight: 500,
+                cursor:
+                  isGithubLoading || !configuredGithubUsername
+                    ? "not-allowed"
+                    : "pointer",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "4px",
+                color: "var(--foreground)",
+                opacity: !configuredGithubUsername ? 0.6 : 1,
+              }}
+            >
+              <iconify-icon
+                icon="lucide:refresh-cw"
+                style={{
+                  fontSize: "12px",
+                  animation: isGithubLoading ? "spin 1s linear infinite" : "none",
+                }}
+              ></iconify-icon>
+              Sync
+            </button>
           </div>
 
           {isGithubLoading && (
