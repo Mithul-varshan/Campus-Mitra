@@ -1,4 +1,4 @@
-﻿import jsPDF from "jspdf";
+import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 
 export function generateCollegeKPIReport({
@@ -34,7 +34,7 @@ export function generateCollegeKPIReport({
       ["Student-Faculty Ratio", "18:1", "18:1", "18:1"],
       ["Graduation Rate (%)", "92.5", "91.2", "90.8"],
       ["Placement Rate (%)", "87.3", "85.1", "83.7"],
-      ["Average Package (â‚¹)", "5,80,000", "5,20,000", "4,80,000"],
+      ["Average Package (INR)", "5,80,000", "5,20,000", "4,80,000"],
       ["Research Publications", "28", "22", "18"],
       ["Patents Filed", "6", "4", "3"],
       ["Capstone Projects", "32", "28", "25"],

@@ -4,6 +4,8 @@ import {
   TrendingUp, Layers, Star, ChevronDown, ChevronRight,
 } from "lucide-react";
 import { generateNIRFReport, generateNAACReport } from "../utils/reportGenerators";
+import { generateCollegeKPIReport } from "../utils/collegeKPIReport";
+import { handleExcelOrCSVExport } from "../utils/reportExcelGenerators";
 
 /* ─── Styles ─────────────────────────────────────────────── */
 const S = {
@@ -53,9 +55,9 @@ const REPORT_TYPES = [
 
 /* Format options + hints per framework */
 const TYPE_FORMATS = {
-  naac:     { formats: ["PDF", "XLSX"],                primary: "PDF",  hints: { PDF: "Final NAAC-ready submission", XLSX: "Internal data preparation (not submitted)" } },
-  nirf:     { formats: ["PDF", "XLSX"],                primary: "PDF",  hints: { PDF: "Human-readable NIRF summary report", XLSX: "NIRF data upload sheets (coming soon)" } },
-  nba:      { formats: ["PDF", "XLSX"],                primary: "PDF",  hints: { PDF: "Program-wise NBA reports", XLSX: "Evidence compilation & mapping (internal)" } },
+  naac:     { formats: ["PDF", "XLSX"],                primary: "PDF",  hints: { PDF: "Final NAAC-ready submission", XLSX: "Internal data preparation workbook" } },
+  nirf:     { formats: ["PDF", "XLSX"],                primary: "PDF",  hints: { PDF: "Human-readable NIRF summary report", XLSX: "NIRF structured data upload workbook" } },
+  nba:      { formats: ["PDF", "XLSX"],                primary: "PDF",  hints: { PDF: "Program-wise NBA reports", XLSX: "Evidence compilation & outcome mapping" } },
   college:  { formats: ["PDF", "CSV", "XLSX", "JSON"], primary: "PDF",  hints: {} },
   platform: { formats: ["PDF", "CSV", "XLSX", "JSON"], primary: "PDF",  hints: {} },
   events:   { formats: ["PDF", "CSV", "XLSX"],         primary: "PDF",  hints: {} },
@@ -187,24 +189,68 @@ export default function ReportsExports() {
   };
 
   const handleGenerate = () => {
-    if (format !== "PDF") {
-      alert("XLSX / CSV export coming soon. Please select PDF format.");
-      return;
-    }
     setLoading(true);
     setTimeout(() => {
       try {
-        const params = { dateFrom, dateTo, subReportName: getSubReportName() };
-        if      (selectedType === "nirf") generateNIRFReport(params);
-        else if (selectedType === "naac") generateNAACReport(params);
-        else if (selectedType === "nba")  generateNAACReport({ ...params });
-        else alert("Report generation for this framework is coming soon.");
+        const subName = getSubReportName();
+        const params = {
+          dateFrom,
+          dateTo,
+          subReportName: subName,
+          instituteName: "Dhanalakshmi Srinivasan University",
+          academicYear: "2024-25",
+        };
+
+        if (format === "XLSX" || format === "CSV") {
+          handleExcelOrCSVExport({
+            selectedType,
+            format,
+            subReportName: subName,
+            academicYear: "2024-25",
+            instituteName: "Dhanalakshmi Srinivasan University",
+          });
+        } else if (format === "JSON") {
+          const exportPayload = {
+            institution: "Dhanalakshmi Srinivasan University",
+            framework: selectedType.toUpperCase(),
+            subReport: subName,
+            period: `${dateFrom} to ${dateTo}`,
+            academicYear: "2024-25",
+            generatedAt: new Date().toISOString(),
+          };
+          const blob = new Blob([JSON.stringify(exportPayload, null, 2)], {
+            type: "application/json",
+          });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = `${selectedType.toUpperCase()}_Report_2024-25.json`;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+        } else {
+          // PDF Export
+          if (selectedType === "nirf") {
+            generateNIRFReport(params);
+          } else if (selectedType === "naac") {
+            generateNAACReport(params);
+          } else if (selectedType === "nba") {
+            generateNAACReport({ ...params });
+          } else if (selectedType === "college") {
+            generateCollegeKPIReport(params);
+          } else if (selectedType === "events") {
+            generateNIRFReport(params);
+          } else {
+            generateNAACReport(params);
+          }
+        }
       } catch (e) {
-        console.error(e);
-        alert("PDF generation failed.\nRun: npm install jspdf jspdf-autotable");
+        console.error("Report generation error:", e);
+        alert(`Export failed: ${e.message || "Unknown error"}`);
       }
       setLoading(false);
-    }, 600);
+    }, 400);
   };
 
   return (
