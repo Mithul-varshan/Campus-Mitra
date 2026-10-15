@@ -5,6 +5,8 @@ import { AuthProvider } from "./context/AuthContext";
 import { ThemeProvider } from "./context/ThemeContext";
 import { DataProvider } from "./context/DataContext";
 import { EventsProvider } from "./context/EventsContext";
+import DemoErrorBoundary from "./components/common/DemoErrorBoundary";
+import DemoSpeedSwitcher from "./components/common/DemoSpeedSwitcher";
 
 function App() {
   return (
@@ -13,7 +15,10 @@ function App() {
         <AuthProvider>
           <DataProvider>
             <EventsProvider>
-              <AppLayout />
+              <DemoErrorBoundary>
+                <AppLayout />
+                <DemoSpeedSwitcher />
+              </DemoErrorBoundary>
             </EventsProvider>
           </DataProvider>
         </AuthProvider>

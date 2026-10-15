@@ -433,11 +433,55 @@ function ShareCertificateTab() {
   const [issuedCerts, setIssuedCerts] = useState(loadIssuedCerts);
 
   useEffect(() => {
-    const items = loadDeclaredWinners();
-    setDeclaredEvents(items);
-    if (!selectedEventId && items[0]?.event?.id) {
-      setSelectedEventId(items[0].event.id);
-    }
+    const refresh = () => {
+      const items = loadDeclaredWinners();
+      if (items.length > 0) {
+        setDeclaredEvents(items);
+        if (!selectedEventId && items[0]?.event?.id) {
+          setSelectedEventId(items[0].event.id);
+        }
+      } else {
+        // Fallback baseline declared event for guaranteed pristine demo state
+        const baseline = [
+          {
+            event: {
+              id: "evt-001",
+              title: "National AI Innovation Hackathon 2026",
+              type: "Hackathon",
+              domain: "Artificial Intelligence",
+              status: "completed",
+            },
+            winners: [
+              {
+                id: "t-001",
+                teamName: "Neural Ninjas",
+                position: "1st",
+                members: [
+                  { name: "Arundhathidevi", department: "CSE" },
+                  { name: "Mithul Varshan", department: "CSE" },
+                ],
+              },
+            ],
+            participants: [
+              {
+                id: "t-002",
+                teamName: "Code Warriors",
+                members: [{ name: "Rohit Sharma", department: "AI-DS" }],
+              },
+            ],
+            declaredAt: new Date().toISOString(),
+          },
+        ];
+        setDeclaredEvents(baseline);
+        if (!selectedEventId) {
+          setSelectedEventId(baseline[0].event.id);
+        }
+      }
+    };
+
+    refresh();
+    window.addEventListener("campusmitra:state-sync", refresh);
+    return () => window.removeEventListener("campusmitra:state-sync", refresh);
   }, [selectedEventId]);
 
   const selectedEvent = useMemo(

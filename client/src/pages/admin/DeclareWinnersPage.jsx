@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
+import { useEvents } from "../../context/EventsContext";
 
 /* ===== SAMPLE DATA ===== */
 const SAMPLE_EVENTS = [
@@ -141,14 +142,80 @@ const cardTitle = {
 
 export default function DeclareWinnersPage() {
   const navigate = useNavigate();
-  const [events, setEvents] = useState(SAMPLE_EVENTS);
+  const { events: contextEvents } = useEvents();
+
+  const [rawEvents, setRawEvents] = useState(SAMPLE_EVENTS);
   const [teams, setTeams] = useState(SAMPLE_TEAMS);
+
+  const events = useMemo(() => {
+    const map = new Map();
+    (contextEvents || []).forEach((e) => {
+      map.set(e.id, {
+        id: e.id,
+        title: e.title,
+        type: e.eventType || "Hackathon",
+        domain: e.domain || e.skillDomains?.[0] || "AI/ML",
+        status: e.status === "closed" ? "completed" : e.status || "ongoing",
+        prizes: e.prizes?.length
+          ? e.prizes
+          : [
+              { position: "1st", amount: "25000" },
+              { position: "2nd", amount: "15000" },
+              { position: "3rd", amount: "10000" },
+            ],
+      });
+    });
+    rawEvents.forEach((e) => {
+      if (!map.has(e.id)) map.set(e.id, e);
+    });
+    return Array.from(map.values());
+  }, [contextEvents, rawEvents]);
+
   const [selectedEventForWinners, setSelectedEventForWinners] = useState(
-    SAMPLE_EVENTS[0]?.id || null,
+    () => events[0]?.id || SAMPLE_EVENTS[0]?.id || null,
   );
   const [winnerSelections, setWinnerSelections] = useState({});
 
   const declaredWinnersStorageKey = "campusMitra_declared_winners";
+
+  const getTeamsForEvent = (eventId) => {
+    if (teams[eventId] && teams[eventId].length > 0) {
+      return teams[eventId];
+    }
+    return [
+      {
+        id: `t-${eventId}-1`,
+        teamName: "Code Warriors",
+        status: "approved",
+        projectTitle: "AI Campus Assistant",
+        members: [
+          { name: "Arun Kumar", department: "CSE" },
+          { name: "Priya Sharma", department: "CSE" },
+          { name: "Vikash J", department: "IT" },
+        ],
+      },
+      {
+        id: `t-${eventId}-2`,
+        teamName: "Neural Ninjas",
+        status: "approved",
+        projectTitle: "Smart Energy Grid",
+        members: [
+          { name: "Sneha Patel", department: "ECE" },
+          { name: "Mithul Varshan", department: "CSE" },
+        ],
+      },
+      {
+        id: `t-${eventId}-3`,
+        teamName: "Quantum Explorers",
+        status: "approved",
+        projectTitle: "Campus Blockchain Identity",
+        members: [
+          { name: "Rahul S.", department: "AI-DS" },
+          { name: "Divya N.", department: "CSE" },
+        ],
+      },
+    ];
+  };
 
   const handleDeclareWinner = (eventId, teamId, position) => {
     setWinnerSelections((prev) => ({
@@ -171,7 +238,7 @@ export default function DeclareWinnersPage() {
       "10th",
     ];
     const event = events.find((e) => e.id === eventId);
-    const eventTeams = teams[eventId] || [];
+    const eventTeams = getTeamsForEvent(eventId);
 
     // Calculate winners based on current selections
     const winnersData = positions
@@ -193,7 +260,7 @@ export default function DeclareWinnersPage() {
     // Update teams with winner status
     setTeams((prev) => ({
       ...prev,
-      [eventId]: prev[eventId].map((t) => {
+      [eventId]: eventTeams.map((t) => {
         const pos = positions.find(
           (p) => winnerSelections[`${eventId}-${p}`] === t.id,
         );
@@ -202,7 +269,7 @@ export default function DeclareWinnersPage() {
     }));
 
     // Update event status
-    setEvents((prev) =>
+    setRawEvents((prev) =>
       prev.map((e) => (e.id === eventId ? { ...e, status: "completed" } : e)),
     );
 
@@ -227,6 +294,14 @@ export default function DeclareWinnersPage() {
       payload,
     ];
     localStorage.setItem(declaredWinnersStorageKey, JSON.stringify(updated));
+
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(
+        new CustomEvent("campusmitra:state-sync", {
+          detail: { type: "WINNERS_DECLARED", payload },
+        })
+      );
+    }
 
     alert(
       "Winners declared. You can now share certificates from Certificate Management.",
@@ -315,7 +390,7 @@ export default function DeclareWinnersPage() {
         >
           <option value="">Choose an event to declare winners</option>
           {events
-            .filter((e) => e.status === "ongoing" || e.status === "completed")
+            .filter((e) => e.status === "ongoing" || e.status === "completed" || e.status === "upcoming")
             .map((e) => (
               <option key={e.id} value={e.id}>
                 {e.title} ({e.status})
@@ -326,7 +401,7 @@ export default function DeclareWinnersPage() {
 
       {selectedEventForWinners &&
         (() => {
-          const eventTeams = teams[selectedEventForWinners] || [];
+          const eventTeams = getTeamsForEvent(selectedEventForWinners);
           const approvedTeams = eventTeams.filter(
             (t) => t.status === "approved" || t.status === "winner",
           );

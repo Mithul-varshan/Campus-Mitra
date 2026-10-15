@@ -1096,7 +1096,7 @@ export function EventsProvider({ children }) {
         eventData.eventLevel?.replace("_", "-"),
       ].filter(Boolean),
       eventLevel: eventData.eventLevel,
-      status: "pending", // New events start as pending approval
+      status: eventData.status || "upcoming", // Live and active for hackathon demo presentation
       createdAt: new Date().toISOString().split("T")[0],
       prizes:
         eventData.winnerSlots?.map((slot) => ({
@@ -1114,7 +1114,23 @@ export function EventsProvider({ children }) {
       rules: eventData.rules || [],
     };
 
-    setEvents((prev) => [newEvent, ...prev]);
+    setEvents((prev) => {
+      const updated = [newEvent, ...prev];
+      try {
+        localStorage.setItem("campusMitra_events", JSON.stringify(updated));
+      } catch (err) {
+        console.warn("Storage sync error:", err);
+      }
+      return updated;
+    });
+
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(
+        new CustomEvent("campusmitra:state-sync", {
+          detail: { type: "EVENT_ADDED", event: newEvent },
+        })
+      );
+    }
     return newEvent;
   };
 
